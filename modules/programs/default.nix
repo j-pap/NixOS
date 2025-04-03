@@ -1,0 +1,16 @@
+[
+  ./1password.nix
+  ./containers.nix
+  ./flatpak.nix
+  ./gaming.nix
+  ./git.nix
+  ./kitty.nix
+  ./openrgb.nix
+  ./plex.nix
+  ./spicetify.nix
+  ./stylix
+  ./syncthing.nix
+  ./vm.nix
+  ./wezterm.nix
+  ./yubikey.nix
+]
