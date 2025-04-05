@@ -106,6 +106,7 @@ in {
           chafa                 # Terminal images
           coreutils             # GNU utilities
           cryptsetup            # Encryption
+          dust                  # Disk usage
           eza                   # ls/tree replacement | 'eza' or 'exa'
           fastfetch             # Faster system info
           fd                    # Find alternative | 'fd'
