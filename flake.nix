@@ -149,7 +149,7 @@
 
     system = "x86_64-linux";  # Used for inheriting nixpkgs-stable and declaring outputs.packages
   in {
-    nixosConfigurations = nixpkgs.lib.mapAttrs mkSystem hostSystems;
+    nixosConfigurations = builtins.mapAttrs mkSystem hostSystems;
 
     packages.${system} = {
       default = self.packages.${system}.buildIso;
