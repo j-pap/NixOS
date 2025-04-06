@@ -89,6 +89,7 @@ in {
           nmap                  # Network discovery
 
         # Nix
+          nixfmt-rfc-style      # Officlal Nix formatter
           nix-plugins           # Used for evaluating secrets @ rebuild
           nix-tree              # Browse nix store
 
