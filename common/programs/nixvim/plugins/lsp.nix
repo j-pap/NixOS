@@ -1,12 +1,16 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.programs.nixvim.plugins.lsp.servers;
 in {
   programs.nixvim = {
     autoGroups.kickstart-lsp-attach.clear = true;
+    extraPackages = [
+      pkgs.nixfmt-rfc-style  # nix/nil_ls formatter
+    ];
 
     plugins = {
       # Useful status updates for LSP
@@ -51,10 +55,14 @@ in {
           nil_ls = {
             enable = true;
             autostart = true;
-            filetypes = [ "nix" ];
+            filetypes = [
+              "nix"
+            ];
             rootDir = "require('lspconfig.util').root_pattern('flake.nix', '.git')";
             settings = {
-              #formatting.command = [ "nixpkgs-fmt" ];
+              formatting.command = [
+                #"nixfmt"
+              ];
               nix = {
                 bin = "nix";
                 maxMemoryMB = 2560;
@@ -67,7 +75,18 @@ in {
             };
           };
 
-          #nixd.enable = lib.mkIf (!cfg.nixd.enable) true;
+          nixd.enable = lib.mkIf (!cfg.nil_ls.enable) true;
+
+          terraformls = {
+            enable = false;
+            autostart = true;
+            filetypes = [
+              "terraform"
+              "terraform-vars"
+              "tf"
+              "tfvars"
+            ];
+          };
         };
 
         keymaps = {

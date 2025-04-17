@@ -9,12 +9,13 @@
     grammarPackages = builtins.attrValues {
       inherit (pkgs.vimPlugins.nvim-treesitter.builtGrammars)
         bash
-        #c
+        c
         html
         lua
         markdown
         markdown_inline
         nix
+        terraform
         vim
         vimdoc
       ;
