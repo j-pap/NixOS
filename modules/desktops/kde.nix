@@ -498,6 +498,7 @@ in {
             "services/${cfgTerm}.desktop"."_launch" = "Meta+Return";
             "services/darkman.desktop"."_launch" = "Meta+Shift+T";
             "services/org.kde.krunner.desktop"."_launch" = [ "" "Alt+Space" "Meta+Space" "Search" "Alt+F2" ];
+            "services/yazi.desktop"."_launch" = "Meta+Y";
           };
 
           #workspace.wallpaper = wallpaper.light;
