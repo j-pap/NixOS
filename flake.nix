@@ -109,7 +109,12 @@
           overlays = overlays;
         };
       in {
-        inherit inputs cfgTerm nixPath nix-secrets stable;
+        inherit
+        inputs
+        cfgTerm
+        nixPath
+        nix-secrets
+        stable;
       };
     in nixpkgs.lib.nixosSystem {
       modules = (
