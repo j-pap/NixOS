@@ -551,6 +551,9 @@ in {
             [Playback]
             ${hwDecoder}
             UseHWDecoding=true
+
+            [Playlist]
+            CanToggleWithMouse=false
           '';
 
           "haruna/shortcuts.conf".text = ''
