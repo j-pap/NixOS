@@ -7,7 +7,6 @@
   inputs,
   myUser,
   nixPath,
-  #stable,
   ...
 }: let
   iosvmata = pkgs.callPackage ../pkgs/fonts/iosvmata.nix { };
@@ -46,7 +45,7 @@ in {
       # List packages installed in system profile. To search, run:
         # $ nix search wget
       # To use a stable version, add 'stable.' to the beginning of the package:
-        # stable.wget
+        # pkgs.stable.wget
       systemPackages = builtins.attrValues {
         inherit (pkgs)
         # ASCII Art
@@ -298,7 +297,7 @@ in {
       mutableUsers = false;
       users = {
         ${myUser} = {
-          description = "${userName}";
+          description = userName;
           extraGroups = [
             "adbusers"
             "audio"

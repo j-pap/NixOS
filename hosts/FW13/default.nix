@@ -5,14 +5,13 @@
   cfgHosts,
   myUser,
   #nixPath,
-  #stable,
   ...
 }: let
   # Patch kernel to log usbpd instead of warn
   fw-usbpd-charger = pkgs.callPackage ./usbpd {
     kernel = config.boot.kernelPackages.kernel;
   };
-  protonMB = pkgs.protonmail-bridge-gui;  # pkgs or stable
+  protonMB = pkgs.protonmail-bridge-gui;  # pkgs or pkgs.stable
   useFP = true; # Whether or not to enable the fingerprint reader
 in {
   imports = [

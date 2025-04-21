@@ -7,7 +7,7 @@
   myUser,
   ...
 }: let
-  protonMB = pkgs.protonmail-bridge-gui;  # pkgs or stable
+  protonMB = pkgs.protonmail-bridge-gui;  # pkgs or pkgs.stable
 in {
   imports = [
     ./filesystems.nix
@@ -61,6 +61,9 @@ in {
         discord                 # Discord
         signal-desktop          # Signal
         thunderbird-latest      # Email client
+
+      # Gaming
+        #openra                  # Command & Conquer
 
       # Hardware
         polychromatic           # Razer lighting GUI

@@ -66,7 +66,7 @@
         inputs.lanzaboote.nixosModules.lanzaboote
       ];
 
-      # 'nix build .#buildIso' or 'nix build .#nixosConfigurations.iso.config.system.build.isoImage'
+      # 'nix build .#nixosConfigurations.iso.config.system.build.isoImage' or 'nix build .#buildIso'
       iso = {
         isBare = true;
         modules = [
@@ -103,18 +103,12 @@
             "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.extra-builtins-file' is defined correctly.";
           builtins.extraBuiltins.readSops ./secrets/eval-secrets.nix
         );
-        stable = import inputs.nixpkgs-stable {
-          inherit system;
-          config.allowUnfree = true;
-          overlays = overlays;
-        };
       in {
         inherit
         inputs
         cfgTerm
         nixPath
-        nix-secrets
-        stable;
+        nix-secrets;
       };
     in nixpkgs.lib.nixosSystem {
       modules = (
@@ -134,7 +128,16 @@
         };
         networking.hostName = hostName;
         nixpkgs = {
-          config.allowUnfree = true;
+          config = {
+            allowUnfree = true;
+            packageOverrides = pkgs: {
+              stable = import inputs.nixpkgs-stable {
+                inherit system;
+                config = config.nixpkgs.config;
+                overlays = config.nixpkgs.overlays;
+              };
+            };
+          };
           overlays = overlays;
         };
       })
