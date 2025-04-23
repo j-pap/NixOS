@@ -7,20 +7,14 @@
   nix-secrets,
   ...
 }: let
-  bpc = {
-    commit = "21f0500a14885be0030e956e3e7053932b0de7b6";
-    sha256 = "sha256-vVo7KlKlQwWt5a3y2ff3zWFl8Yc9duh/jr4TC5sa0Y4=";
-    version = "4.0.5.0";
-  };
+  userName = config.users.users.${myUser}.description;
 
+  hostName = config.networking.hostName;
   dohProvider = (
     if (hostName == "Ridge" || hostName == "T1" || hostName == "VM")
       then nix-secrets.dns.doh.int
     else nix-secrets.dns.doh.ext
   ) + hostName;
-  hostName = config.networking.hostName;
-
-  userName = config.users.users.${myUser}.description;
 in {
   options.myOptions.browser = lib.mkOption {
     default = "floorp";
@@ -51,21 +45,18 @@ in {
       search = import ./search.nix { inherit lib pkgs; };
       settings = import ./settings.nix { inherit config lib cfgOpts dohProvider; };
 
-      # Search extensions at: https://nur.nix-community.org/repos/rycee/
       extensions.packages = let
         inherit (pkgs.nur.repos.rycee) firefox-addons;
-
-        # BPC releases are regularly removed
-        bypass-paywalls = firefox-addons.bypass-paywalls-clean.override {
-          version = "${bpc.version}";
-          url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-${bpc.version}.xpi&inline=false&commit=${bpc.commit}";
-          sha256 = "${bpc.sha256}";
+        bypass-paywalls = import ./addons/bypass-paywalls-clean.nix {
+          inherit lib;
+          inherit (firefox-addons) buildFirefoxXpiAddon;
         };
       in [
         bypass-paywalls
       ] ++ builtins.attrValues {
+        # Search extensions at: https://nur.nix-community.org/repos/rycee/
         #inherit (firefox-addons)
-          # Additional non-overridden extensions
+          # Additional rycee.firefox-addons extensions
         #;
       };
     };
