@@ -7,12 +7,16 @@
   #nixPath,
   ...
 }: let
+  useFP = true; # Whether or not to enable the fingerprint reader
+
   # Patch kernel to log usbpd instead of warn
   fw-usbpd-charger = pkgs.callPackage ./usbpd {
     kernel = config.boot.kernelPackages.kernel;
   };
-  protonMB = pkgs.protonmail-bridge-gui;  # pkgs or pkgs.stable
-  useFP = true; # Whether or not to enable the fingerprint reader
+
+  # pkgs or pkgs.stable
+  protonMB = pkgs.protonmail-bridge-gui;
+  protonVPN = pkgs.stable.protonvpn-gui;
 in {
   imports = [
     ./filesystems.nix
@@ -68,6 +72,7 @@ in {
       s2idle = pkgs.callPackage ./s2idle.nix { };
     in [
       protonMB                # GUI bridge for Thunderbird
+      protonVPN               # VPN client
       s2idle                  # Environment for suspend testing | 's2idle ./amd_s2idle.py'
     ] ++ builtins.attrValues {
       inherit (pkgs)
@@ -92,9 +97,6 @@ in {
         tauon                 # Music player
         tidal-dl              # Tidal downloader
         tidal-hifi            # Tidal client
-
-      # Networking
-        protonvpn-gui         # VPN client
 
       # Productivity
         libreoffice-fresh     # Office suite
@@ -176,8 +178,8 @@ in {
       "autostart/ProtonVPN.desktop".text = lib.strings.concatLines [
         (lib.strings.replaceStrings
           [ "Exec=protonvpn-app" ]
-          [ "Exec=${lib.getExe pkgs.protonvpn-gui} --start-minimized" ]
-          (lib.strings.fileContents "${pkgs.protonvpn-gui}/share/applications/protonvpn-app.desktop")
+          [ "Exec=${lib.getExe protonVPN} --start-minimized" ]
+          (lib.strings.fileContents "${protonVPN}/share/applications/protonvpn-app.desktop")
         )
         "X-GNOME-Autostart-enabled=true"
       ];
