@@ -35,7 +35,7 @@ in {
 
       specialisation = lib.mkIf (stylix) {
         dark.configuration.programs.spicetify.colorScheme = lib.mkForce "CatppuccinMocha";
-        light.configuration.programs.spicetify.colorScheme = lib.mkForce "CatppuccinFrappe";
+        light.configuration.programs.spicetify.colorScheme = lib.mkForce "CatppuccinLatte";
       };
     };
 
