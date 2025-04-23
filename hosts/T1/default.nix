@@ -62,9 +62,6 @@ in {
         signal-desktop          # Signal
         thunderbird-latest      # Email client
 
-      # Gaming
-        #openra                  # Command & Conquer
-
       # Hardware
         polychromatic           # Razer lighting GUI
 
@@ -85,6 +82,9 @@ in {
         libreoffice-qt6-fresh   # Office suite
         obsidian                # Markdown notes
       ;
+
+      # Command & Conquer | openra
+      inherit (pkgs.openraPackages_2019.engines) bleed;
     };
     # Set Firefox to use GPU for video codecs
     variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render";
