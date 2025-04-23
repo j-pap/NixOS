@@ -2,9 +2,9 @@
   description = "NixOS Multi-System Flake";
 
   inputs = {
-    #chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    # Pin cachyos to 6.13.7 until testing with 6.14
-    chaotic.url = "github:chaotic-cx/nyx/4d79ffe0f2da2875dcd55d48ca7710e404b70795";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    # Pin cachyos to 6.13.7 until testing with 6.14.X
+    #chaotic.url = "github:chaotic-cx/nyx/4d79ffe0f2da2875dcd55d48ca7710e404b70795";
     disko.url = "github:nix-community/disko";
     framework-plymouth.url = "github:j-pap/framework-plymouth";
     hardware.url = "github:nixos/nixos-hardware";
@@ -47,7 +47,7 @@
       inputs.nur.overlays.default
     ];
 
-    # 'nixos-rebuild switch --flake .#your-hostname'
+    # 'nixos-rebuild switch --flake .#hostname'
     hostSystems = {
       /*
       Dekki.modules = [
@@ -108,12 +108,12 @@
         inputs
         cfgTerm
         nixPath
-        nix-secrets;
+        nix-secrets
+        ;
       };
     in nixpkgs.lib.nixosSystem {
-      modules = (
-        if (isBare)
-          then ([ ])
+      modules = (if (isBare)
+        then ([ ])
         else (stdModules hostName specialArgs)
       ) ++ sysModules;
       specialArgs = specialArgs;

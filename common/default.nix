@@ -196,6 +196,7 @@ in {
       };
       nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
       optimise.automatic = true;
+      package = pkgs.nixVersions.nix_2_24;
       registry = {
         nixpkgs.flake = inputs.nixpkgs;
         stable.flake = inputs.nixpkgs-stable;
