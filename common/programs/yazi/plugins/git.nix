@@ -7,15 +7,15 @@ in {
   # Show the status of GIt file changes as linemode in the file list
   programs.yazi = {
     initLua = ''
-      THEME.git = THEME.git or {}
-      THEME.git.added_sign = "A"
-      THEME.git.deleted_sign = "D"
-      ---THEME.git.ignored_sign = ""
-      THEME.git.modified_sign = "M"
-      ---THEME.git.untracked_sign = ""
-      ---THEME.git.updated_sign = ""
-
       require("${pluginName}"):setup()
+
+      th.git = th.git or {}
+      th.git.modified_sign = "M"
+      th.git.added_sign = "A"
+      ---th.git.untracked_sign = ""
+      ---th.git.ignored_sign = ""
+      th.git.deleted_sign = "D"
+      ---th.git.updated_sign = ""
     '';
 
     plugins.${pluginName} = inputs.yazi-plugins + "/${pluginName}.yazi";
