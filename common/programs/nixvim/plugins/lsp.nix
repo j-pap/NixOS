@@ -58,7 +58,11 @@ in {
             filetypes = [
               "nix"
             ];
-            rootDir = "require('lspconfig.util').root_pattern('flake.nix', '.git')";
+            #rootDir = "require('lspconfig.util').root_pattern('flake.nix', '.git')";
+            rootMarkers = [
+              "flake.nix"
+              ".git"
+            ];
             settings = {
               formatting.command = [
                 #"nixfmt"
