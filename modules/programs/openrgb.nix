@@ -18,12 +18,12 @@ in {
     services.hardware.openrgb = {
       enable = true;
       package = pkgs.openrgb.overrideAttrs (_: {
-        version = "pipeline-v0.91";
+        version = "1.0rc1-pipeline";
         src = pkgs.fetchFromGitLab {
           owner = "CalcProgrammer1";
           repo = "OpenRGB";
-          rev = "a7cdbb384490ad15010754f0d7b8baef3864eff4";
-          sha256 = "sha256-+spXyT4Roc6pLAfzTBBPoHIgc69lJ+gYMpiTs+NdTdY=";
+          rev = "a2315a45ff9372834ff1c9773d6529088c219d87";
+          sha256 = "sha256-HuHhKp4eNdK2SLh1PyJX2nH9f1OO04fo20PNe96SvoI=";
         };
         postPatch = ''
           patchShebangs scripts/build-udev-rules.sh
@@ -34,7 +34,7 @@ in {
     };
 
     systemd.user.services.openrgb = {
-      enable = false;
+      enable = true;
       description = "Launch OpenRGB after logon";
       serviceConfig = {
         ExecStart = "${lib.getExe config.services.hardware.openrgb.package} --startminimized";
