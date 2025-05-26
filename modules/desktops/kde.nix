@@ -11,6 +11,7 @@
 }: let
   cfg = cfgOpts.desktops.kde;
 
+  profileImg = ../../assets/profile.png;
   kitty = {
     dark = "Catppuccin-Mocha";
     light = "Catppuccin-Frappe";
@@ -31,7 +32,10 @@
     # teal violet white yaru yellow
     package = pkgs.papirus-icon-theme.override { color = "violet"; };
   };
-  profileImg = ../../assets/profile.png;
+  theme = {
+    dark = "org.kde.breezedark.desktop";
+    light = "org.kde.breeze.desktop";
+  };
   wallpaper = {
     dark = "${nixPath}/assets/wallpapers/dark.png";
     light = "${nixPath}/assets/wallpapers/light.png";
@@ -506,8 +510,11 @@ in {
       };
 
       services.darkman = let
-        lookandfeeltool = lib.getExe' pkgs.kdePackages.plasma-workspace "lookandfeeltool";
-        qdbus = lib.getExe' pkgs.kdePackages.qttools "qdbus";
+        plasma = {
+          changeicons = "${pkgs.kdePackages.plasma-workspace}/libexec/plasma-changeicons";
+          lookandfeel = lib.getExe' pkgs.kdePackages.plasma-workspace "plasma-apply-lookandfeel";
+          wallpaper = lib.getExe' pkgs.kdePackages.plasma-workspace "plasma-apply-wallpaperimage";
+        };
       in {
         enable = true;
         darkModeScripts = {
@@ -515,10 +522,9 @@ in {
             ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${kitty.dark}.conf /home/${myUser}/.config/kitty/current-theme.conf
             kill -SIGUSR1 $(pidof kitty) 2>/dev/null
           '';
-          plasma_global_theme = ''${lookandfeeltool} --apply "org.kde.breezedark.desktop"'';
-          wallpaper = ''
-            ${qdbus} org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript 'var allDesktops = desktops();print (allDesktops);for (i=0;i<allDesktops.length;i++) {d = allDesktops[i];d.wallpaperPlugin = "org.kde.image";d.currentConfigGroup = Array("Wallpaper", "org.kde.image", "General");d.writeConfig("Image", "file://'${wallpaper.dark}'")}'
-          '';
+          plasma_global_theme = "${plasma.lookandfeel} --apply ${theme.dark}";
+          plasma_icon_theme = "${plasma.changeicons} ${icon.name}";
+          plasma_wallpaper = "${plasma.wallpaper} ${wallpaper.dark}";
         };
 
         lightModeScripts = {
@@ -526,10 +532,9 @@ in {
             ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${kitty.light}.conf /home/${myUser}/.config/kitty/current-theme.conf
             kill -SIGUSR1 $(pidof kitty) 2>/dev/null
           '';
-          plasma_global_theme = ''${lookandfeeltool} --apply "org.kde.breeze.desktop"'';
-          wallpaper = ''
-            ${qdbus} org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript 'var allDesktops = desktops();print (allDesktops);for (i=0;i<allDesktops.length;i++) {d = allDesktops[i];d.wallpaperPlugin = "org.kde.image";d.currentConfigGroup = Array("Wallpaper", "org.kde.image", "General");d.writeConfig("Image", "file://'${wallpaper.light}'")}'
-          '';
+          plasma_global_theme = "${plasma.lookandfeel} --apply ${theme.light}";
+          plasma_icon_theme = "${plasma.changeicons} ${icon.name}";
+          plasma_wallpaper = "${plasma.wallpaper} ${wallpaper.light}";
         };
       };
 
