@@ -79,13 +79,19 @@ in {
 
         # Monitoring
           htop                  # Resource manager
+          iptraf-ng             # Network
           pstree                # Process tree
 
         # Network
           #cifs-utils           # SMB support
           dig                   # DNS tools
+          ethtool               # Diagnostic / control
+          mtr                   # ping/traceroute
           nfs-utils             # NFS support
-          nmap                  # Network discovery
+          nmap                  # Discovery
+          tcpdump               # Sniffer
+          traceroute            # Route tracing
+          whois                 # Domain lookup
 
         # Nix
           nixfmt-rfc-style      # Officlal Nix formatter
@@ -112,6 +118,7 @@ in {
           killall               # Process killer
           ripgrep               # Search file contents | 'rg'
           shellcheck            # Script formating checker
+          sysstat               # 'iostat' & various tools
           tldr                  # Abbreviated manual
           tmux                  # Multiplexor
           toybox                # Various commands
