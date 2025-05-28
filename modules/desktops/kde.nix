@@ -267,6 +267,8 @@ in {
               # Set host scaling
               "Xwayland"."Scale" = cfgHosts.scale;
             };
+            # No audio feedback on volume change
+            "plasmaparc"."General"."AudioFeedback" = false;
           };
 
           kwin.scripts.polonium = {
