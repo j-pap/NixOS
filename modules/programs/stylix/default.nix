@@ -52,85 +52,91 @@ in {
     };
   };
 
-  config = lib.mkIf (cfg.enable) {
-    environment.systemPackages = builtins.attrValues {
-      inherit (pkgs)
-        base16-schemes  # Presets
-        home-manager    # Required for switch-mode | 'programs.home-manager.enable' doesn't install
-      ;
-    } ++ [
-      switch-mode       # HM theme switcher script
-    ];
+  config = lib.mkMerge [
+    {
+      stylix.autoEnable = false;
+    }
 
-    stylix = {
-      enable = true;
-      autoEnable = false;
-      base16Scheme = lib.mkDefault "${base16}/${theme.dark}";
-      image = lib.mkDefault "${wallpaper.dark}";
-      polarity = lib.mkDefault "dark";
+    (lib.mkIf (cfg.enable) {
+      environment.systemPackages = builtins.attrValues {
+        inherit (pkgs)
+          base16-schemes  # Presets
+          home-manager    # Required for switch-mode | 'programs.home-manager.enable' doesn't install
+        ;
+      } ++ [
+        switch-mode       # HM theme switcher script
+      ];
 
-      cursor = {
-        # Variants: Bibata-(Modern/Original)-(Amber/Classic/Ice)
-        name = "Bibata-Modern-Classic";
-        package = pkgs.bibata-cursors;
-        # Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96
-        size = 24;
-      };
+      stylix = {
+        enable = true;
+        autoEnable = false;
+        base16Scheme = lib.mkDefault "${base16}/${theme.dark}";
+        image = lib.mkDefault "${wallpaper.dark}";
+        polarity = lib.mkDefault "dark";
 
-      fonts = {
-        monospace = lib.mkDefault {
-          name = "Iosvmata";
-          package = pkgs.callPackage ../../../pkgs/fonts/iosvmata.nix { };
-          #package = pkgs.nur.repos.nykma.font-iosvmata;
+        cursor = {
+          # Variants: Bibata-(Modern/Original)-(Amber/Classic/Ice)
+          name = "Bibata-Modern-Classic";
+          package = pkgs.bibata-cursors;
+          # Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96
+          size = 24;
         };
 
-        sizes = lib.mkDefault {
-          #applications = 12;
-          #desktop = 10;
-          #popups = 10;
-          terminal = 14;
-        };
-      };
+        fonts = {
+          monospace = lib.mkDefault {
+            name = "Iosvmata";
+            package = pkgs.callPackage ../../../pkgs/fonts/iosvmata.nix { };
+            #package = pkgs.nur.repos.nykma.font-iosvmata;
+          };
 
-      opacity = {
-        #applications = 1.0;
-        #desktop = 1.0;
-        #popups = 1.0;
-        terminal = 0.9;
-      };
-
-      targets = {
-        console.enable = true;  # TTY
-        gtk.enable = true;
-        #qt.enable = true;
-      };
-    };
-
-    home-manager.users.${myUser} = {
-      stylix.targets = {
-        gtk.enable = true;
-        #helix.enable = true;
-        #qt.enable = true;
-        #tmux.enable = true;
-        #zellij.enable = true;
-      };
-
-      specialisation = {
-        dark.configuration = {
-          stylix = {
-            base16Scheme = "${base16}/${theme.dark}";
-            image = "${wallpaper.dark}";
-            polarity = lib.mkForce "dark";
+          sizes = lib.mkDefault {
+            #applications = 12;
+            #desktop = 10;
+            #popups = 10;
+            terminal = 14;
           };
         };
-        light.configuration = {
-          stylix = {
-            base16Scheme = "${base16}/${theme.light}";
-            image = "${wallpaper.light}";
-            polarity = lib.mkForce "light";
+
+        opacity = {
+          #applications = 1.0;
+          #desktop = 1.0;
+          #popups = 1.0;
+          terminal = 0.9;
+        };
+
+        targets = {
+          console.enable = true;  # TTY
+          gtk.enable = true;
+          #qt.enable = true;
+        };
+      };
+
+      home-manager.users.${myUser} = {
+        stylix.targets = {
+          gtk.enable = true;
+          #helix.enable = true;
+          #qt.enable = true;
+          #tmux.enable = true;
+          #zellij.enable = true;
+        };
+
+        specialisation = {
+          dark.configuration = {
+            stylix = {
+              base16Scheme = "${base16}/${theme.dark}";
+              image = "${wallpaper.dark}";
+              polarity = lib.mkForce "dark";
+            };
+          };
+          light.configuration = {
+            stylix = {
+              base16Scheme = "${base16}/${theme.light}";
+              image = "${wallpaper.light}";
+              polarity = lib.mkForce "light";
+            };
           };
         };
       };
-    };
-  };
+    })
+  ];
 }
