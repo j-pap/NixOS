@@ -162,9 +162,15 @@ in {
 
     stylix = {
       fonts = {
+        monospace = {
+          #name = "Adwaita Mono";
+          #package = pkgs.adwaita-fonts;
+        };
         sansSerif = {
           name = "Cantarell Bold";
           package = pkgs.cantarell-fonts;
+          #name = "Adwaita Sans";
+          #package = pkgs.adwaita-fonts;
         };
         serif = config.stylix.fonts.sansSerif;
         sizes = {

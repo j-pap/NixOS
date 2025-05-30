@@ -78,7 +78,7 @@ in {
       };
 
       fonts = {
-        monospace = {
+        monospace = lib.mkDefault {
           name = "Iosvmata";
           package = pkgs.callPackage ../../../pkgs/fonts/iosvmata.nix { };
           #package = pkgs.nur.repos.nykma.font-iosvmata;

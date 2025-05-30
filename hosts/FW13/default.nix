@@ -51,7 +51,7 @@ in {
     plex.enable = true;
     spicetify.enable = true;
     stylix = {
-      enable = true;
+      enable = false;
       wallpaper = {
         #dark = "${nixPath}/assets/wallpapers/FW13/dark.png";
         #light = "${nixPath}/assets/wallpapers/FW13/light.png";
