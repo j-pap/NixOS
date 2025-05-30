@@ -2,9 +2,9 @@
   description = "NixOS Multi-System Flake";
 
   inputs = {
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    #chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # Pin cachyos to 6.14.8 until testing with 6.15.x
-    #chaotic.url = "github:chaotic-cx/nyx/7b20daf110d06962ee99114220f2fb98cdc8673d";
+    chaotic.url = "github:chaotic-cx/nyx/7b20daf110d06962ee99114220f2fb98cdc8673d";
     disko.url = "github:nix-community/disko";
     framework-plymouth.url = "github:j-pap/framework-plymouth";
     hardware.url = "github:nixos/nixos-hardware";
@@ -21,7 +21,7 @@
     };
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nixvim.url = "github:nix-community/nixvim";
     nur.url = "github:nix-community/NUR";
     plasma-manager = {
