@@ -22,7 +22,9 @@ in {
 
         kitty = {
           enable = true;
-          extraConfig = lib.mkIf (!stylix) ''include /home/${myUser}/.config/kitty/current-theme.conf'';
+          extraConfig = lib.mkIf (!stylix) ''
+            include /home/${myUser}/.config/kitty/current-theme.conf
+          '';
           font.name = lib.mkDefault "Iosvmata";
           font.size = lib.mkDefault 14;
           settings = {
@@ -44,6 +46,8 @@ in {
           };
         };
       };
+
+      stylix.targets.kitty.enable = lib.mkIf (stylix) true;
     };
   };
 }

@@ -84,8 +84,8 @@ in {
           XDG_SESSION_TYPE = "wayland";
 
         # Scaling
-          GDK_SCALE = cfgHosts.scale;
-          QT_AUTO_SCREEN_SCALE_FACTOR = cfgHosts.scale;
+          GDK_SCALE = toString cfgHosts.scale;
+          QT_AUTO_SCREEN_SCALE_FACTOR = toString cfgHosts.scale;
         
         # Toolkit Backend
           GDK_BACKEND = "wayland,x11";
@@ -142,7 +142,7 @@ in {
           networkmanagerapplet    # Show network tray icon (nm-applet --indicator)
 
         # Theming
-          pywal                   # Theme colors from current wallpaper
+          #pywal                  # Theme colors from current wallpaper
           #wpgtk                  # Pywal GUI
 
         # Wallpaper
@@ -157,12 +157,9 @@ in {
           xwayland                # Interface X11 apps w/ Wayland
         ;
       } ++ [
-        # Display Manager
-        pkgs.greetd.tuigreet            # TTY-like greeter
-
         # Wayland
-        pkgs.kdePackages.qtwayland      # QT6 Wayland support
-        pkgs.libsForQt5.qt5.qtwayland   # QT5 Wayland support
+          pkgs.kdePackages.qtwayland      # QT6 Wayland support
+          pkgs.libsForQt5.qt5.qtwayland   # QT5 Wayland support
       ];
     };
 
@@ -173,7 +170,7 @@ in {
       ;
     };
 
-    home-manager.users.${myUser} = { lib, ... }: {
+    home-manager.users.${myUser} = { config, lib, ... }: {
       gtk = {
         enable = true;
         cursorTheme = {
@@ -200,6 +197,7 @@ in {
       };
 
       # Use Pywal for terminal theming
+      /*
       programs = {
         bash.initExtra = ''
           if command -v wal > /dev/null 2>&1 && [ "$TERM" = "${cfgTerm}" ]; then
@@ -208,6 +206,7 @@ in {
         '';
         kitty.extraConfig = ''include /home/${myUser}/.cache/wal/colors-kitty.conf'';
       };
+      */
 
       #qt.enable = true;
 
@@ -217,6 +216,7 @@ in {
 
       xdg = {
         # Create hyprland pywal template
+        /*
         configFile."wal/templates/colors-hyprland.conf".text = ''
           $background = rgb({background.strip})
           $foreground = rgb({foreground.strip})
@@ -237,17 +237,25 @@ in {
           $color14 = rgb({color14.strip})
           $color15 = rgb({color15.strip})
         '';
+        */
 
         # Set default application file associations
         mimeApps = let
           mime = {
             archive = [
+              "org.gnome.FileRoller.desktop"
               #"org.kde.ark.desktop"
             ];
             audio = [ "" ];
+            browser = [ "${cfgOpts.browser}.desktop" ];
             calendar = [ "" ];
+            connect = [ "" ];
+            #email = [ "thunderbird.desktop" ];
             image = [ "feh.desktop" ];
-            pdf = [ "${cfgOpts.browser}.desktop" ];
+            pdf = [
+              #"${cfgOpts.browser}.desktop"
+              "org.pwmt.zathura.desktop"
+            ];
             text = [ "neovide.desktop" ];
             video = [ "" ];
           };
@@ -256,6 +264,17 @@ in {
           associations.added = config.xdg.mimeApps.defaultApplications;
           defaultApplications = import ../mimeapps.nix { inherit mime; };
         };
+      };
+
+      stylix.targets = {
+        /*
+        hyprland.enable = true;
+        hyprlock.enable = true;
+        hyprpaper.enable = false;
+        mako.enable = true;
+        rofi.enable = true;
+        wofi.enable = true;
+        */
       };
     };
 
@@ -308,20 +327,26 @@ in {
 
       greetd = {
         enable = true;
-        package = lib.mkIf (!config.programs.regreet.enable) pkgs.greetd.tuigreet;
+        package = (if (config.programs.regreet.enable) then
+          pkgs.greetd.regreet
+        else
+          pkgs.greetd.tuigreet
+        );
         settings = let
           hyprApps = cfg.hyprApps;
         in {
-          # Auto login
-          default_session = config.services.greetd.settings.initial_session;
-          initial_session = {
-            command = if (config.programs.regreet.enable)
+          default_session = {
+            command = (if (config.programs.regreet.enable) then
               # Regreet
-              then "${hyprApps.hyprland}"
+              "${hyprApps.hyprland}"
+            else
               # Tuigreet
-              else "${hyprApps.tuigreet} --asterisks --remember --remember-user-session --time --cmd ${hyprApps.hyprland}";
+              "${hyprApps.tuigreet} --asterisks --remember --remember-user-session --time --cmd ${hyprApps.hyprland}"
+            );
             user = myUser;
           };
+          # Auto login
+          #initial_session = config.services.greetd.settings.default_session;
         };
       };
 
@@ -329,6 +354,23 @@ in {
         enable = true;
         package = pkgs.hypridle;
       };
+    };
+
+    stylix = {
+      fonts = {
+        sansSerif = {
+          #name = "";
+          #package = ;
+        };
+        serif = config.stylix.fonts.sansSerif;
+        sizes = {
+          #applications = 10;
+          #desktop = 10;
+          #popups = 10;
+          #terminal = 14;
+        };
+      };
+      #targets.regreet.enable = false;
     };
 
     xdg.portal = {

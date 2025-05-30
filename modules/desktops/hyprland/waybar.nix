@@ -50,7 +50,7 @@ in {
               "keyboard-state"
               #"custom/cliphist"
               "tray"
-              ] ++ lib.optionals (config.bluetooth.enable) [ "bluetooth" ] ++ [
+              ] ++ lib.optionals (config.hardware.bluetooth.enable) [ "bluetooth" ] ++ [
               "wireplumber"
               "network"
               "group/battery"
@@ -177,7 +177,7 @@ in {
             };
 
             # Bluetooth
-            "bluetooth" = lib.mkIf (config.bluetooth.enable) {
+            "bluetooth" = lib.mkIf (config.hardware.bluetooth.enable) {
               format-disabled = "";
               format-off = "󰂲";
               format_on = "󰂯";
@@ -372,6 +372,8 @@ in {
           }
         '';
       };
+
+      #stylix.targets.waybar.enable = true;
     };
   };
 }

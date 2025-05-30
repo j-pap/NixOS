@@ -3,8 +3,8 @@
 
   inputs = {
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    # Pin cachyos to 6.13.7 until testing with 6.14.X
-    #chaotic.url = "github:chaotic-cx/nyx/4d79ffe0f2da2875dcd55d48ca7710e404b70795";
+    # Pin cachyos to 6.14.8 until testing with 6.15.x
+    #chaotic.url = "github:chaotic-cx/nyx/7b20daf110d06962ee99114220f2fb98cdc8673d";
     disko.url = "github:nix-community/disko";
     framework-plymouth.url = "github:j-pap/framework-plymouth";
     hardware.url = "github:nixos/nixos-hardware";
@@ -153,6 +153,7 @@
       }
       inputs.nur.modules.nixos.default
       inputs.sops-nix.nixosModules.sops
+      inputs.stylix.nixosModules.stylix
     ];
 
     system = "x86_64-linux";  # Used for inheriting nixpkgs-stable and declaring outputs.packages

@@ -10,6 +10,7 @@
 }: let
   cfg = cfgOpts.desktops.cosmic;
 
+  profileImg = ../../assets/profile.png;
   cursor = {
     # Variants: Bibata-(Modern/Original)-(Amber/Classic/Ice)
     name = "Bibata-Modern-Classic";
@@ -26,7 +27,6 @@
     # teal violet white yaru yellow
     package = pkgs.papirus-icon-theme.override { color = "violet"; };
   };
-  profileImg = ../../assets/profile.png;
   wallpaper = {
     day = "${nixPath}/assets/wallpapers/blobs-l.png";
     night = "${nixPath}/assets/wallpapers/blobs-d.png";
@@ -39,8 +39,8 @@ in {
   config = lib.mkIf (cfg.enable) {
     environment.systemPackages = [
     # Theming
-      cursor.package      # For GDM
-      icon.package        # Icon theme
+      #cursor.package      # Cursor theme
+      #icon.package        # Icon theme
     ] ++ builtins.attrValues {
       inherit (pkgs)
       # Text
@@ -64,6 +64,24 @@ in {
       xserver.enable = true;
     };
 
+    stylix.fonts = {
+      sansSerif = {
+        #name = "";
+        #package = ;
+      };
+      serif = config.stylix.fonts.sansSerif;
+      sizes = {
+        #applications = 10;
+        #desktop = 10;
+        #popups = 10;
+        #terminal = 14;
+      };
+    };
+
+    xdg.portal.extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+
     home-manager.users.${myUser} = {
       # Sets profile image
       home.file.".face".source = profileImg;
@@ -75,6 +93,7 @@ in {
           audio = [ "com.system76.CosmicPlayer.desktop" ];
           browser = [ "${cfgOpts.browser}.desktop" ];
           #calendar = [ "thunderbird.desktop" ];
+          connect = [ "" ];
           #email = [ "thunderbird.desktop" ];
           image = [ "org.gnome.eog.desktop" ];
           pdf = [ "org.gnome.Evince.desktop" ];
@@ -90,9 +109,5 @@ in {
         defaultApplications = import ./mimeapps.nix { inherit mime; };
       };
     };
-
-    xdg.portal.extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-    ];
   };
 }

@@ -11,7 +11,7 @@
   stylix = config.stylix.enable;
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
 in {
-  imports = [ inputs.spicetify-nix.nixosModules.spicetify ];
+  #imports = [ inputs.spicetify-nix.nixosModules.spicetify ];
 
   options.myOptions.spicetify.enable = lib.mkEnableOption "Spicetify";
 
@@ -37,6 +37,9 @@ in {
         dark.configuration.programs.spicetify.colorScheme = lib.mkForce "CatppuccinMocha";
         light.configuration.programs.spicetify.colorScheme = lib.mkForce "CatppuccinLatte";
       };
+
+      # Disabled to troubleshoot
+      #stylix.targets.spicetify.enable = true;
     };
 
     /*

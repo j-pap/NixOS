@@ -160,6 +160,26 @@ in {
       udev.packages = [ pkgs.gnome-settings-daemon ];
     };
 
+    stylix = {
+      fonts = {
+        sansSerif = {
+          name = "Cantarell Bold";
+          package = pkgs.cantarell-fonts;
+        };
+        serif = config.stylix.fonts.sansSerif;
+        sizes = {
+          applications = 11;
+          desktop = 11;
+          popups = 11;
+          terminal = 15;
+        };
+      };
+      targets = {
+        gnome.enable = false;
+        #gnome-text-editor.enable = true;  # Throws assertion about nixpkgs/useGlobalPkgs
+      };
+    };
+
     # Workaround to display profile image at login screen
     system.activationScripts.showProfileImage.text = ''
       mkdir -p /var/lib/AccountsService/{icons,users}
@@ -507,6 +527,11 @@ in {
         };
       };
       */
+
+      stylix.targets = {
+        gnome.enable = true;
+        #gnome-text-editor.enable = true;  # Throws assertion about nixpkgs/useGlobalPkgs
+      };
 
       xdg = {
         # Set Nautilus bookmarks

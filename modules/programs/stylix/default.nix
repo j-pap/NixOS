@@ -20,8 +20,6 @@
     light = cfg.wallpaper.light;
   };
 in {
-  imports = [ inputs.stylix.nixosModules.stylix ];
-
   options.myOptions.stylix = {
     enable = lib.mkEnableOption "Stylix";
     theme = {
@@ -79,40 +77,20 @@ in {
         size = 24;
       };
 
-      fonts = lib.mkMerge [
-        {
-          monospace = {
-            name = "Iosvmata";
-            package = pkgs.nur.repos.nykma.font-iosvmata;
-          };
+      fonts = {
+        monospace = {
+          name = "Iosvmata";
+          package = pkgs.callPackage ../../../pkgs/fonts/iosvmata.nix { };
+          #package = pkgs.nur.repos.nykma.font-iosvmata;
+        };
 
-          sizes = lib.mkDefault {
-            #applications = 12;
-            #desktop = 10;
-            #popups = 10;
-            terminal = 14;
-          };
-        }
-
-        #(lib.mkIf (cfgOpts.desktops.cosmic.enable) { })
-
-        (lib.mkIf (cfgOpts.desktops.gnome.enable) {
-          sansSerif = {
-            name = "Cantarell Bold";
-            package = pkgs.cantarell-fonts;
-          };
-          serif = config.stylix.fonts.sansSerif;
-          sizes = {
-            applications = 11;
-            desktop = 11;
-            popups = 11;
-            terminal = 15;
-          };
-        })
-
-        #(lib.mkIf (cfgOpts.desktops.hyprland.enable) { })
-        #(lib.mkIf (cfgOpts.desktops.kde.enable) { })
-      ];
+        sizes = lib.mkDefault {
+          #applications = 12;
+          #desktop = 10;
+          #popups = 10;
+          terminal = 14;
+        };
+      };
 
       opacity = {
         #applications = 1.0;
@@ -122,53 +100,18 @@ in {
       };
 
       targets = {
-        console.enable = true;  # Linux kernel console
-        gnome.enable = false;
-        #gnome-text-editor.enable = true;  # Throws an assertion about nixpkgs/useGlobalPkgs
+        console.enable = true;  # TTY
         gtk.enable = true;
         #qt.enable = true;
-        #regreet.enable = false;
       };
     };
 
     home-manager.users.${myUser} = {
       stylix.targets = {
-        bat.enable = true;
-        btop.enable = true;
-        ${cfgOpts.browser} = {  # Disabled as Floorp looks strange with Stylix applied
-          enable = false;
-          colorTheme.enable = false;
-          firefoxGnomeTheme.enable = false;
-          profileNames = [ "${myUser}" ];
-        };
-        gnome.enable = true;
-        #gnome-text-editor.enable = true;  # Throws an assertion about nixpkgs/useGlobalPkgs
         gtk.enable = true;
         #helix.enable = true;
-        #hyprland.enable = true;
-        #hyprlock.enable = true;
-        #hyprpaper.enable = true;
-        #kde.enable = true;
-        kitty.enable = true;
-        #mako.enable = true;
-        mangohud.enable = true;
-        nixvim = {
-          enable = true;
-          plugin = "base16-nvim";
-          transparentBackground = {
-            main = true;
-            signColumn = false;
-          };
-        };
         #qt.enable = true;
-        #rofi.enable = true;
-        #spicetify.enable = true; # Disabled to troubleshoot
         #tmux.enable = true;
-        #waybar.enable = true;
-        wezterm.enable = true;
-        #wofi.enable = true;
-        yazi.enable = true;
-        zathura.enable = true;
         #zellij.enable = true;
       };
 

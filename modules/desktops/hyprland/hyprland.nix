@@ -92,17 +92,11 @@ in {
 
           # https://wiki.hyprland.org/Configuring/Variables/#decoration
           decoration = {
-            drop_shadow = true;
-
             # Change transparency of focused and unfocused windows
             active_opacity = 0.9;
             inactive_opacity = 0.75;
 
             rounding = 10;
-
-            shadow_range = 4;
-            shadow_render_power = 3;
-            "col.shadow" = "rgba(1a1a1aee)";
 
             # https://wiki.hyprland.org/Configuring/Variables/#blur
             blur = {
@@ -111,6 +105,12 @@ in {
               passes = 1;
               size = 3;
               vibrancy = 0.1696;
+            };
+
+            shadow = {
+              color = "rgba(1a1a1aee)";
+              range = 4;
+              render_power = 3;
             };
           };
 

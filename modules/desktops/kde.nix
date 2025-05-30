@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   cfgHosts,
@@ -130,6 +131,20 @@ in {
       };
 
       xserver.enable = true;
+    };
+
+    stylix.fonts = {
+      sansSerif = {
+        name = "Noto Sans";
+        package = pkgs.noto-fonts;
+      };
+      serif = config.stylix.fonts.sansSerif;
+      sizes = {
+        applications = 10;
+        desktop = 10;
+        popups = 10;
+        #terminal = 14;
+      };
     };
 
     # Workaround to display profile image at login screen
@@ -420,10 +435,10 @@ in {
 
           shortcuts = {
             "ksmserver" = {
-              "Lock Session" = (
-                if (polo)
-                  then "Ctrl+Alt+L"
-                else "Meta+L"
+              "Lock Session" = (if (polo) then
+                "Ctrl+Alt+L"
+              else
+                "Meta+L"
               );
               "Log Out" = "Ctrl+Alt+Del"; # Show Logout Screen
               #"Log Out W/O Confirmation" = ""; # Log Out W/O Confirmation
@@ -435,10 +450,10 @@ in {
               "PoloniumFocusAbove" = "Meta+K";
               "PoloniumFocusBelow" = "Meta+J";
               "PoloniumFocusLeft" = "Meta+H";
-              "PoloniumFocusRight" = (
-                if (polo)
-                  then "Meta+L"
-                else ""
+              "PoloniumFocusRight" = (if (polo) then
+                "Meta+L"
+              else
+                ""
               );
               "PoloniumInsertAbove" = "Meta+Shift+K";
               "PoloniumInsertBelow" = "Meta+Shift+J";
@@ -539,6 +554,8 @@ in {
           plasma_wallpaper = "${plasma.wallpaper} ${wallpaper.light}";
         };
       };
+
+      #stylix.targets.kde.enable = true;
 
       xdg = {
         # Set Haruna settings, since there is no HM module

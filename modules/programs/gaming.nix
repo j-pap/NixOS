@@ -8,6 +8,7 @@
   ...
 }: let
   cfg = cfgOpts.gaming;
+  stylix = config.stylix.enable;
 in {
   options.myOptions.gaming.enable = lib.mkEnableOption "Gaming";
 
@@ -27,10 +28,10 @@ in {
         '';
 
         lutris-pkg = pkgs.lutris.override {
-          extraLibraries = pkgs: (
-            if (pkgs.hostPlatform.is64bit)
-              then config.hardware.graphics.extraPackages
-            else config.hardware.graphics.extraPackages32
+          extraLibraries = pkgs: (if (pkgs.hostPlatform.is64bit) then
+            config.hardware.graphics.extraPackages
+          else
+            config.hardware.graphics.extraPackages32
           );
           extraPkgs = pkgs: builtins.attrValues {
             inherit (pkgs)
@@ -89,14 +90,14 @@ in {
           gpu_stats = true;
           gpu_load_change = true;
           gpu_load_value = "50,90";
-          gpu_load_color = lib.mkDefault "FFFFFF,FFAA7F,CC0000";
+          gpu_load_color = lib.mkIf (!stylix) "FFFFFF,FFAA7F,CC0000";
           gpu_temp = true;
           gpu_power = true;
           cpu_text = "CPU";
           cpu_stats = true;
           cpu_load_change = true;
           cpu_load_value = "50,90";
-          cpu_load_color = lib.mkDefault "FFFFFF,FFAA7F,CC0000";
+          cpu_load_color = lib.mkIf (!stylix) "FFFFFF,FFAA7F,CC0000";
           cpu_temp = true;
           cpu_power = true;
           vram = true;
@@ -118,6 +119,8 @@ in {
           toggle_hud = "Shift_R+F12";
         };
       };
+
+      stylix.targets.mangohud.enable = true;
     };
 
     programs = {
@@ -131,14 +134,10 @@ in {
           #custom.start = "${lib.getExe pkgs.libnotify} -a 'GameMode' -i 'input-gaming' 'GameMode Activated'";
           #custom.end = "${lib.getExe pkgs.libnotify} -a 'GameMode' -i 'input-gaming' 'GameMode Deactivated'";
           general = {
-            # Prevents errors when screensaver not installed
-            inhibit_screensaver = 0;
-            # Game process priority
-            renice = 20;
-            # Reaper checks every 5 secs for updates
-            reaper_freq = 5;
-            # Scheduler policy
-            softrealtime = "auto";
+            inhibit_screensaver = 0;  # Prevents errors when screensaver not installed
+            renice = 20;  # Game process priority
+            reaper_freq = 5;  # Reaper checks every 5 secs for updates
+            softrealtime = "auto";  # Scheduler policy
           };
         };
       };
