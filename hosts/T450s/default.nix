@@ -24,8 +24,8 @@
 
   myOptions = {
     desktops = {
-      cosmic.enable = true;
-      hyprland.enable = false;
+      cosmic.enable = false;
+      hyprland.enable = true;
     };
 
     hardware.bluetooth.enable = false;
