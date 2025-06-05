@@ -104,13 +104,15 @@ in {
       variables.GSK_RENDERER = "gl";
     };
 
+    /*
     nixpkgs.overlays = lib.mkIf (cfgOpts.git.ssh.enable && cfgOpts."1password".enable) [
       (final: prev: {
         gnome-keyring = prev.gnome-keyring.overrideAttrs (oldAttrs: {
-          configureFlags = (builtins.filter (flag: flag != "--enable-ssh-agent") oldAttrs.configureFlags) ++ [ "--disable-ssh-agent" ];
+          mesonFlags = (builtins.filter (flag: flag != "--enable-ssh-agent") oldAttrs.mesonFlags) ++ [ "--disable-ssh-agent" ];
         });
       })
     ];
+    */
 
     programs = {
       kdeconnect = {
@@ -144,33 +146,30 @@ in {
     security.pam.services.gdm.enableGnomeKeyring = true;
 
     services = {
+      desktopManager.gnome.enable = true;
+      displayManager.gdm.enable = true;
+
       gnome = {
         gnome-browser-connector.enable = true;
         gnome-keyring.enable = true;
         sushi.enable = true;
       };
 
-      xserver = {
-        enable = true;
-        desktopManager.gnome.enable = true;
-        displayManager.gdm.enable = true;
-      };
-
       # Enable additional systray icons
       udev.packages = [ pkgs.gnome-settings-daemon ];
+
+      xserver.enable = true;
     };
 
     stylix = {
       fonts = {
         monospace = {
-          #name = "Adwaita Mono";
-          #package = pkgs.adwaita-fonts;
+          name = "Adwaita Mono Regular";
+          package = pkgs.adwaita-fonts;
         };
         sansSerif = {
-          name = "Cantarell Bold";
-          package = pkgs.cantarell-fonts;
-          #name = "Adwaita Sans";
-          #package = pkgs.adwaita-fonts;
+          name = "Adwaita Sans Regular";
+          package = pkgs.adwaita-fonts;
         };
         serif = config.stylix.fonts.sansSerif;
         sizes = {
@@ -505,10 +504,12 @@ in {
           package = cursor.package;
           size = cursor.size;
         };
+        /*  # Disable custom icons
         iconTheme = {
           name = icon.name;
           package = icon.package;
         };
+        */
       };
 
       home.file = {
