@@ -76,6 +76,9 @@ in {
       s2idle                  # Environment for suspend testing | 's2idle ./amd_s2idle.py'
     ] ++ builtins.attrValues {
       inherit (pkgs)
+      # Browser
+        brave                 # Alt
+
       # Communication
         discord               # Discord
         signal-desktop        # Signal
@@ -92,6 +95,7 @@ in {
 
       # Multimedia
         #mpv                  # Media player
+        jellyfin-media-player # Jellyfin client
         picard                # Music tagger
         pocket-casts          # Podcast player
         tauon                 # Music player
