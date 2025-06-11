@@ -89,11 +89,11 @@ in {
         # Don't show the mode, since it's already in the status line
         showmode = false;
 
-        # Enable break indent
+        # Indentation
         breakindent = true;
-
-        # Indent spacing
         smartindent = true;
+        expandtab = true;
+        softtabstop = 2;
         tabstop = 2;
         shiftwidth = 2;
 

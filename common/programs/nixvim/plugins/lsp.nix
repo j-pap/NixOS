@@ -60,8 +60,8 @@ in {
             ];
             #rootDir = "require('lspconfig.util').root_pattern('flake.nix', '.git')";
             rootMarkers = [
+              #".git"
               "flake.nix"
-              ".git"
             ];
             settings = {
               formatting.command = [
