@@ -166,6 +166,17 @@ in {
     };
 
     home-manager.users.${myUser} = {
+      programs = {
+        # `echo "use nix" >> .envrc && direnv allow`
+        direnv = {
+          enable = true;
+          config = { }; # ~/direnv/direnv.toml
+          enableBashIntegration = true;
+          nix-direnv.enable = true;
+          silent = false;
+          stdlib = "";  # ~/direnv/direnvrc
+        };
+      };
       xdg.userDirs.createDirectories = true;
     };
 
@@ -231,15 +242,7 @@ in {
       };
     };
 
-    programs = {
-      dconf.enable = true;
-      /*
-      direnv = {
-        enable = true;
-        enableBashIntegration = true;
-        nix-direnv.enable = true;
-      };*/
-    };
+    programs.dconf.enable = true;
 
     security = {
       polkit.enable = true;
