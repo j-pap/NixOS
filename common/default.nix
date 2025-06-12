@@ -214,7 +214,7 @@ in {
       };
       nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
       optimise.automatic = true;
-      package = pkgs.nixVersions.nix_2_24;
+      #package = pkgs.nixVersions.nix_2_24;
       registry = {
         nixpkgs.flake = inputs.nixpkgs;
         stable.flake = inputs.nixpkgs-stable;
@@ -227,7 +227,16 @@ in {
           "nix-command"
         ];
         extra-builtins-file = "${nixPath}/libs/extra-builtins.nix";
-        plugin-files = [ "${pkgs.nix-plugins}/lib/nix/plugins" ];
+        plugin-files = [
+          #"${pkgs.nix-plugins}/lib/nix/plugins"
+          "${pkgs.nix-plugins.overrideAttrs (o: {
+            buildInputs = [
+              pkgs.nixVersions.latest
+              pkgs.boost
+            ];
+            patches = (o.patches or [ ]) ++ [ ../libs/nix-plugins.patch ];
+          })}/lib/nix/plugins"
+        ];
         substituters = [
           "https://cosmic.cachix.org/"
           "https://nix-community.cachix.org"
