@@ -10,6 +10,7 @@
   userName = config.users.users.${myUser}.description;
 
   hostName = config.networking.hostName;
+  #dohProvider = "https://dns.quad9.net/dns-query";
   dohProvider = (if (hostName == "Ridge" || hostName == "T1" || hostName == "VM") then
     nix-secrets.dns.doh.int
   else
