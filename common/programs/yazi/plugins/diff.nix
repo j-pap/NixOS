@@ -5,7 +5,7 @@
   pluginName = "diff";
 in {
   programs.yazi = {
-    keymap.manager.prepend_keymap = [
+    keymap.mgr.prepend_keymap = [
       {
         desc = "Diff the selected w/ the hovered file";
         on = "<C-d>";

@@ -5,7 +5,7 @@
   pluginName = "jump-to-char";
 in {
   programs.yazi = {
-    keymap.manager.prepend_keymap = [
+    keymap.mgr.prepend_keymap = [
       {
         desc = "Jump to char";
         on = "f";

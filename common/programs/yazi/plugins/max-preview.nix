@@ -5,7 +5,7 @@
   pluginName = "max-preview";
 in {
   programs.yazi = {
-    keymap.manager.prepend_keymap = [
+    keymap.mgr.prepend_keymap = [
       {
         desc = "Maximize or restore preview";
         on = "T";

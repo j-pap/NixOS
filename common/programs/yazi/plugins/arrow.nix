@@ -2,7 +2,7 @@ let
   pluginName = "arrow";
 in {
   # File navigation wraparound
-  programs.yazi.keymap.manager.prepend_keymap = [
+  programs.yazi.keymap.mgr.prepend_keymap = [
     # Wrap to top
     {
       on = "j";
@@ -21,7 +21,7 @@ in {
       entry = function(_, job)
         local current = cx.active.current
         local new = (current.cursor + job.args[1]) % #current.files
-        ya.manager_emit("arrow", { new - current.cursor })
+        ya.emit("arrow", { new - current.cursor })
       end,
     }
   '';

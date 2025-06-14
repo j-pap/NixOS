@@ -1,6 +1,6 @@
 {
   imports = [
-    ./arrow.nix
+    #./arrow.nix
     ./chmod.nix
     #./confirm-quit.nix
     ./diff.nix

@@ -5,7 +5,7 @@
   pluginName = "chmod";
 in {
   programs.yazi = {
-    keymap.manager.prepend_keymap = [
+    keymap.mgr.prepend_keymap = [
       {
         desc = "Chmod on selected files";
         on = [ "c" "m" ];

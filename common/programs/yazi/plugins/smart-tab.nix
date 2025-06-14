@@ -1,7 +1,7 @@
 let
   pluginName = "smart-tab";
 in {
-  programs.yazi.keymap.manager.prepend_keymap = [
+  programs.yazi.keymap.mgr.prepend_keymap = [
     {
       desc = "Create a tab and enter the hovered directory";
       on = "t";
@@ -14,7 +14,7 @@ in {
     return {
       entry = function()
         local h = cx.active.current.hovered
-        ya.manager_emit("tab_create", h and h.cha.is_dir and { h.url } or { current = true })
+        ya.emit("tab_create", h and h.cha.is_dir and { h.url } or { current = true })
       end,
     }
   '';

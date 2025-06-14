@@ -64,7 +64,7 @@ in {
           }
         ];
 
-        manager.prepend_keymap = [
+        mgr.prepend_keymap = [
           # Open a shell in pwd
           {
             desc = "Open shell here";
@@ -112,7 +112,7 @@ in {
       settings = {
         input.cursor_blink = true;
 
-        manager = {
+        mgr = {
           show_symlink = true;
           sort_by = "natural";
           sort_dir_first = true;

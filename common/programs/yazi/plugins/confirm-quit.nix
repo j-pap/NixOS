@@ -2,7 +2,7 @@ let
   pluginName = "confirm-quit";
 in {
   # Confirm before quitting if multiple tabs are open
-  programs.yazi.keymap.manager.prepend_keymap = [
+  programs.yazi.keymap.mgr.prepend_keymap = [
     # Reverse q/Q actions
     {
       desc = "Quit the process w/o outputting cwd-file";
@@ -19,18 +19,18 @@ in {
   xdg.configFile."yazi/plugins/${pluginName}.yazi/main.lua".text = ''
     local count = ya.sync(function() return #cx.tabs end)
 
-    local function entry(_, job)
+    local function entry()
       if count() < 2 then
-        return ya.mgr_emit("quit", { job.args[1] })
+        return ya.emit("quit", {})
       end
 
       local yes = ya.confirm {
         pos = { "center", w = 60, h = 10 },
         title = "Quit?",
-        content = ui.Text("There are multiple tabs open. Are you sure you want to quit?"):wrap(ui.Text.WRAP),
+        content = ui.Text("There are multiple tabs open. Are you sure you want to quit?"):wrap(ui.Wrap.YES),
       }
       if yes then
-        ya.mgr_emit("quit", { job.args[1] })
+        ya.emit("quit", {})
       end
     end
 
