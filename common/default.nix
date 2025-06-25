@@ -226,7 +226,8 @@ in {
           "flakes"
           "nix-command"
         ];
-        extra-builtins-file = "${nixPath}/libs/extra-builtins.nix";
+        #extra-builtins-file = "${nixPath}/libs/extra-builtins.nix";
+        extra-builtins-file = ../libs/extra-builtins.nix;
         plugin-files = [
           #"${pkgs.nix-plugins}/lib/nix/plugins"
           "${pkgs.nix-plugins.overrideAttrs (o: {
