@@ -6,6 +6,10 @@
     # Pin cachyos to 6.14.8 until testing with 6.15.x
     chaotic.url = "github:chaotic-cx/nyx/7b20daf110d06962ee99114220f2fb98cdc8673d";
     disko.url = "github:nix-community/disko";
+    flake-programs-sqlite = {
+      url = "github:wamserma/flake-programs-sqlite";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     framework-plymouth.url = "github:j-pap/framework-plymouth";
     hardware.url = "github:nixos/nixos-hardware";
     home-manager = {
@@ -144,6 +148,7 @@
       ./common
       ./hosts/${hostName}
       inputs.disko.nixosModules.disko
+      inputs.flake-programs-sqlite.nixosModules.programs-sqlite
       inputs.home-manager.nixosModules.home-manager {
         home-manager = {
           extraSpecialArgs = specialArgs;

@@ -16,6 +16,7 @@
       "fishy" = "asciiquarium";
       "ll" = "ls -la";
       "nix-diff" = "nixos-rebuild build && nix store diff-closures /run/current-system ./result";
+      "nix-find" = "command-not-found \"$@\"";
     };
   };
 }
