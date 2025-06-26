@@ -19,10 +19,11 @@
             type = "filesystem";
             format = "vfat";
             mountpoint = "/boot";
+            mountOptions = [ "umask=0077" ];
           };
         };
 
-        luks = {
+        LUKS = {
           label = "root";
           size = "100%";
           content = {
