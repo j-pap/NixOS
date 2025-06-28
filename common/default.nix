@@ -166,16 +166,20 @@ in {
     };
 
     home-manager.users.${myUser} = {
-      programs = {
-        # `echo "use nix" >> .envrc && direnv allow`
-        direnv = {
-          enable = true;
-          config = { }; # ~/direnv/direnv.toml
-          enableBashIntegration = true;
-          nix-direnv.enable = true;
-          silent = false;
-          stdlib = "";  # ~/direnv/direnvrc
-        };
+      # `echo "use nix" >> .envrc && direnv allow`
+      programs.direnv = {
+        enable = true;
+        config = { }; # ~/direnv/direnv.toml
+        enableBashIntegration = true;
+        nix-direnv.enable = true;
+        silent = false;
+        stdlib = "";  # ~/direnv/direnvrc
+      };
+      # Auto shell rebuild upon .nix change
+      services.lorri = {
+        enable = true;
+        enableNotifications = false;
+        nixPackage = config.nix.package;
       };
       xdg.userDirs.createDirectories = true;
     };
