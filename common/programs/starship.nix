@@ -33,6 +33,7 @@
       $aws\
       $azure\
       $c\
+      $cpp\
       $cmake\
       $direnv\
       $gcloud\
@@ -49,27 +50,30 @@
       $container\
       $docker_context\
       $kubernetes\
+      $helm\
       $cmd_duration\
+      $fill\
       $time
       $character
       """
 
       [os]
-      format = "[$symbol](bold)  "
+      format = "[$symbol]($style) "
+      style = "bold"
       disabled = false
 
       [os.symbols]
-      Alpine = ""
-      Arch = ""
-      CentOS = ""
-      Debian = ""
-      Fedora = ""
-      Linux = ""
-      NixOS = ""
-      openSUSE = ""
-      Redhat = ""
-      RedHatEnterprise = ""
-      SUSE = ""
+      Alpine = " "
+      Arch = " "
+      CentOS = " "
+      Debian = " "
+      Fedora = " "
+      Linux = " "
+      NixOS = " "
+      openSUSE = " "
+      Redhat = "󱄛 "
+      RedHatEnterprise = "󱄛 "
+      SUSE = " "
 
       [sudo]
       format = "[$symbol]($style)"
@@ -129,6 +133,10 @@
       format = "[|](bold bright-blue) took [$duration]($style) "
       style = "bright-white"
 
+      [fill]
+      symbol = " "
+      disabled = true
+
       [time]
       format = "[|](bold bright-blue) 󰅐 [$time]($style)"
       style = ""
@@ -146,19 +154,24 @@
       symbol = "az "
 
       [c]
-      symbol = "C "
+      symbol = "c "
+
+      [cpp]
+      symbol = "c++ "
 
       [cmake]
       symbol = "cmake "
 
       [container]
-      symbol = "⬢"
+      symbol = " "
 
       [direnv]
       symbol = "direnv "
+      style = "bold white"
+      disabled = false
 
       [docker_context]
-      symbol = "docker "
+      symbol = "󰡨 "
 
       [gcloud]
       symbol = "gcp "
@@ -166,18 +179,21 @@
       [golang]
       symbol = "go "
 
+      [helm]
+      symbol = " "
+
       [java]
       symbol = "java "
 
       [kubernetes]
-      symbol = "kube "
-      #disabled = false
+      symbol = "󱃾 "
+      disabled = true
 
       [lua]
       symbol = "lua "
 
       [nix_shell]
-      symbol = "nix-shell "
+      symbol = "nix sh "
 
       [nodejs]
       symbol = "nodejs "
@@ -192,7 +208,7 @@
       symbol = "rs "
 
       [terraform]
-      symbol = "terraform "
+      symbol = "tf "
 
       [zig]
       symbol = "zig "
