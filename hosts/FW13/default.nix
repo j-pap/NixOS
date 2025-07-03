@@ -166,8 +166,8 @@ in {
       fwRepo = pkgs.fetchFromGitHub {
         owner = "FrameworkComputer";
         repo = "linux-docs";
-        rev = "c8be8145fb9d8b45d6ec5949ade81998b7f755ff";
-        sha256 = "sha256-6V1wEr1Q2p3ndJMMxd+XdcvC088YL9T+XpYdcZJ1ySE=";
+        rev = "5f840849623f019b433e5c9d9e8a7d4c55add809";
+        sha256 = "sha256-cfP2Ykrcxylesl/cuKDSj6XcVPE51CDCT+0sC01iFBg=";
       };
     in {
       "autostart/ProtonMailBridge.desktop".text = lib.strings.concatLines [
@@ -188,11 +188,7 @@ in {
         "X-GNOME-Autostart-enabled=true"
       ];
 
-      "easyeffects/output/${easyPreset}.json".text = (lib.strings.replaceStrings
-        [ "\"kernel-path\": \"%CFG%/irs/IR_22ms_27dB_5t_15s_0c.irs\"," ]
-        [ "\"kernel-name\": \"IR_22ms_27dB_5t_15s_0c\"," ]
-        (lib.strings.fileContents (fwRepo + "/easy-effects/${easyPreset}.json"))
-      );
+      "easyeffects/output/${easyPreset}.json".source = fwRepo + "/easy-effects/${easyPreset}.json";
       "easyeffects/irs/IR_22ms_27dB_5t_15s_0c.irs".source = fwRepo + "/easy-effects/irs/IR_22ms_27dB_5t_15s_0c.irs";
 
       # Set GNOME fractional scaling
