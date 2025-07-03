@@ -100,17 +100,11 @@
       specialArgs = let
         cfgTerm = "kitty";  # kitty or wezterm
         nixPath = "/etc/nixos";
-        nix-secrets = (
-          assert nixpkgs.lib.assertMsg (builtins ? extraBuiltins.readSops)
-            "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.extra-builtins-file' is defined correctly.";
-          builtins.extraBuiltins.readSops ./secrets/eval-secrets.nix
-        );
       in {
         inherit
         inputs
         cfgTerm
         nixPath
-        nix-secrets
         ;
       };
     in nixpkgs.lib.nixosSystem {

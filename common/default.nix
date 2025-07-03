@@ -26,6 +26,14 @@ in {
   config = {
     myOptions.${cfgTerm}.enable = true;
 
+    _module.args = {
+      nixSecrets = (
+        assert lib.assertMsg (builtins ? extraBuiltins.readSops)
+          "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.extra-builtins-file' is defined correctly.";
+        builtins.extraBuiltins.readSops ../secrets/eval-secrets.nix
+      );
+    };
+
     boot = {
       # Prioritize swap for hibernation only
       kernel.sysctl."vm.swappiness" = lib.mkDefault 0;
@@ -230,10 +238,11 @@ in {
           "flakes"
           "nix-command"
         ];
-        #extra-builtins-file = "${nixPath}/libs/extra-builtins.nix";
-        extra-builtins-file = ../libs/extra-builtins.nix;
+        #extra-builtins-file = [ "${nixPath}/libs/extra-builtins.nix" ];
+        #extra-builtins-file = [ ../libs/extra-builtins.nix ];
+        extra-builtins-file = [ "${inputs.self}/libs/extra-builtins.nix" ];
+        #extra-builtins-file = [ "${./..}/libs/extra-builtins.nix" ];
         plugin-files = [
-          #"${pkgs.nix-plugins}/lib/nix/plugins"
           "${pkgs.nix-plugins.overrideAttrs (o: {
             buildInputs = [
               pkgs.nixVersions.latest
