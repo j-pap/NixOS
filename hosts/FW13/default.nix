@@ -316,11 +316,14 @@ in {
     extraModulePackages = [
       fw-usbpd-charger  # Taints kernel when debugging w/ amd_s2idle
     ];
-    kernelModules = [ "nfs" ];
+    kernelModules = [
+      "dummy" # Wireguard fix - https://github.com/ProtonVPN/proton-vpn-gtk-app/issues/57#issuecomment-2994148066
+      "nfs"
+    ];
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "amd_iommu=off" # Fixes VP9/VAAPI video glitches
-      #"ipv6.disable=1" # Currently breaks wireguard in protonvpn-gui
+      "ipv6.disable=1"
       "quiet"
     ];
 
