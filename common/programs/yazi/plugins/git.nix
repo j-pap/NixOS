@@ -1,5 +1,5 @@
 {
-  inputs,
+  pkgs,
   ...
 }: let
   pluginName = "git";
@@ -18,18 +18,18 @@ in {
       ---th.git.updated_sign = ""
     '';
 
-    plugins.${pluginName} = inputs.yazi-plugins + "/${pluginName}.yazi";
+    plugins.${pluginName} = pkgs.yaziPlugins."${pluginName}";
 
     settings.plugin.prepend_fetchers = [
       {
         id = "git";
         name = "*";
-        run = pluginName;
+        run = "${pluginName}";
       }
       {
         id = "git";
         name = "*/";
-        run = pluginName;
+        run = "${pluginName}";
       }
     ];
   };

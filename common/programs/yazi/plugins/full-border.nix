@@ -1,5 +1,5 @@
 {
-  inputs,
+  pkgs,
   ...
 }: let
   pluginName = "full-border";
@@ -12,6 +12,6 @@ in {
       }
     '';
 
-    plugins.${pluginName} = inputs.yazi-plugins + "/${pluginName}.yazi";
+    plugins.${pluginName} = pkgs.yaziPlugins."${pluginName}";
   };
 }

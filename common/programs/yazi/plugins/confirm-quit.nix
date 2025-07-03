@@ -3,16 +3,16 @@ let
 in {
   # Confirm before quitting if multiple tabs are open
   programs.yazi.keymap.mgr.prepend_keymap = [
-    # Reverse q/Q actions
-    {
-      desc = "Quit the process w/o outputting cwd-file";
-      on = "q";
-      run = "plugin ${pluginName} --no-cwd-file";
-    }
+    # Reassign 'q' to plugin / leave 'Q' alone
     {
       desc = "Quit the process";
-      on = "Q";
+      on = "q";
       run = "plugin ${pluginName}";
+    }
+    {
+      desc = "Quit the process w/o outputting cwd-file";
+      on = "Q";
+      run = "quit --no-cwd-file";
     }
   ];
 
@@ -27,7 +27,7 @@ in {
       local yes = ya.confirm {
         pos = { "center", w = 60, h = 10 },
         title = "Quit?",
-        content = ui.Text("There are multiple tabs open. Are you sure you want to quit?"):wrap(ui.Wrap.YES),
+        content = ui.Text("Multiple tabs are open. Are you sure you want to quit?"):wrap(ui.Wrap.YES),
       }
       if yes then
         ya.emit("quit", {})

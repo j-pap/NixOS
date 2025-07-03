@@ -1,5 +1,5 @@
 {
-  inputs,
+  pkgs,
   ...
 }: let
   pluginName = "chmod";
@@ -13,6 +13,6 @@ in {
       }
     ];
 
-    plugins.${pluginName} = inputs.yazi-plugins + "/${pluginName}.yazi";
+    plugins.${pluginName} = pkgs.yaziPlugins."${pluginName}";
   };
 }

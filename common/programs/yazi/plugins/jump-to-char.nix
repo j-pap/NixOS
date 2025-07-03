@@ -1,5 +1,5 @@
 {
-  inputs,
+  pkgs,
   ...
 }: let
   pluginName = "jump-to-char";
@@ -18,6 +18,6 @@ in {
       }
     ];
 
-    plugins.${pluginName} = inputs.yazi-plugins + "/${pluginName}.yazi";
+    plugins.${pluginName} = pkgs.yaziPlugins."${pluginName}";
   };
 }
