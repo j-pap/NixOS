@@ -3,10 +3,10 @@
   lib,
   pkgs,
   cfgOpts,
+  cfgPath,
   cfgTerm,
   inputs,
   myUser,
-  nixPath,
   ...
 }: let
   iosvmata = pkgs.callPackage ../pkgs/fonts/iosvmata.nix { };
@@ -261,7 +261,7 @@ in {
           "flakes"
           "nix-command"
         ];
-        #extra-builtins-file = [ "${nixPath}/libs/extra-builtins.nix" ];
+        #extra-builtins-file = [ "${cfgPath}/libs/extra-builtins.nix" ];
         #extra-builtins-file = [ ../libs/extra-builtins.nix ];
         extra-builtins-file = [ "${inputs.self}/libs/extra-builtins.nix" ];
         #extra-builtins-file = [ "${./..}/libs/extra-builtins.nix" ];
@@ -338,7 +338,7 @@ in {
 
     sops = {
       age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      defaultSopsFile = "${nixPath}/secrets/secrets.yaml";
+      defaultSopsFile = "${cfgPath}/secrets/secrets.yaml";
       secrets = {
         "user/password".neededForUsers = true;
         "wifi.env" = { };

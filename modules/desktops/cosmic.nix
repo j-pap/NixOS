@@ -3,9 +3,9 @@
   lib,
   pkgs,
   cfgOpts,
+  cfgPath,
   inputs,
   myUser,
-  nixPath,
   ...
 }: let
   cfg = cfgOpts.desktops.cosmic;
@@ -28,8 +28,8 @@
     package = pkgs.papirus-icon-theme.override { color = "violet"; };
   };
   wallpaper = {
-    day = "${nixPath}/assets/wallpapers/blobs-l.png";
-    night = "${nixPath}/assets/wallpapers/blobs-d.png";
+    day = "${cfgPath}/assets/wallpapers/blobs-l.png";
+    night = "${cfgPath}/assets/wallpapers/blobs-d.png";
   };
 in {
   imports = [ inputs.nixos-cosmic.nixosModules.default ];

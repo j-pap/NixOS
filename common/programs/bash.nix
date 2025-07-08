@@ -1,6 +1,6 @@
 {
+  cfgPath,
   myUser,
-  nixPath,
   ...
 }: {
   home-manager.users.${myUser}.programs.bash = {
@@ -8,7 +8,7 @@
     #initExtra = '''';
     shellAliases = {
       ".." = "cd ..";
-      ".df" = "cd ${nixPath}";
+      ".df" = "cd ${cfgPath}";
       "bonsai" = "cbonsai --screensaver";
       "exifinfo" = "exiftool -a -g -s \"$@\"";
       "exifstrip" = "exiftool -All= \"$@\"";

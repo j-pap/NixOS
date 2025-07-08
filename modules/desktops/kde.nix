@@ -4,10 +4,10 @@
   pkgs,
   cfgHosts,
   cfgOpts,
+  cfgPath,
   cfgTerm,
   inputs,
   myUser,
-  nixPath,
   ...
 }: let
   cfg = cfgOpts.desktops.kde;
@@ -38,9 +38,9 @@
     light = "org.kde.breeze.desktop";
   };
   wallpaper = {
-    dark = "${nixPath}/assets/wallpapers/dark.png";
-    light = "${nixPath}/assets/wallpapers/light.png";
-    sddm = "${nixPath}/assets/wallpapers/login.png";
+    dark = "${cfgPath}/assets/wallpapers/dark.png";
+    light = "${cfgPath}/assets/wallpapers/light.png";
+    sddm = "${cfgPath}/assets/wallpapers/login.png";
   };
   sddm-astronaut-pkg = pkgs.sddm-astronaut.override {
     themeConfig = {

@@ -1,15 +1,15 @@
 {
-  cfgOpts,
   lib,
-  myUser,
-  nixPath,
   pkgs,
+  cfgOpts,
+  cfgPath,
+  myUser,
   ...
 }: let
   cfg = cfgOpts.desktops.hyprland;
 
   wallpaper = {
-    dir = "${nixPath}/assets/wallpapers";
+    dir = "${cfgPath}/assets/wallpapers";
     day = "${wallpaper.dir}/blobs-l.png";
     night = "${wallpaper.dir}/blobs-d.png";
   };

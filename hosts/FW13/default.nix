@@ -3,8 +3,8 @@
   lib,
   pkgs,
   cfgHosts,
+  #cfgPath,
   myUser,
-  #nixPath,
   ...
 }: let
   useFP = true; # Whether or not to enable the fingerprint reader
@@ -53,8 +53,8 @@ in {
     stylix = {
       enable = false;
       wallpaper = {
-        #dark = "${nixPath}/assets/wallpapers/FW13/dark.png";
-        #light = "${nixPath}/assets/wallpapers/FW13/light.png";
+        #dark = "${cfgPath}/assets/wallpapers/FW13/dark.png";
+        #light = "${cfgPath}/assets/wallpapers/FW13/light.png";
       };
     };
     syncthing.enable = true;

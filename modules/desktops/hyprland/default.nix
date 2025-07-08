@@ -4,9 +4,9 @@
   pkgs,
   cfgHosts,
   cfgOpts,
+  cfgPath,
   cfgTerm,
   myUser,
-  nixPath,
   ...
 }: let
   cfg = cfgOpts.desktops.hyprland;
@@ -28,7 +28,7 @@
     package = pkgs.papirus-icon-theme.override { color = "violet"; };
   };
   wallpaper = {
-    dir = "${nixPath}/assets/wallpapers";
+    dir = "${cfgPath}/assets/wallpapers";
     regreet = "${wallpaper.dir}/blobs-l.png";
   };
 in {

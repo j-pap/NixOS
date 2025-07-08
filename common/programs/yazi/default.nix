@@ -1,8 +1,8 @@
 {
   lib,
   pkgs,
+  cfgPath,
   myUser,
-  nixPath,
   ...
 }: let
   extraDeps = [ pkgs.mediainfo ];
@@ -85,7 +85,7 @@ in {
           {
             desc = "Goto NixOS config";
             on = ["g" "n"];
-            run = "cd ${nixPath}";
+            run = "cd ${cfgPath}";
           }
 
           # cd back to the root of the current Git repository
