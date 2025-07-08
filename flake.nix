@@ -45,6 +45,7 @@
 
   outputs = { self, nixpkgs, stable, ... } @ inputs: let
     overlays = [
+      (import ./overlays.nix)
       inputs.nur.overlays.default
     ];
 
@@ -111,6 +112,8 @@
 
 
     stdModules = hostName: specialArgs: [
+      ./common
+      ./hosts/${hostName}
       ({ config, ... }: {
         _module.args = {
           cfgHosts = config.myHosts;
@@ -132,8 +135,6 @@
           overlays = overlays;
         };
       })
-      ./common
-      ./hosts/${hostName}
       inputs.disko.nixosModules.disko
       inputs.flake-programs-sqlite.nixosModules.programs-sqlite
       inputs.home-manager.nixosModules.home-manager {

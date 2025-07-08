@@ -265,15 +265,7 @@ in {
         #extra-builtins-file = [ ../libs/extra-builtins.nix ];
         extra-builtins-file = [ "${inputs.self}/libs/extra-builtins.nix" ];
         #extra-builtins-file = [ "${./..}/libs/extra-builtins.nix" ];
-        plugin-files = [
-          "${pkgs.nix-plugins.overrideAttrs (o: {
-            buildInputs = [
-              pkgs.nixVersions.latest
-              pkgs.boost
-            ];
-            patches = (o.patches or [ ]) ++ [ ../libs/nix-plugins.patch ];
-          })}/lib/nix/plugins"
-        ];
+        plugin-files = [ "${pkgs.nix-plugins}/lib/nix/plugins" ];
         substituters = [
           "https://cosmic.cachix.org/"
           "https://nix-community.cachix.org"
