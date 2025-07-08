@@ -2,13 +2,19 @@
   description = "NixOS Multi-System Flake";
 
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    ###
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     disko.url = "github:nix-community/disko";
     flake-programs-sqlite = {
       url = "github:wamserma/flake-programs-sqlite";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    framework-plymouth.url = "github:j-pap/framework-plymouth";
+    framework-plymouth = {
+      url = "github:j-pap/framework-plymouth";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     hardware.url = "github:nixos/nixos-hardware";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -22,8 +28,6 @@
       flake = false;
     };
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nixvim.url = "github:nix-community/nixvim";
     nur.url = "github:nix-community/NUR";
     plasma-manager = {
@@ -39,14 +43,14 @@
     wezterm.url = "github:wez/wezterm?dir=nix";
   };
 
-
-  outputs = { self, nixpkgs, ... } @ inputs: let
+  outputs = { self, nixpkgs, stable, ... } @ inputs: let
     overlays = [
       inputs.nur.overlays.default
     ];
 
+
     # 'nixos-rebuild switch --flake .#hostname'
-    hostSystems = {
+    hosts = {
       /*
       Dekki.modules = [
         inputs.chaotic.nixosModules.default
@@ -66,7 +70,7 @@
 
       # 'nix build .#nixosConfigurations.iso.config.system.build.isoImage' or 'nix build .#buildIso'
       iso = {
-        isBare = true;
+        hostIsBare = true;
         modules = [
           ./hosts/iso
         ];
@@ -90,32 +94,29 @@
       VM.modules = [ ];
     };
 
+
     mkSystem = hostName: hostOpts: let
-      isBare = hostOpts.isBare or false;
-      sysModules = hostOpts.modules;
-      specialArgs = let
-        cfgTerm = "kitty";  # kitty or wezterm
-        nixPath = "/etc/nixos";
-      in {
-        inherit
-        inputs
-        cfgTerm
-        nixPath
-        ;
-      };
+      hostIsBare = hostOpts.hostIsBare or false;
+      hostModules = hostOpts.modules;
+      specialArgs = { inherit inputs; };
     in nixpkgs.lib.nixosSystem {
-      modules = (if (isBare)
-        then ([ ])
-        else (stdModules hostName specialArgs)
-      ) ++ sysModules;
+      modules = (
+        if (hostIsBare) then
+          ([ ])
+        else
+          (stdModules hostName specialArgs)
+      ) ++ hostModules;
       specialArgs = specialArgs;
     };
+
 
     stdModules = hostName: specialArgs: [
       ({ config, ... }: {
         _module.args = {
           cfgHosts = config.myHosts;
           cfgOpts = config.myOptions;
+          nixPath = "/etc/nixos";
+          cfgTerm = "kitty";  # kitty or wezterm
           myUser = config.myUser;
         };
         networking.hostName = hostName;
@@ -123,10 +124,8 @@
           config = {
             allowUnfree = true;
             packageOverrides = pkgs: {
-              stable = import inputs.nixpkgs-stable {
-                inherit system;
-                config = config.nixpkgs.config;
-                overlays = config.nixpkgs.overlays;
+              stable = import stable {
+                inherit (pkgs) config overlays system;
               };
             };
           };
@@ -149,13 +148,15 @@
       inputs.stylix.nixosModules.stylix
     ];
 
-    system = "x86_64-linux";  # Used for inheriting nixpkgs-stable and declaring outputs.packages
-  in {
-    nixosConfigurations = builtins.mapAttrs mkSystem hostSystems;
 
-    packages.${system} = {
+    supportedSystems = [ "aarch64-linux" "x86_64-linux" ];
+    forEachSystem = nixpkgs.lib.genAttrs supportedSystems;
+  in {
+    nixosConfigurations = builtins.mapAttrs mkSystem hosts;
+
+    packages = forEachSystem (system: {
       default = self.packages.${system}.buildIso;
       buildIso = self.nixosConfigurations.iso.config.system.build.isoImage;
-    };
+    });
   };
 }

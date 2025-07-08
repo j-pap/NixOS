@@ -252,7 +252,7 @@ in {
       #package = pkgs.nixVersions.nix_2_24;
       registry = {
         nixpkgs.flake = inputs.nixpkgs;
-        stable.flake = inputs.nixpkgs-stable;
+        stable.flake = inputs.stable;
       };
       settings = {
         auto-optimise-store = true;
