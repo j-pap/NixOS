@@ -435,10 +435,11 @@ in {
 
           shortcuts = {
             "ksmserver" = {
-              "Lock Session" = (if (polo) then
-                "Ctrl+Alt+L"
-              else
-                "Meta+L"
+              "Lock Session" = (
+                if (polo) then
+                  "Ctrl+Alt+L"
+                else
+                  "Meta+L"
               );
               "Log Out" = "Ctrl+Alt+Del"; # Show Logout Screen
               #"Log Out W/O Confirmation" = ""; # Log Out W/O Confirmation
@@ -450,10 +451,11 @@ in {
               "PoloniumFocusAbove" = "Meta+K";
               "PoloniumFocusBelow" = "Meta+J";
               "PoloniumFocusLeft" = "Meta+H";
-              "PoloniumFocusRight" = (if (polo) then
-                "Meta+L"
-              else
-                ""
+              "PoloniumFocusRight" = (
+                if (polo) then
+                  "Meta+L"
+                else
+                  ""
               );
               "PoloniumInsertAbove" = "Meta+Shift+K";
               "PoloniumInsertBelow" = "Meta+Shift+J";
@@ -561,11 +563,12 @@ in {
         # Set Haruna settings, since there is no HM module
         configFile = let
           hwDecoder = (
-            if (cfgOpts.hardware.amdgpu.enable)
-              then "HWDecoding=vaapi"
-            else if (cfgOpts.hardware.nvidia.enable)
-              then "HWDecoding=nvdec"
-            else ""
+            if (cfgOpts.hardware.amdgpu.enable) then
+              "HWDecoding=vaapi"
+            else if (cfgOpts.hardware.nvidia.enable) then
+              "HWDecoding=nvdec"
+            else
+              ""
           );
         in {
           "haruna/haruna.conf".text = ''
@@ -578,6 +581,8 @@ in {
 
             [Playlist]
             CanToggleWithMouse=false
+            LoadSiblings=false
+            Repeat=false
           '';
 
           "haruna/shortcuts.conf".text = ''
