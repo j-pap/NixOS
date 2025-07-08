@@ -212,14 +212,12 @@ in {
       "nfs"
     ];
     kernelPackages = (
-      if (config.services.scx.enable)
-        then pkgs.linuxPackages_cachyos
-      else pkgs.linuxPackages_latest
+      if (config.services.scx.enable) then
+        pkgs.linuxPackages_cachyos
+      else
+        pkgs.linuxPackages_latest
     );
-    kernelParams = [
-      "amd_pstate=active"
-      "quiet"
-    ];
+    kernelParams = [ "amd_pstate=active" ];
 
     loader = {
       efi = {
@@ -237,10 +235,12 @@ in {
     };
 
     plymouth = {
-      enable = true;
+      enable = false;
       theme = "loader"; # Previews: https://github.com/adi1090x/plymouth-themes
       # Overriding installs a single theme instead of all 80, reducing the required size
-      themePackages = [ (pkgs.adi1090x-plymouth-themes.override { selected_themes = [ "${config.boot.plymouth.theme}" ]; }) ];
+      themePackages = [ (pkgs.adi1090x-plymouth-themes.override {
+        selected_themes = [ "${config.boot.plymouth.theme}" ];
+      }) ];
     };
 
     supportedFilesystems = [

@@ -242,9 +242,10 @@ in {
   services = {
     # 'sudo fprintd-enroll'
     fprintd.enable = (
-      if (useFP)
-        then lib.mkForce true
-      else lib.mkForce false
+      if (useFP) then
+        lib.mkForce true
+      else
+        lib.mkForce false
     );
 
     fwupd = {
@@ -320,7 +321,6 @@ in {
     kernelParams = [
       "amd_iommu=off" # Fixes VP9/VAAPI video glitches
       "ipv6.disable=1"
-      "quiet"
     ];
 
     # https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md
@@ -336,9 +336,10 @@ in {
       };
       systemd-boot = {
         enable = (
-          if (config.boot.lanzaboote.enable)
-            then lib.mkForce false
-          else true
+          if (config.boot.lanzaboote.enable) then
+            lib.mkForce false
+          else
+            true
         );
         configurationLimit = 5;
         consoleMode = "auto";

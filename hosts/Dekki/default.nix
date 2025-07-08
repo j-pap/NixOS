@@ -122,9 +122,10 @@
     initrd.systemd.enable = true;
 
     kernelPackages = (
-      if (config.jovian.devices.steamdeck.enable)
-        then pkgs.linuxPackages_jovian
-      else pkgs.linuxPackages_latest
+      if (config.jovian.devices.steamdeck.enable) then
+        pkgs.linuxPackages_jovian
+      else
+        pkgs.linuxPackages_latest
     );
     kernelParams = [
       "quiet"

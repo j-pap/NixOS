@@ -35,9 +35,19 @@ in {
     };
 
     boot = {
-      # Prioritize swap for hibernation only
-      kernel.sysctl."vm.swappiness" = lib.mkDefault 0;
-      # Clear /tmp on every boot
+      consoleLogLevel = 3;  # Errors only // sets 'loglevel=' kernelParam
+      initrd.verbose = false;
+      kernel.sysctl."vm.swappiness" = lib.mkDefault 0;  # Prioritize swap for hibernation
+      kernelParams = lib.mkBefore [
+        "quiet"
+        "splash"
+        "udev.log_level=3"  # Errors only
+        "rd.udev.log_level=3"  # Errors only
+        "systemd.show_status=auto"  # Errors only
+        "vt.global_cursor_default=0"  # Disable TTY cursor blink @ boot
+        "fbcon=nodefer" # Clears UEFI logo quicker
+        "plymouth.use-simpledrm"  # Faster splash
+      ];
       tmp.cleanOnBoot = true;
     };
 
@@ -47,8 +57,21 @@ in {
     };
 
     environment = {
-      # Symlink for nix.nixPath
-      etc."nix/nixpkgs".source = "${pkgs.path}";
+      etc = {
+        # Enable TTY cursor blink post-boot
+        issue = {
+          mode = "0444";
+          text = ''
+
+            [1;32m<<< Welcome to NixOS ${lib.version} (\m) - \l >>>[0m
+
+            Run 'nixos-help' for the NixOS manual.
+            [?12h[?25h
+          '';
+        };
+        # Symlink for nix.nixPath
+        "nix/nixpkgs".source = "${pkgs.path}";
+      };
 
       # List packages installed in system profile. To search, run:
         # $ nix search wget

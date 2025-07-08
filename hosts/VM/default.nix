@@ -79,7 +79,7 @@
     initrd.systemd.enable = true;
 
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "quiet" ];
+    kernelParams = [ ];
 
     loader = {
       efi = {

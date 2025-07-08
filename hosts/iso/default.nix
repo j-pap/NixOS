@@ -24,11 +24,13 @@ in {
             #nct6687d
           #;
         };
-        # ZFS won't build against 6.13.x, even w/ allowBroken
         kernelPackages = (
-          if (latestKernel)
-            then pkgs.linuxPackages_latest
-          else pkgs.linuxPackages_6_12
+          if (latestKernel) then
+            # ZFS won't build against 6.15.x, even w/ allowBroken
+            pkgs.linuxPackages_latest
+          else
+            # 6.14 is currently the latest that builds successfully
+            pkgs.linuxPackages_6_14
         );
       };
 
@@ -51,6 +53,7 @@ in {
       isoImage.squashfsCompression = "gzip";
 
       nix.settings = {
+        download-buffer-size = 536870912; # 512MB in Bytes
         experimental-features = [ "nix-command" "flakes" ];
         substituters = [ "https://nix-community.cachix.org" ];
         trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];

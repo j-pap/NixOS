@@ -188,7 +188,7 @@
 
     kernelModules = [ "nfs" ];
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "quiet" ];
+    kernelParams = [ ];
 
     loader = {
       efi = {
