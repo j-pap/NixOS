@@ -29,8 +29,8 @@ in {
             # ZFS won't build against 6.15.x, even w/ allowBroken
             pkgs.linuxPackages_latest
           else
-            # 6.14 is currently the latest that builds successfully
-            pkgs.linuxPackages_6_14
+            # 6.12 (LTS) is currently the latest that builds successfully
+            pkgs.linuxPackages_6_12
         );
       };
 
