@@ -280,7 +280,10 @@ in {
       };
     };
 
-    programs.dconf.enable = true;
+    programs = {
+      command-not-found.enable = true;
+      dconf.enable = true;
+    };
 
     security = {
       polkit.enable = true;
