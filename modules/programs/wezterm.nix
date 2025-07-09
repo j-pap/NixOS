@@ -61,8 +61,6 @@ in {
           }
         '';
       };
-
-      stylix.targets.wezterm.enable = true;
     };
   };
 }

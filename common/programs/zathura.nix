@@ -7,7 +7,5 @@
       enable = true;
       mappings = { };
     };
-
-    stylix.targets.zathura.enable = true;
   };
 }

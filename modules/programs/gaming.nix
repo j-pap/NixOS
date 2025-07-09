@@ -28,10 +28,11 @@ in {
         '';
 
         lutris-pkg = pkgs.lutris.override {
-          extraLibraries = pkgs: (if (pkgs.hostPlatform.is64bit) then
-            config.hardware.graphics.extraPackages
-          else
-            config.hardware.graphics.extraPackages32
+          extraLibraries = pkgs: (
+            if (pkgs.hostPlatform.is64bit) then
+              config.hardware.graphics.extraPackages
+            else
+              config.hardware.graphics.extraPackages32
           );
           extraPkgs = pkgs: builtins.attrValues {
             inherit (pkgs)
@@ -119,8 +120,6 @@ in {
           toggle_hud = "Shift_R+F12";
         };
       };
-
-      stylix.targets.mangohud.enable = true;
     };
 
     programs = {

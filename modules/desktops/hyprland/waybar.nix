@@ -372,8 +372,6 @@ in {
           }
         '';
       };
-
-      #stylix.targets.waybar.enable = true;
     };
   };
 }

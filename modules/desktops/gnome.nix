@@ -439,14 +439,16 @@ in {
         "org/gnome/shell/extensions/nightthemeswitcher/commands" = {
           enabled = true;
           sunrise = (
-            if (stylix)
-              then "${lib.getExe switch-mode} light"
-            else "${lib.getExe themeChange}"
+            if (stylix) then
+              "${lib.getExe switch-mode} light"
+            else
+              "${lib.getExe themeChange}"
           );
           sunset = (
-            if (stylix)
-              then "${lib.getExe switch-mode} dark"
-            else "${lib.getExe themeChange}"
+            if (stylix) then
+              "${lib.getExe switch-mode} dark"
+            else
+              "${lib.getExe themeChange}"
           );
         };
         "org/gnome/shell/extensions/nightthemeswitcher/time" = {
@@ -527,18 +529,14 @@ in {
         enable = true;
         settings = {
           neovim-bin = (
-            if (config.programs.nixvim.enable)
-              then "${lib.getExe config.programs.nixvim.package}"
-            else "${lib.getExe pkgs.neovim}"
+            if (config.programs.nixvim.enable) then
+              "${lib.getExe config.programs.nixvim.package}"
+            else
+              "${lib.getExe pkgs.neovim}"
           );
         };
       };
       */
-
-      stylix.targets = {
-        gnome.enable = true;
-        #gnome-text-editor.enable = true;  # Throws assertion about nixpkgs/useGlobalPkgs
-      };
 
       xdg = {
         # Set Nautilus bookmarks

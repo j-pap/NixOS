@@ -17,7 +17,5 @@
         ;
       };
     };
-
-    stylix.targets.bat.enable = true;
   };
 }

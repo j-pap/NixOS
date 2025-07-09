@@ -113,10 +113,43 @@ in {
 
       home-manager.users.${myUser} = {
         stylix.targets = {
+          # Disabled as browser currently looks strange with Stylix applied
+          ${cfgOpts.browser} = {
+            enable = false;
+            colorTheme.enable = false;
+            firefoxGnomeTheme.enable = false;
+            profileNames = [ "${myUser}" ];
+          };
+          bat.enable = true;
+          btop.enable = true;
+          gnome.enable = true;
+          #gnome-text-editor.enable = true;  # Throws assertion about nixpkgs/useGlobalPkgs
           gtk.enable = true;
           #helix.enable = true;
+          #hyprland.enable = true;
+          #hyprlock.enable = true;
+          #hyprpaper.enable = false;
+          #kde.enable = true;
+          kitty.enable = true;
+          #mako.enable = true;
+          mangohud.enable = true;
+          nixvim = {
+            enable = true;
+            plugin = "base16-nvim";
+            transparentBackground = {
+              main = true;
+              signColumn = false;
+            };
+          };
           #qt.enable = true;
+          #rofi.enable = true;
+          #spicetify.enable = true; # Disabled to troubleshoot
           #tmux.enable = true;
+          #waybar.enable = true;
+          wezterm.enable = true;
+          #wofi.enable = true;
+          yazi.enable = true;
+          zathura.enable = true;
           #zellij.enable = true;
         };
 

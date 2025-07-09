@@ -265,17 +265,6 @@ in {
           defaultApplications = import ../mimeapps.nix { inherit mime; };
         };
       };
-
-      stylix.targets = {
-        /*
-        hyprland.enable = true;
-        hyprlock.enable = true;
-        hyprpaper.enable = false;
-        mako.enable = true;
-        rofi.enable = true;
-        wofi.enable = true;
-        */
-      };
     };
 
     programs = {
@@ -327,21 +316,23 @@ in {
 
       greetd = {
         enable = true;
-        package = (if (config.programs.regreet.enable) then
-          pkgs.greetd.regreet
-        else
-          pkgs.greetd.tuigreet
+        package = (
+          if (config.programs.regreet.enable) then
+            pkgs.greetd.regreet
+          else
+            pkgs.greetd.tuigreet
         );
         settings = let
           hyprApps = cfg.hyprApps;
         in {
           default_session = {
-            command = (if (config.programs.regreet.enable) then
-              # Regreet
-              "${hyprApps.hyprland}"
-            else
-              # Tuigreet
-              "${hyprApps.tuigreet} --asterisks --remember --remember-user-session --time --cmd ${hyprApps.hyprland}"
+            command = (
+              if (config.programs.regreet.enable) then
+                # Regreet
+                "${hyprApps.hyprland}"
+              else
+                # Tuigreet
+                "${hyprApps.tuigreet} --asterisks --remember --remember-user-session --time --cmd ${hyprApps.hyprland}"
             );
             user = myUser;
           };

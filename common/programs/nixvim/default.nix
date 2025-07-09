@@ -4,10 +4,8 @@
   lib,
   myUser,
   ...
-}: let
-  stylix = config.stylix.enable;
-in { 
-  home-manager.users.${myUser} = { config, ... }: {
+}: {
+  home-manager.users.${myUser} = { config, osConfig, ... }: {
     imports = [
       inputs.nixvim.homeManagerModules.nixvim
       ./plugins
@@ -59,7 +57,7 @@ in {
         register = "unnamedplus";
       };
 
-      colorschemes = lib.mkIf (!stylix) {
+      colorschemes = lib.mkIf (!osConfig.stylix.enable) {
         catppuccin = {
           enable = true;
           settings.flavour = "auto";
@@ -309,15 +307,6 @@ in {
 
         # Vim game/tutorial
         vim-be-good.enable = true;
-      };
-    };
-
-    stylix.targets.nixvim = {
-      enable = true;
-      plugin = "base16-nvim";
-      transparentBackground = {
-        main = true;
-        signColumn = false;
       };
     };
   };

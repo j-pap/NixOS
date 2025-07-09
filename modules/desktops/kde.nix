@@ -557,8 +557,6 @@ in {
         };
       };
 
-      #stylix.targets.kde.enable = true;
-
       xdg = {
         # Set Haruna settings, since there is no HM module
         configFile = let

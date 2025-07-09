@@ -8,13 +8,14 @@
   ...
 }: let
   userName = config.users.users.${myUser}.description;
-
   hostName = config.networking.hostName;
+
   #dohProvider = "https://dns.quad9.net/dns-query";
-  dohProvider = (if (hostName == "Ridge" || hostName == "T1" || hostName == "VM") then
-    nixSecrets.dns.doh.int
-  else
-    nixSecrets.dns.doh.ext
+  dohProvider = (
+    if (hostName == "Ridge" || hostName == "T1" || hostName == "VM") then
+      nixSecrets.dns.doh.int
+    else
+      nixSecrets.dns.doh.ext
   ) + hostName;
 in {
   options.myOptions.browser = lib.mkOption {
@@ -63,14 +64,6 @@ in {
         id = 1;
         name = "Vanilla";
       };
-    };
-
-    # Disabled as browser currently looks strange with Stylix applied
-    stylix.targets.${cfgOpts.browser} = {
-      enable = false;
-      colorTheme.enable = false;
-      firefoxGnomeTheme.enable = false;
-      profileNames = [ "${myUser}" ];
     };
   };
 }

@@ -11,8 +11,6 @@
   stylix = config.stylix.enable;
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
 in {
-  #imports = [ inputs.spicetify-nix.nixosModules.spicetify ];
-
   options.myOptions.spicetify.enable = lib.mkEnableOption "Spicetify";
 
   config = lib.mkIf (cfg.enable) {
@@ -22,7 +20,7 @@ in {
       programs.spicetify =  {
         enable = true;
         theme = spicePkgs.themes.text;
-        colorScheme = "CatppuccinMocha";
+        colorScheme = lib.mkDefault "CatppuccinMocha";
         enabledExtensions = builtins.attrValues {
           inherit (spicePkgs.extensions)
             fullAlbumDate
@@ -37,25 +35,6 @@ in {
         dark.configuration.programs.spicetify.colorScheme = lib.mkForce "CatppuccinMocha";
         light.configuration.programs.spicetify.colorScheme = lib.mkForce "CatppuccinLatte";
       };
-
-      # Disabled to troubleshoot
-      #stylix.targets.spicetify.enable = true;
     };
-
-    /*
-    programs.spicetify = {
-      enable = true;
-      theme = spicePkgs.themes.text;
-      colorScheme = "CatppuccinMocha";
-      enabledExtensions = builtins.attrValues {
-        inherit (spicePkgs.extensions)
-          fullAlbumDate
-          hidePodcasts
-          savePlaylists
-          wikify
-        ;
-      };
-    };
-    */
   };
 }

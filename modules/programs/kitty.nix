@@ -46,8 +46,6 @@ in {
           };
         };
       };
-
-      stylix.targets.kitty.enable = lib.mkIf (stylix) true;
     };
   };
 }
