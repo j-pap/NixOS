@@ -1,16 +1,17 @@
 {
-  lib,
   stdenv,
   fetchurl,
-  zstd
-}: let
-  pname = "iosvmata-font";
+  zstd,
+}:
+let
+  pname = "iosvmata";
   version = "1.2.0";
   src = fetchurl {
     url = "https://github.com/N-R-K/Iosvmata/releases/download/v${version}/Iosvmata-v${version}.tar.zst";
     hash = "sha256-Cq/bx+nc5sTHxb4GerpEHDmW7st835bQ6ihTOp20Ei4=";
   };
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   inherit pname version src;
   dontUnpack = true;
   nativeBuildInputs = [ zstd ];
@@ -21,7 +22,6 @@ in stdenv.mkDerivation {
   '';
 
   meta = {
-    inherit lib;
     description = "Custom Iosevka build somewhat mimicking PragmataPro";
     homepage = "https://github.com/N-R-K/Iosvmata";
   };

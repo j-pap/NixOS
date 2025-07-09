@@ -1,10 +1,10 @@
 {
-  lib,
   stdenvNoCC,
   fetchurl,
-  unzip
-}: let
-  pname = "pragmasevka-font";
+  unzip,
+}:
+let
+  pname = "pragmasevka";
   version = "1.6.6";
   src = fetchurl {
     url = "https://github.com/shytikov/pragmasevka/releases/download/v${version}/Pragmasevka.zip";
@@ -22,7 +22,6 @@ stdenvNoCC.mkDerivation {
   '';
 
   meta = {
-    inherit lib;
     description = "Pragmata Pro doppelgänger made of Iosevka SS08";
     homepage = "https://github.com/shytikov/pragmasevka";
   };
