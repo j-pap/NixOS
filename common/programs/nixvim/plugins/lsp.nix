@@ -9,7 +9,7 @@ in {
   programs.nixvim = {
     autoGroups.kickstart-lsp-attach.clear = true;
     extraPackages = [
-      pkgs.nixfmt-rfc-style  # nix/nil_ls formatter
+      #pkgs.nixfmt-rfc-style
     ];
 
     plugins = {
@@ -58,7 +58,6 @@ in {
             filetypes = [
               "nix"
             ];
-            #rootDir = "require('lspconfig.util').root_pattern('flake.nix', '.git')";
             rootMarkers = [
               #".git"
               "flake.nix"
@@ -68,7 +67,7 @@ in {
                 #"nixfmt"
               ];
               nix = {
-                bin = "nix";
+                binary = "nix";
                 maxMemoryMB = 2560;
                 flake = {
                   autoArchive = false;
