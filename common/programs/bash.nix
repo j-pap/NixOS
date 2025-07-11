@@ -5,7 +5,6 @@
 }: {
   home-manager.users.${myUser}.programs.bash = {
     enable = true;
-    #initExtra = '''';
     shellAliases = {
       ".." = "cd ..";
       ".df" = "cd ${cfgPath}";
@@ -15,8 +14,8 @@
       "ff" = "fastfetch";
       "fishy" = "asciiquarium";
       "ll" = "ls -la";
-      "nix-diff" = "nixos-rebuild build && nix store diff-closures /run/current-system ./result";
-      "nix-find" = "command-not-found \"$@\"";
+      "nix-diff" = "nix store diff-closures /run/current-system \"$@\"";
+      "nix-host" = "nixos-rebuild build --build-host \"$@\"";
     };
   };
 }
