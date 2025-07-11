@@ -2,13 +2,21 @@
 
 This is my flake for a multi-system NixOS installation. I've tried to craft it
 to be as secure as possible without being a complete inconvenience to the
-average user. I currently run GNOME on my Framework because I feel like it is
-the most integrated way of fully utilizing the system's features; This means declaring
-nearly all options via dconf.settings to achieve reproducibility. I'm testing the
-COSMIC desktop via the nixos-cosmic flake on my T450s, and may eventually
-deploy it on my Framework, as well as my gaming system. Speaking of, my
-gaming system uses KDE, provided by the plasma-manager flake. I also have a
-half-baked Hyprland configuration, that I haven't gotten around to completing.
+average user.
+
+My Framework 13 is running GNOME, because I feel like it is currently the most
+integrated way of fully utilizing a laptop's features. Nearly all of GNOME's
+customizations are declared using dconf settings via home-manager.
+
+My gaming desktop is running KDE, which is customized with the plasma-manager
+flake via home-manager.
+
+I'm testing the alpha COSMIC DE on my T450s, and may eventually deploy it on
+the Framework once it gets a stable release. Depending on how it benchmarks
+running games, I may deploy it to the gaming desktop as well.
+
+I also have a half-baked Hyprland config, which I hope to eventually complete,
+but I haven't gotten around to finishing it.
 
 ## Installation
 
@@ -50,9 +58,15 @@ nixos-install --no-root-passwd --flake .#<host>
 ```sh
 nixos
 ├── assets
+│   └── wallpapers
 ├── common
 │   └── programs
 ├── hosts
+│   ├── FW13
+│   ├── iso
+│   ├── T1
+│   ├── T450s
+│   └── VM
 ├── libs
 ├── modules
 │   ├── desktops
@@ -85,7 +99,7 @@ custom options to easily enable them with boolean values in the system configura
 
 * default.nix: imports the three directories below.
 * /desktops: contain the individual desktop environments and their requirements
-(Cosmic/GNOME/Hyprland/KDE).
+(COSMIC/GNOME/Hyprland/KDE).
 * /hardware: contain the configs to enable individual hardware on systems
 (audio, bluetooth, GPUs, etc).
 * /programs: contain applications that can be enabled/disabled, usually

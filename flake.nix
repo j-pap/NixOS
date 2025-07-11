@@ -27,7 +27,6 @@
       url = "github:NixOS/nixos-artwork";
       flake = false;
     };
-    nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
     nixvim.url = "github:nix-community/nixvim";
     nur.url = "github:nix-community/NUR";
     plasma-manager = {

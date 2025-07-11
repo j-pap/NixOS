@@ -4,7 +4,6 @@
   pkgs,
   cfgOpts,
   cfgPath,
-  inputs,
   myUser,
   ...
 }: let
@@ -32,36 +31,37 @@
     night = "${cfgPath}/assets/wallpapers/blobs-d.png";
   };
 in {
-  imports = [ inputs.nixos-cosmic.nixosModules.default ];
-
   options.myOptions.desktops.cosmic.enable = lib.mkEnableOption "Cosmic desktop";
 
   config = lib.mkIf (cfg.enable) {
-    environment.systemPackages = [
-    # Theming
-      #cursor.package      # Cursor theme
-      #icon.package        # Icon theme
-    ] ++ builtins.attrValues {
-      inherit (pkgs)
-      # Text
-        neovide           # GUI launcher for neovim
-      ;
+    environment = {
+      cosmic.excludePackages = [ ];
+      systemPackages = [
+      # Theming
+        #cursor.package      # Cursor theme
+        #icon.package        # Icon theme
+      ] ++ builtins.attrValues {
+        inherit (pkgs)
+        # Text
+          #neovide           # GUI launcher for neovim
+        ;
+      };
     };
 
     programs.seahorse.enable = true;
-
     security.pam.services = {
       cosmic-greeter.enableGnomeKeyring = true;
       login.enableGnomeKeyring = lib.mkForce false; # Override GDM's setting from services.gnome.gnome-keyring
     };
+    services.gnome.gnome-keyring.enable = true;
 
     services = {
-      desktopManager.cosmic.enable = true;
+      desktopManager.cosmic = {
+        enable = true;
+        showExcludedPkgsWarning = true;
+        xwayland.enable = true;
+      };
       displayManager.cosmic-greeter.enable = true;
-
-      gnome.gnome-keyring.enable = true;
-
-      xserver.enable = true;
     };
 
     stylix.fonts = {
@@ -77,10 +77,6 @@ in {
         #terminal = 14;
       };
     };
-
-    xdg.portal.extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-    ];
 
     home-manager.users.${myUser} = {
       # Sets profile image
