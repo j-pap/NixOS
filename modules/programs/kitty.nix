@@ -1,12 +1,13 @@
 {
-  cfgOpts,
   config,
   lib,
-  myUser,
   pkgs,
+  cfgOpts,
+  myUser,
   ...
 }: let
   cfg = cfgOpts.kitty;
+  kde = cfgOpts.desktops.kde.enable;
   stylix = config.stylix.enable;
 in {
   options.myOptions.kitty.enable = lib.mkEnableOption "Kitty";
@@ -17,7 +18,7 @@ in {
     home-manager.users.${myUser} = {
       programs = {
         bash.shellAliases = {
-          "ssh" = "kitten ssh \"$@\"";
+          "s" = "kitten ssh \"$@\"";
         };
 
         kitty = {
@@ -27,13 +28,15 @@ in {
           '';
           font.name = lib.mkDefault "Iosvmata";
           font.size = lib.mkDefault 14;
+          keybindings = {
+            "f2" = "new_os_window_with_cwd";
+          };
           settings = {
-            # Blur not supported in GNOME
-            #background_blur = 1;
+            #background_blur = lib.mkIf (kde) 1; # Only KDE supported, but even minimum (1) is too aggressive
             background_opacity = lib.mkDefault "0.9";
             confirm_os_window_close = 0;
             copy_on_select = "clipboard";
-            #dim_opacity = "0.4";
+            dim_opacity = "0.5";  # Dim/faint font's opacity
             dynamic_background_opacity = "yes";
             enable_audio_bell = "no";
             linux_display_server = "wayland";
