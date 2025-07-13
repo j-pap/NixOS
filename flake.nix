@@ -11,10 +11,7 @@
       url = "github:wamserma/flake-programs-sqlite";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    framework-plymouth = {
-      url = "github:j-pap/framework-plymouth";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    framework-plymouth.url = "github:j-pap/framework-plymouth";
     hardware.url = "github:nixos/nixos-hardware";
     home-manager = {
       url = "github:nix-community/home-manager";

@@ -311,17 +311,12 @@
       }
     },
     "framework-plymouth": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
       "locked": {
-        "lastModified": 1744254441,
-        "narHash": "sha256-zpbqouGFxu0fdECX54jHPyjYEX+04kZRWZFZ4IKL58c=",
+        "lastModified": 1752437979,
+        "narHash": "sha256-Of/7i/+NH++eA2yQxtVBy5zb1ZMYTakeHrnEFj6ecNI=",
         "owner": "j-pap",
         "repo": "framework-plymouth",
-        "rev": "6aa8efd36bd79660ced9b8a82495afdb0c8c1166",
+        "rev": "a2f08a434cf7202301ae1a14862b88e9e52387e6",
         "type": "github"
       },
       "original": {
