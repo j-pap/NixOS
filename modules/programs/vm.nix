@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   cfgOpts,
   myUser,
   ...
@@ -11,11 +12,21 @@ in {
   config = lib.mkIf (cfg.enable) {
     programs.virt-manager.enable = true;
 
+    services = {
+      qemuGuest.enable = true;
+      spice-vdagentd.enable = true; # Shared clipboard
+    };
+
     users.users.${myUser}.extraGroups = [
       "libvirtd"
       "qemu-libvirtd"
     ];
 
-    virtualisation.libvirtd.enable = true;
+    virtualisation.libvirtd = {
+      enable = true;
+      qemu.vhostUserPackages = [
+        pkgs.virtiofsd  # Shared directories
+      ];
+    };
   };
 }
