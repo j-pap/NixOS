@@ -20,7 +20,7 @@ in {
 
     home-manager.users.${myUser}.xdg.configFile."autostart/1password.desktop".text = let
       onePassword-pkg = config.programs._1password-gui.package;
-    in (lib.strings.replaceStrings
+    in (lib.replaceStrings
       [ "Exec=1password %U" ]
       [ "Exec=${lib.getExe onePassword-pkg} --silent %U" ]
       (lib.fileContents "${onePassword-pkg}/share/applications/1password.desktop")

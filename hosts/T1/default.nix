@@ -142,10 +142,10 @@ in {
       #monitor = lib.mkForce [ "eDP-1, ${builtins.toString cfgHosts.width}x${builtins.toString cfgHosts.height}@${builtins.toString cfgHosts.refresh}, 0x0, ${builtins.toString cfgHosts.scale}" ];
     };
 
-    xdg.configFile."autostart/ProtonMailBridge.desktop".text = (lib.strings.replaceStrings
+    xdg.configFile."autostart/ProtonMailBridge.desktop".text = (lib.replaceStrings
       [ "Exec=protonmail-bridge-gui" ]
       [ "Exec=${lib.getExe protonMB} --no-window" ]
-      (lib.strings.fileContents "${protonMB}/share/applications/proton-bridge-gui.desktop")
+      (lib.fileContents "${protonMB}/share/applications/proton-bridge-gui.desktop")
     );
   };
 

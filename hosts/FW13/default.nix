@@ -170,20 +170,20 @@ in {
         sha256 = "sha256-cfP2Ykrcxylesl/cuKDSj6XcVPE51CDCT+0sC01iFBg=";
       };
     in {
-      "autostart/ProtonMailBridge.desktop".text = lib.strings.concatLines [
-        (lib.strings.replaceStrings
+      "autostart/ProtonMailBridge.desktop".text = lib.concatLines [
+        (lib.replaceStrings
           [ "Exec=protonmail-bridge-gui" ]
           [ "Exec=${lib.getExe protonMB} --no-window" ]
-          (lib.strings.fileContents "${protonMB}/share/applications/proton-bridge-gui.desktop")
+          (lib.fileContents "${protonMB}/share/applications/proton-bridge-gui.desktop")
         )
         "X-GNOME-Autostart-enabled=true"
       ];
 
-      "autostart/ProtonVPN.desktop".text = lib.strings.concatLines [
-        (lib.strings.replaceStrings
+      "autostart/ProtonVPN.desktop".text = lib.concatLines [
+        (lib.replaceStrings
           [ "Exec=protonvpn-app" ]
           [ "Exec=${lib.getExe protonVPN} --start-minimized" ]
-          (lib.strings.fileContents "${protonVPN}/share/applications/protonvpn-app.desktop")
+          (lib.fileContents "${protonVPN}/share/applications/protonvpn-app.desktop")
         )
         "X-GNOME-Autostart-enabled=true"
       ];

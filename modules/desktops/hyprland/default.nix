@@ -84,8 +84,8 @@ in {
           XDG_SESSION_TYPE = "wayland";
 
         # Scaling
-          GDK_SCALE = toString cfgHosts.scale;
-          QT_AUTO_SCREEN_SCALE_FACTOR = toString cfgHosts.scale;
+          GDK_SCALE = builtins.toString cfgHosts.scale;
+          QT_AUTO_SCREEN_SCALE_FACTOR = builtins.toString cfgHosts.scale;
         
         # Toolkit Backend
           GDK_BACKEND = "wayland,x11";
