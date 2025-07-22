@@ -248,6 +248,11 @@ in {
       optimise.automatic = true;
       package = pkgs.nixVersions.nix_2_28;
       registry = {
+        devshells.to = {
+          type = "github";
+          owner = "j-pap";
+          repo = "devshells";
+        };
         nixpkgs.flake = inputs.nixpkgs;
         stable.flake = inputs.stable;
       };
