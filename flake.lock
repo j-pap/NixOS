@@ -641,22 +641,6 @@
         "type": "github"
       }
     },
-    "nixos-artwork": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1751141820,
-        "narHash": "sha256-//4BiRF1W5W2rEbw6MupiyDOjvcveqGtYjJ1mZfck9U=",
-        "owner": "NixOS",
-        "repo": "nixos-artwork",
-        "rev": "9d2cdedd73d64a068214482902adea3d02783ba8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixos-artwork",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1751792365,
@@ -998,7 +982,6 @@
         "jovian": "jovian_2",
         "lanzaboote": "lanzaboote",
         "nix-flatpak": "nix-flatpak",
-        "nixos-artwork": "nixos-artwork",
         "nixpkgs": "nixpkgs_5",
         "nixvim": "nixvim",
         "nur": "nur",

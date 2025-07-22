@@ -1,9 +1,7 @@
 {
-  config,
   lib,
   pkgs,
   cfgOpts,
-  inputs,
   myUser,
   ...
 }: let
@@ -38,13 +36,13 @@ in {
     };
     wallpaper = {
       dark = lib.mkOption {
-        default = "${inputs.nixos-artwork}/wallpapers/nix-wallpaper-binary-black.png";
+        default = pkgs.nixos-artwork.wallpapers.binary-black.gnomeFilePath;
         description = "File path to choosen wallpaper.";
         example = "/path/to/file.ext";
         type = lib.types.str;
       };
       light = lib.mkOption {
-        default = "${inputs.nixos-artwork}/wallpapers/nix-wallpaper-binary-blue.png";
+        default = pkgs.nixos-artwork.wallpapers.binary-blue.gnomeFilePath;
         description = "File path to choosen wallpaper.";
         example = "/path/to/file.ext";
         type = lib.types.str;

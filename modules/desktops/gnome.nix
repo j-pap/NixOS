@@ -5,7 +5,6 @@
   #cfgHosts,
   cfgOpts,
   cfgTerm,
-  inputs,
   myUser,
   ...
 }: let
@@ -42,13 +41,13 @@
       ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${kitty.light}.conf /home/${myUser}/.config/kitty/current-theme.conf
       kill -SIGUSR1 $(pidof kitty) 2>/dev/null
       # Wallpaper
-      gsettings set org.gnome.desktop.background picture-uri '${inputs.nixos-artwork}/wallpapers/nix-wallpaper-binary-blue.png'
+      gsettings set org.gnome.desktop.background picture-uri '${pkgs.nixos-artwork.wallpapers.binary-blue.gnomeFilePath}'
     elif [[ "$CURRENT_THEME" = "prefer-dark" ]]; then
       # Kitty
       ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${kitty.dark}.conf /home/${myUser}/.config/kitty/current-theme.conf
       kill -SIGUSR1 $(pidof kitty) 2>/dev/null
       # Wallpaper
-      gsettings set org.gnome.desktop.background picture-uri-dark '${inputs.nixos-artwork}/wallpapers/nix-wallpaper-binary-black.png'
+      gsettings set org.gnome.desktop.background picture-uri-dark '${pkgs.nixos-artwork.wallpapers.binary-black.gnomeFilePath}'
     fi;
   '';
 in {
