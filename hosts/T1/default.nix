@@ -72,15 +72,13 @@ in {
         calibre                 # Book organization
 
       # Multimedia
-        #mpv                    # Media player
+        flacon                  # CUE converter
         jellyfin-media-player   # Jellyfin client
         picard                  # Music tagger
         pocket-casts            # Podcast player
         tauon                   # Music player
         tidal-dl                # Tidal downloader
         tidal-hifi              # Tidal client
-
-      # Networking
 
       # Productivity
         libreoffice-qt6-fresh   # Office suite

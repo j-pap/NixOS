@@ -94,7 +94,7 @@ in {
         zenmonitor            # CPU stats
 
       # Multimedia
-        #mpv                  # Media player
+        flacon                # CUE converter
         jellyfin-media-player # Jellyfin client
         picard                # Music tagger
         pocket-casts          # Podcast player
