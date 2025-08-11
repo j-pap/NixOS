@@ -103,15 +103,26 @@ in {
       variables.GSK_RENDERER = "gl";
     };
 
-    /*
-    nixpkgs.overlays = lib.mkIf (cfgOpts.git.ssh.enable && cfgOpts."1password".enable) [
+    nixpkgs.overlays = [
       (final: prev: {
-        gnome-keyring = prev.gnome-keyring.overrideAttrs (oldAttrs: {
+        /* gnome-keyring = lib.mkIf (cfgOpts.git.ssh.enable && cfgOpts."1password".enable) prev.gnome-keyring.overrideAttrs (oldAttrs: {
           mesonFlags = (builtins.filter (flag: flag != "--enable-ssh-agent") oldAttrs.mesonFlags) ++ [ "--disable-ssh-agent" ];
+        }); */
+        nautilus = prev.nautilus.overrideAttrs (super: {
+          buildInputs = super.buildInputs ++ builtins.attrValues {
+            inherit (prev.gst_all_1)
+              gstreamer
+              gst-libav
+              #gst-plugins-base # Already included with super.buildInputs
+              gst-plugins-good
+              #gst-plugins-bad
+              #gst-plugins-ugly
+              gst-vaapi
+            ;
+          };
         });
       })
     ];
-    */
 
     programs = {
       kdeconnect = {
@@ -145,8 +156,14 @@ in {
     security.pam.services.gdm.enableGnomeKeyring = true;
 
     services = {
-      desktopManager.gnome.enable = true;
-      displayManager.gdm.enable = true;
+      desktopManager.gnome = {
+        enable = true;
+        debug = true;
+      };
+      displayManager.gdm = {
+        enable = true;
+        debug = true;
+      };
 
       gnome = {
         gnome-browser-connector.enable = true;
