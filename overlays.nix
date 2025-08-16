@@ -13,11 +13,13 @@ final: prev: {
 
   iosvmata = prev.callPackage ./pkgs/fonts/iosvmata.nix { };
 
+  #nix = prev.nixVersions.latest;
+  nix = prev.nixVersions.nix_2_28;
+
   nix-plugins = prev.nix-plugins.overrideAttrs (old: {
     buildInputs = [
-      final.nixVersions.nix_2_28
-      #final.nixVersions.latest
       final.boost
+      final.nix
     ];
     patches = (old.patches or [ ]) ++ [ ./pkgs/nix-plugins/nix-plugins.patch ];
   });

@@ -36,12 +36,6 @@
   };
 
   outputs = { self, nixpkgs, stable, ... } @ inputs: let
-    overlays = [
-      (import ./overlays.nix)
-      inputs.nur.overlays.default
-    ];
-
-
     # 'nixos-rebuild switch --flake .#hostname'
     hosts = {
       /*
@@ -124,7 +118,10 @@
               };
             };
           };
-          overlays = overlays;
+          overlays = [
+            (import ./overlays.nix)
+            inputs.nur.overlays.default
+          ];
         };
       })
       inputs.disko.nixosModules.disko

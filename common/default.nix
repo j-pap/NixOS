@@ -246,7 +246,6 @@ in {
       };
       nixPath = [ "nixpkgs=/etc/nix/nixpkgs" ];
       optimise.automatic = true;
-      package = pkgs.nixVersions.nix_2_28;
       registry = {
         devshells.to = {
           type = "github";
@@ -263,12 +262,7 @@ in {
           "flakes"
           "nix-command"
         ];
-        extra-builtins-file = [
-          #"${cfgPath}/libs/extra-builtins.nix"
-          #../libs/extra-builtins.nix
-          "${inputs.self}/libs/extra-builtins.nix"
-          #"${./..}/libs/extra-builtins.nix"
-        ];
+        extra-builtins-file = [ "${inputs.self}/libs/extra-builtins.nix" ];
         plugin-files = [ "${pkgs.nix-plugins}/lib/nix/plugins" ];
         substituters = [
           "https://nix-community.cachix.org"
