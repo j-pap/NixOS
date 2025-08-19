@@ -1,4 +1,8 @@
 {
+  lib,
+  ...
+}:
+{
   disko.devices.disk.vda = {
     type = "disk";
     device = "/dev/vda";
@@ -26,17 +30,23 @@
               "--force"
               "--label NixOS"
             ];
-            subvolumes = {
+            subvolumes = let
+              defaultOptions = [
+                "compress=zstd"
+                "discard=async"
+                "noatime"
+              ];
+            in {
               "root" = {
-                mountOptions = [ "compress=zstd" "noatime" ];
+                mountOptions = defaultOptions;
                 mountpoint = "/";
               };
               "home" = {
-                mountOptions = [ "compress=zstd" ];
+                mountOptions = lib.remove "noatime" defaultOptions;
                 mountpoint = "/home";
               };
               "nix" = {
-                mountOptions = [ "compress=zstd" "noatime" ];
+                mountOptions = defaultOptions;
                 mountpoint = "/nix";
               };
             };
@@ -45,5 +55,4 @@
       };
     };
   };
-
 }

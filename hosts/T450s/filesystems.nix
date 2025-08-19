@@ -1,4 +1,8 @@
 {
+  lib,
+  ...
+}:
+{
   disko.devices.disk.sda = {
     type = "disk";
     device = "/dev/sda";
@@ -26,17 +30,23 @@
               "--force"
               "--label NixOS"
             ];
-            subvolumes = {
+            subvolumes = let
+              defaultOptions = [
+                "compress=zstd"
+                "discard=async"
+                "noatime"
+              ];
+            in {
               "root" = {
-                mountOptions = [ "compress=zstd" "noatime" ];
+                mountOptions = defaultOptions;
                 mountpoint = "/";
               };
               "home" = {
-                mountOptions = [ "compress=zstd" ];
+                mountOptions = lib.remove "noatime" defaultOptions;
                 mountpoint = "/home";
               };
               "nix" = {
-                mountOptions = [ "compress=zstd" "noatime" ];
+                mountOptions = defaultOptions;
                 mountpoint = "/nix";
               };
             };
@@ -45,17 +55,4 @@
       };
     };
   };
-
-  fileSystems."/mnt/nas" = {
-    device = "oscuras:/mnt/user";
-    fsType = "nfs";
-    options = [
-      "noauto"
-      "x-systemd.automount"
-      "x-systemd.device-timeout=5s"
-      "x-systemd.idle-timeout=600"
-      "x-systemd.mount-timeout=5s"
-    ];
-  };
-
 }

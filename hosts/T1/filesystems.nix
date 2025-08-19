@@ -1,4 +1,8 @@
 {
+  lib,
+  ...
+}:
+{
   boot = {
     # sudo btrfs inspect-internal map-swapfile -r /.swap/swapfile
     kernelParams = [ "resume_offset=533760" ];
@@ -32,17 +36,23 @@
               "--force"
               "--label NixOS"
             ];
-            subvolumes = {
+            subvolumes = let
+              defaultOptions = [
+                "compress=zstd"
+                "discard=async"
+                "noatime"
+              ];
+            in {
               "root" = {
-                mountOptions = [ "compress=zstd" "noatime" ];
+                mountOptions = defaultOptions;
                 mountpoint = "/";
               };
               "home" = {
-                mountOptions = [ "compress=zstd" ];
+                mountOptions = lib.remove "noatime" defaultOptions;
                 mountpoint = "/home";
               };
               "nix" = {
-                mountOptions = [ "compress=zstd" "noatime" ];
+                mountOptions = defaultOptions;
                 mountpoint = "/nix";
               };
               "swap" = {
@@ -57,15 +67,15 @@
   };
 
   fileSystems."/mnt/nas" = {
-    device = "oscuras:/mnt/user";
+    device = "rm21:/mnt/user";
     fsType = "nfs";
     options = [
+      "_netdev"
       "noauto"
       "x-systemd.automount"
       "x-systemd.device-timeout=5s"
-      "x-systemd.idle-timeout=600"
+      "x-systemd.idle-timeout=10m"
       "x-systemd.mount-timeout=5s"
     ];
   };
-
 }
