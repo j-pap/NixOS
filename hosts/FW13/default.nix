@@ -3,7 +3,6 @@
   lib,
   pkgs,
   cfgHosts,
-  #cfgPath,
   myUser,
   ...
 }: let
@@ -53,8 +52,8 @@ in {
     stylix = {
       enable = false;
       wallpaper = {
-        #dark = "${cfgPath}/assets/wallpapers/FW13/dark.png";
-        #light = "${cfgPath}/assets/wallpapers/FW13/light.png";
+        #dark = "${inputs.self}/assets/wallpapers/FW13/dark.png";
+        #light = "${inputs.self}/assets/wallpapers/FW13/light.png";
       };
     };
     syncthing.enable = true;

@@ -4,7 +4,6 @@
   pkgs,
   cfgHosts,
   cfgOpts,
-  cfgPath,
   cfgTerm,
   inputs,
   myUser,
@@ -38,9 +37,9 @@
     light = "org.kde.breeze.desktop";
   };
   wallpaper = {
-    dark = "${cfgPath}/assets/wallpapers/dark.png";
-    light = "${cfgPath}/assets/wallpapers/light.png";
-    sddm = "${cfgPath}/assets/wallpapers/login.png";
+    dark = "${inputs.self}/assets/wallpapers/dark.png";
+    light = "${inputs.self}/assets/wallpapers/light.png";
+    sddm = "${inputs.self}/assets/wallpapers/login.png";
   };
   sddm-astronaut-pkg = pkgs.sddm-astronaut.override {
     themeConfig = {

@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  cfgPath,
   myUser,
   ...
 }: let
@@ -85,7 +84,7 @@ in {
           {
             desc = "Goto NixOS config";
             on = ["g" "n"];
-            run = "cd ${cfgPath}";
+            run = "cd /etc/nixos";
           }
 
           # cd back to the root of the current Git repository

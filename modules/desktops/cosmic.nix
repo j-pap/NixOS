@@ -3,7 +3,7 @@
   lib,
   pkgs,
   cfgOpts,
-  cfgPath,
+  inputs,
   myUser,
   ...
 }: let
@@ -27,8 +27,8 @@
     package = pkgs.papirus-icon-theme.override { color = "violet"; };
   };
   wallpaper = {
-    day = "${cfgPath}/assets/wallpapers/blobs-l.png";
-    night = "${cfgPath}/assets/wallpapers/blobs-d.png";
+    day = "${inputs.self}/assets/wallpapers/blobs-l.png";
+    night = "${inputs.self}/assets/wallpapers/blobs-d.png";
   };
 in {
   options.myOptions.desktops.cosmic.enable = lib.mkEnableOption "Cosmic desktop";

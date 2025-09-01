@@ -1,5 +1,4 @@
 {
-  cfgPath,
   myUser,
   ...
 }: {
@@ -7,7 +6,7 @@
     enable = true;
     shellAliases = {
       ".." = "cd ..";
-      ".df" = "cd ${cfgPath}";
+      ".df" = "cd /etc/nixos";
       "bonsai" = "cbonsai --screensaver";
       "exifinfo" = "exiftool -a -g -s \"$@\"";
       "exifstrip" = "exiftool -All= \"$@\"";

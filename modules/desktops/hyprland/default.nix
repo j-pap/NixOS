@@ -4,8 +4,8 @@
   pkgs,
   cfgHosts,
   cfgOpts,
-  cfgPath,
   cfgTerm,
+  inputs,
   myUser,
   ...
 }: let
@@ -28,7 +28,7 @@
     package = pkgs.papirus-icon-theme.override { color = "violet"; };
   };
   wallpaper = {
-    dir = "${cfgPath}/assets/wallpapers";
+    dir = "${inputs.self}/assets/wallpapers";
     regreet = "${wallpaper.dir}/blobs-l.png";
   };
 in {

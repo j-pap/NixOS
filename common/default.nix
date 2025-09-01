@@ -3,7 +3,6 @@
   lib,
   pkgs,
   cfgOpts,
-  cfgPath,
   cfgTerm,
   inputs,
   myUser,
@@ -330,7 +329,7 @@ in {
 
     sops = {
       age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      defaultSopsFile = "${cfgPath}/secrets/secrets.yaml";
+      defaultSopsFile = "${inputs.self}/secrets/secrets.yaml";
       secrets = {
         "user/password".neededForUsers = true;
         "wifi.env" = { };

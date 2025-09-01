@@ -104,7 +104,6 @@
         _module.args = {
           cfgHosts = config.myHosts;
           cfgOpts = config.myOptions;
-          cfgPath = "/etc/nixos";
           cfgTerm = "kitty";  # kitty or wezterm
           myUser = config.myUser;
         };

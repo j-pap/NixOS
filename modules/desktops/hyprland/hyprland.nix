@@ -2,14 +2,14 @@
   lib,
   pkgs,
   cfgOpts,
-  cfgPath,
+  inputs,
   myUser,
   ...
 }: let
   cfg = cfgOpts.desktops.hyprland;
 
   wallpaper = {
-    dir = "${cfgPath}/assets/wallpapers";
+    dir = "${inputs.self}/assets/wallpapers";
     day = "${wallpaper.dir}/blobs-l.png";
     night = "${wallpaper.dir}/blobs-d.png";
   };
