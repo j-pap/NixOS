@@ -30,7 +30,7 @@
 
     hardware.bluetooth.enable = false;
 
-    # "1password", flatpak, kitty, wezterm
+    # "1password", kitty, wezterm
     "1password".enable = true;
   };
 

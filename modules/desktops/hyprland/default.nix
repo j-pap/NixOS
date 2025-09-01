@@ -160,6 +160,8 @@ in {
         # Wayland
           pkgs.kdePackages.qtwayland      # QT6 Wayland support
           pkgs.libsForQt5.qt5.qtwayland   # QT5 Wayland support
+      ] ++ lib.optional (config.services.flatpak.enable) [
+        pkgs.kdePackages.discover # Flatpak store
       ];
     };
 

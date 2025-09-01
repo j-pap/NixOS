@@ -84,6 +84,9 @@ in {
         cursor.package          # For SDDM
         icon.package            # Icon theme
         sddm-astronaut-pkg      # SDDM theme
+      ] ++ lib.optional (config.services.flatpak.enable) [
+        pkgs.kdePackages.discover     # Flatpak store
+        pkgs.kdePackages.flatpak-kcm  # Flatpak settings
       ] ++ builtins.attrValues {
         inherit (pkgs)
         # Multimedia

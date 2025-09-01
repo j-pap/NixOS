@@ -43,7 +43,7 @@ in {
       bluetooth.enable = true;
     };
 
-    # "1password", containers, flatpak, gaming, kitty, plex, spicetify, stylix, syncthing, vm, wezterm, yubikey
+    # "1password", containers, gaming, kitty, plex, spicetify, stylix, syncthing, vm, wezterm, yubikey
     "1password".enable = true;
     containers.enable = true;
     gaming.enable = true;

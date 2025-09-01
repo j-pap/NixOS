@@ -1,7 +1,6 @@
 [
   ./1password.nix
   ./containers.nix
-  ./flatpak.nix
   ./gaming.nix
   ./git.nix
   ./kitty.nix

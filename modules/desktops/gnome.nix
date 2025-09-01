@@ -81,6 +81,8 @@ in {
       systemPackages = [
       # Theming
         cursor.package                # GDM login screen
+      ] ++ lib.optional (config.services.flatpak.enable) [
+        pkgs.gnome-software           # Flatpak store
       ] ++ builtins.attrValues {
         inherit (pkgs)
         # GNOME

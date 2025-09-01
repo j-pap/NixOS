@@ -19,7 +19,6 @@
     };
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
     lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     nixvim.url = "github:nix-community/nixvim";
     nur.url = "github:nix-community/NUR";
     plasma-manager = {

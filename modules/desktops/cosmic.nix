@@ -40,6 +40,8 @@ in {
       # Theming
         #cursor.package      # Cursor theme
         #icon.package        # Icon theme
+      ] ++ lib.optional (config.services.flatpak.enable) [
+        pkgs.cosmic-store    # Flatpak store
       ] ++ builtins.attrValues {
         inherit (pkgs)
         # Text

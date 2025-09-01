@@ -38,7 +38,7 @@ in {
       nvidia.enable = true;
     };
 
-    # "1password", flatpak, gaming, kitty, openrgb, plex, spicetify, syncthing, vm, wezterm, yubikey
+    # "1password", gaming, kitty, openrgb, plex, spicetify, syncthing, vm, wezterm, yubikey
     "1password".enable = true;
     gaming.enable = true;
     plex.enable = true;

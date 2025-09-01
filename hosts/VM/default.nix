@@ -20,7 +20,7 @@
 
     hardware.audio.enable = false;
 
-    # "1password", flatpak, kitty, wezterm
+    # kitty, wezterm
   };
 
 
