@@ -12,9 +12,10 @@
       "exifstrip" = "exiftool -All= \"$@\"";
       "ff" = "fastfetch";
       "fishy" = "asciiquarium";
-      "ll" = "ls -la";
+      "ll" = "eza --long --all --header --links --group --modified --git --icons";
       "nix-diff" = "nix store diff-closures /run/current-system \"$@\"";
       "nix-host" = "nixos-rebuild build --build-host \"$@\"";
+      "tree" = "eza --tree --all";
     };
   };
 }
