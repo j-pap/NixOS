@@ -82,6 +82,7 @@ in {
           cbonsai               # Bonsai growing
 
         # Files
+          caligula              # Disk imaging
           cryptomator           # Encrypt cloud files
           exiftool              # File metadata
           file                  # File information
@@ -115,9 +116,12 @@ in {
           #cifs-utils           # SMB support
           dig                   # DNS tools
           ethtool               # Diagnostic / control
+          ipcalc                # Network calculator
           mtr                   # ping/traceroute
           nfs-utils             # NFS support
           nmap                  # Discovery
+          sipcalc               # Advanced network calculator
+          speedtest-cli         # Bandwidth testing
           tcpdump               # Sniffer
           traceroute            # Route tracing
           whois                 # Domain lookup
@@ -151,7 +155,6 @@ in {
           tldr                  # Abbreviated manual
           tmux                  # Multiplexor
           toybox                # Various commands
-          tree                  # Directory layout
           wget                  # Retriever
           wl-clipboard          # Enable wl-copy/wl-paste
           xdg-utils             # Environment integration
