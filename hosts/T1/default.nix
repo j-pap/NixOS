@@ -73,7 +73,7 @@ in {
 
       # Multimedia
         flacon                  # CUE converter
-        jellyfin-media-player   # Jellyfin client
+        #jellyfin-media-player   # Jellyfin client
         picard                  # Music tagger
         pocket-casts            # Podcast player
         tauon                   # Music player
@@ -191,7 +191,7 @@ in {
     };
 
     openrazer = {
-      enable = true;
+      #enable = true;
       users = [ myUser ];
     };
   };

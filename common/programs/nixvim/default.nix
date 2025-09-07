@@ -7,7 +7,7 @@
 }: {
   home-manager.users.${myUser} = { config, osConfig, ... }: {
     imports = [
-      inputs.nixvim.homeManagerModules.nixvim
+      inputs.nixvim.homeModules.nixvim
       ./plugins
     ];
 

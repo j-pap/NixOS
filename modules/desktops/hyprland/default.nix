@@ -65,7 +65,7 @@ in {
       swww-daemon = lib.getExe' pkgs.swww "swww-daemon";
       terminal = lib.getExe pkgs.${cfgTerm};
       thunderbird = lib.getExe pkgs.thunderbird;
-      tuigreet =  lib.getExe pkgs.greetd.tuigreet;
+      tuigreet =  lib.getExe pkgs.tuigreet;
       waybar = lib.getExe config.programs.waybar.package;
       wl-copy = lib.getExe' pkgs.wl-clipboard "wl-copy";
       wofi = lib.getExe pkgs.wofi;
@@ -320,9 +320,9 @@ in {
         enable = true;
         package = (
           if (config.programs.regreet.enable) then
-            pkgs.greetd.regreet
+            pkgs.regreet
           else
-            pkgs.greetd.tuigreet
+            pkgs.tuigreet
         );
         settings = let
           hyprApps = cfg.hyprApps;
@@ -341,6 +341,7 @@ in {
           # Auto login
           #initial_session = config.services.greetd.settings.default_session;
         };
+        #useTextGreeter = lib.mkIf (!config.programs.regreet.enable) true;
       };
 
       hypridle = {

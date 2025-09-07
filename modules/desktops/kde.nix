@@ -159,8 +159,6 @@ in {
     home-manager.users.${myUser} = { config, osConfig, ... }: let
       polo = config.programs.plasma.kwin.scripts.polonium.enable;
     in {
-      imports = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];
-
       home.file = {
         # Sets profile image
         ".face".source = profileImg;

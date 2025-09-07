@@ -94,7 +94,7 @@ in {
 
       # Multimedia
         flacon                # CUE converter
-        jellyfin-media-player # Jellyfin client
+        #jellyfin-media-player # Jellyfin client
         picard                # Music tagger
         pocket-casts          # Podcast player
         tauon                 # Music player
@@ -252,13 +252,11 @@ in {
       #extraRemotes = ["lvfs-testing"];
     };
 
-    logind = {
-      lidSwitch = "suspend";
-      powerKey = "suspend-then-hibernate";
-      extraConfig = ''
-        IdleAction=suspend
-        IdleActionSec=10m
-      '';
+    logind.settings.Login = {
+      HandleLidSwitch = "suspend";
+      HandlePowerKey = "suspend-then-hibernate";
+      IdleAction = "suspend";
+      IdleActionSec = "10m";
     };
 
     udev.extraRules = let

@@ -53,7 +53,6 @@
   home-manager.users.${myUser} = let
     hyprApps = cfgOpts.desktops.hyprland.hyprApps;
   in {
-    imports = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];
     home.stateVersion = "24.11";
 
     programs = {

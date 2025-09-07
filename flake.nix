@@ -54,7 +54,7 @@
         inputs.lanzaboote.nixosModules.lanzaboote
       ];
 
-      # 'nix build .#nixosConfigurations.iso.config.system.build.isoImage' or 'nix build .#buildIso'
+      # 'nix build .#nixosConfigurations.iso.config.system.build.isoImage'
       iso = {
         hostIsBare = true;
         modules = [
@@ -127,6 +127,9 @@
       inputs.home-manager.nixosModules.home-manager {
         home-manager = {
           extraSpecialArgs = specialArgs;
+          sharedModules = [
+            inputs.plasma-manager.homeModules.plasma-manager
+          ];
           useGlobalPkgs = true;
           useUserPackages = true;
         };
@@ -135,16 +138,7 @@
       inputs.sops-nix.nixosModules.sops
       inputs.stylix.nixosModules.stylix
     ];
-
-
-    supportedSystems = [ "aarch64-linux" "x86_64-linux" ];
-    forEachSystem = nixpkgs.lib.genAttrs supportedSystems;
   in {
     nixosConfigurations = builtins.mapAttrs mkSystem hosts;
-
-    packages = forEachSystem (system: {
-      default = self.packages.${system}.buildIso;
-      buildIso = self.nixosConfigurations.iso.config.system.build.isoImage;
-    });
   };
 }
