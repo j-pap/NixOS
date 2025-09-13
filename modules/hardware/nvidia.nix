@@ -48,10 +48,12 @@ in {
           # Starting w/ 560, open drivers are used by default
           open = false;
           # beta or stable
-          package = config.boot.kernelPackages.nvidiaPackages.stable;
+          package = config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs (old: {
+            buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.bash ]; # Patches nvidia-sleep.sh via patchShebangs
+          });
           powerManagement = {
-            # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" / enables nvidia-hibernate/resume/sleep.services
-              # enable if graphical corruption on resumption from sleep
+            # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" / enables nvidia-hibernate/resume/suspend.services
+              # enable if graphical corruption on resumption from suspend
             enable = true;
             # Experimental: Turns off GPU when not in use - cannot be used w/ nvidia.prime.sync
             finegrained = false;
