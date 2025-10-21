@@ -15,6 +15,7 @@
       "ll" = "eza --long --all --header --links --group --modified --git --icons";
       "nix-diff" = "nix store diff-closures /run/current-system \"$@\"";
       "nix-host" = "nixos-rebuild build --build-host \"$@\"";
+      "showdns" = "nmcli device show \"$@\" | grep DNS";
       "tree" = "eza --tree --all";
     };
   };
