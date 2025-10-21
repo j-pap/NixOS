@@ -4,19 +4,9 @@
   pkgs,
   cfgOpts,
   myUser,
-  nixSecrets,
   ...
 }: let
   userName = config.users.users.${myUser}.description;
-  hostName = config.networking.hostName;
-
-  #dohProvider = "https://dns.quad9.net/dns-query";
-  dohProvider = (
-    if (hostName == "Ridge" || hostName == "T1" || hostName == "VM") then
-      nixSecrets.dns.doh.int
-    else
-      nixSecrets.dns.doh.ext
-  ) + hostName;
 in {
   options.myOptions.browser = lib.mkOption {
     default = "floorp";
@@ -32,7 +22,7 @@ in {
       ]) ++ (lib.optionals (cfgOpts.desktops.kde.enable) [
         pkgs.kdePackages.plasma-browser-integration
       ]);
-      policies = import ./policies.nix { inherit dohProvider; };
+      policies = import ./policies.nix;
 
       profiles.${myUser} = {
         id = 0;
@@ -42,7 +32,7 @@ in {
         containers = import ./containers.nix;
         containersForce = true;
         search = import ./search.nix { inherit lib pkgs; };
-        settings = import ./settings.nix { inherit config lib cfgOpts dohProvider; };
+        settings = import ./settings.nix { inherit config lib cfgOpts; };
 
         extensions.packages = let
           inherit (pkgs.nur.repos.rycee) firefox-addons;
@@ -54,9 +44,10 @@ in {
           bypass-paywalls
         ] ++ builtins.attrValues {
           # Search extensions at: https://nur.nix-community.org/repos/rycee/
-          #inherit (firefox-addons)
-            # Additional rycee.firefox-addons extensions
-          #;
+          inherit (firefox-addons)
+            # Additional 'rycee.firefox-addons' extensions
+            enhancer-for-youtube
+          ;
         };
       };
 

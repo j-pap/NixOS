@@ -1,6 +1,4 @@
 {
-  dohProvider
-}: {
   AutofillAddressEnabled = false;
   AutofillCreditCardEnabled = false;
   DisableFirefoxStudies = true;
@@ -9,9 +7,9 @@
   DisableTelemetry = true;
   DisplayBookmarksToolbar = "newtab";
   DNSOverHTTPS = {
-    Enabled = true;
+    Enabled = false;
     Fallback = false;
-    ProviderURL = dohProvider;
+    #ProviderURL = dohProvider;
   };
   EnableTrackingProtection = {
     Locked = false;

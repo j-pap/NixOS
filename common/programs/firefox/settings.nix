@@ -2,7 +2,6 @@
   config,
   lib,
   cfgOpts,
-  dohProvider,
   ...
 }: lib.mkMerge [
   {
@@ -180,9 +179,9 @@
     /** DNS-over-HTTPS ***/
     "network.dns.skipTRR-when-parental-control-enabled" = false;
     # 0=default, 2=DoH first, 3=DoH only, 5=off
-      "network.trr.mode" = 3;
-    "network.trr.uri" = dohProvider;
-    "network.trr.custom_uri" = dohProvider;
+      "network.trr.mode" = 5;
+    #"network.trr.uri" = dohProvider;
+    #"network.trr.custom_uri" = dohProvider;
 
     /** PROXY / SOCKS / IPv6 ***/
     "network.file.disable_unc_paths" = true;
