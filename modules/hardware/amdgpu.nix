@@ -56,14 +56,6 @@ in {
 
       hardware = {
         amdgpu = {
-          # Disabling amdvlk to use mesa unless specifically required
-          amdvlk = {
-            # hardware.graphics.extraPackages: pkgs.amdvlk
-            #enable = true;
-            # hardware.graphics.extraPackages32: pkgs.driversi686Linux.amdvlk
-            #support32Bit.enable = true;
-          };
-
           # boot.initrd.kernelModules: "amdgpu"
           initrd.enable = true;
           # hardware.graphics.extraPackages: pkgs.rocmPackages.clr/.icd

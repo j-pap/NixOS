@@ -6,8 +6,10 @@
 
     neo-tree = {
       enable = true;
-      filesystem.window.mappings = { };
-      window.mappings = { };
+      settings = {
+        filesystem.window.mappings = { };
+        window.mappings = { };
+      };
     };
   };
 }

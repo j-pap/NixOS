@@ -35,9 +35,13 @@ in {
       {
         programs.git = {
           enable = true;
-          extraConfig.init.defaultBranch = "main";
-          userEmail = "205946337+j-pap@users.noreply.github.com";
-          userName = "j-pap";
+          settings = {
+            init.defaultBranch = "main";
+            user = {
+              email = "205946337+j-pap@users.noreply.github.com";
+              name = "j-pap";
+            };
+          };
         };
       }
 
@@ -54,7 +58,7 @@ in {
 
       (lib.mkIf (cfg.ssh.enable) {
         programs = {
-          git.extraConfig = {
+          git.settings = {
             commit.gpgsign = true;
             gpg = {
               format = "ssh";

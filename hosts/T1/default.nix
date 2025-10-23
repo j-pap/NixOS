@@ -191,7 +191,7 @@ in {
     };
 
     openrazer = {
-      #enable = true;
+      enable = true;
       users = [ myUser ];
     };
   };
