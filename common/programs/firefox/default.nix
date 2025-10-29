@@ -5,12 +5,11 @@
   cfgOpts,
   myUser,
   ...
-}: let
-  userName = config.users.users.${myUser}.description;
-in {
+}:
+{
   options.myOptions.browser = lib.mkOption {
     default = "floorp";
-    description = "Which Firefox-based browser to configure via Home-Manager: Firefox, Floorp, or LibreWolf";
+    description = "Which Firefox-based browser to configure via Home-Manager: firefox, floorp, or librewolf";
     type = lib.types.str;
   };
 
@@ -26,7 +25,7 @@ in {
 
       profiles.${myUser} = {
         id = 0;
-        name = userName;
+        name = config.users.users.${myUser}.description;
         isDefault = true;
 
         containers = import ./containers.nix;
@@ -49,11 +48,6 @@ in {
             enhancer-for-youtube
           ;
         };
-      };
-
-      profiles.vanilla = {
-        id = 1;
-        name = "Vanilla";
       };
     };
   };
