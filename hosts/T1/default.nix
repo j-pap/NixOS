@@ -89,7 +89,10 @@ in {
       inherit (pkgs.openraPackages_2019.engines) bleed;
     };
     # Set Firefox to use GPU for video codecs
-    variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render";
+    variables = {
+      MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render";  # Nvidia
+      #MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0d:00.0-render";  # AMD
+    };
   };
 
   programs = {
@@ -187,7 +190,7 @@ in {
     nvidia.prime = {
       amdgpuBusId = "PCI:13:0:0";
       nvidiaBusId = "PCI:1:0:0";
-      #sync.enable = true;
+      #reverseSync.enable = true;
     };
 
     openrazer = {
@@ -215,7 +218,10 @@ in {
       else
         pkgs.linuxPackages_latest
     );
-    kernelParams = [ "amd_pstate=active" ];
+    kernelParams = [
+      "amd_pstate=active"
+      "module_blacklist=amdgpu"
+    ];
 
     loader = {
       efi = {
