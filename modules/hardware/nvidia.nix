@@ -3,11 +3,12 @@
   lib,
   pkgs,
   cfgOpts,
+  ffVersion,
   myUser,
   ...
 }: let
   cfg = cfgOpts.hardware.nvidia;
-  nvidiaPkg = "stable"; # or beta
+  nvidiaPkg = "latest"; # stable, latest, or beta
 in {
   options.myOptions.hardware.nvidia.enable = lib.mkEnableOption "Nvidia GPU";
 
@@ -25,29 +26,29 @@ in {
           pkgs.nvtopPackages.nvidia
         ];
         variables = {
-          __GL_GSYNC_ALLOWED = 1;
-          __GL_VRR_ALLOWED = 1;
+          # Wayland
+          GBM_BACKEND = "nvidia-drm";
           __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-          GBM_BACKEND = "nvidia-drm";  # Could possibily cause Firefox to crash - comment out if so
-          LIBVA_DRIVER_NAME = "nvidia";  # Hardware Acceleration - 'nvidia' or 'vdpau'
-          MOZ_DISABLE_RDD_SANDBOX = 1;  # Disables Firefox's sandbox for the RDD process that the decoder runs in
+
+          # Hardware Acceleration
           NVD_BACKEND = "direct";  # Library backend - 'direct' or 'egl'
+          MOZ_DISABLE_RDD_SANDBOX = 1;  # Disables Firefox's sandbox for the RDD process that the decoder runs in
+          LIBVA_DRIVER_NAME = "nvidia";  # VA-API - 'nvidia' or 'vdpau'
+          #CUDA_DISABLE_PERF_BOOST = 1;  # Disable high power draw when using HW acceleration - 580.105.08+ required
         };
       };
 
       hardware = {
         graphics.enable = true;
         nvidia = {
-          modesetting.enable = true;  # "nvidia-drm.modeset=1" / "nvidia-drm.fbdev=1" enables dedicated framebuffer
+          modesetting.enable = true;  # "nvidia-drm.modeset=1" / "nvidia-drm.fbdev=1" - enables dedicated framebuffer
           nvidiaSettings = true;
-          open = false;  # Starting w/ 560, open drivers are used by default
+          open = false;  # Used by default with v560+
           package = config.boot.kernelPackages.nvidiaPackages.${nvidiaPkg}.overrideAttrs (old: {
             buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.bash ];  # Patches nvidia-sleep.sh via patchShebangs
           });
           powerManagement = {
-            # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" / enables nvidia-hibernate/resume/suspend.services
-              # enable if graphical corruption on resumption from suspend
-            enable = true;
+            enable = true;  # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" - enables nvidia-hibernate/resume/suspend.services
             finegrained = false;  # Experimental: Turns off GPU when not in use - cannot be used w/ nvidia.prime.sync
           };
           videoAcceleration = true;  # nvidia-vaapi-driver
@@ -56,9 +57,7 @@ in {
 
       # Firefox about:config(s)
       home-manager.users.${myUser}.programs.${cfgOpts.browser}.profiles.${myUser}.settings = {
-        "gfx.x11-egl.force-enabled" = true;
-        "media.rdd-ffmpeg.enabled" = true;
-        "widget.dmabuf.force-enabled" = true;
+        "media.rdd-ffmpeg.enabled" = lib.mkIf (lib.versionOlder ffVersion "97.0.0") true;  # FF97+ defaults to true
       };
 
       programs.gamescope.args = [ "-F nis" ];
@@ -68,9 +67,11 @@ in {
     #(lib.mkIf (cfg.enable && cfgOpts.desktops.hyprland.enable) { })
 
     (lib.mkIf (cfg.enable && cfgOpts.desktops.kde.enable) {
+      # Disable GSP - Smoother Plasma Wayland experience
       boot.kernelParams = [
-        "nvidia.NVreg_EnableGpuFirmware=0"  # Disable GSP Mode - Smoother Plasma Wayland experience
+        "nvidia.NVreg_EnableGpuFirmware=0"
       ];
+      hardware.nvidia.gsp.enable = false;
     })
   ];
 }

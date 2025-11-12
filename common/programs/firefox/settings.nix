@@ -2,6 +2,7 @@
   config,
   lib,
   cfgOpts,
+  ffVersion,
   ...
 }: let
   host = config.networking.hostName;
@@ -120,7 +121,7 @@ in lib.mkMerge [
       "pdfjs.enableScripting" = false;
 
     ### EXTENSIONS ###
-      #"extensions.enabledScopes" = 15; # 1=profile, 2=user, 4=application, 8=system, 16=temporary, 31=all
+      "extensions.enabledScopes" = 7; # 1=profile, 2=user, 4=application, 8=system, 16=temporary, 31=all
 
     ### HEADERS / REFERERS ###
       "network.http.referer.XOriginTrimmingPolicy" = 2; # 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port
@@ -252,29 +253,24 @@ in lib.mkMerge [
      * START: MY OVERRIDES                                                      *
     ****************************************************************************/
     ### GFX ADV ###
-    # Webrender
+    # Webrender (GPU)
       "gfx.webrender.all" = true;
       "gfx.webrender.precache-shaders" = true;
       "gfx.webrender.compositor" = true;
-      "gfx.webrender.compositor.force-enabled" = true;
-    # Webrender (CPU)
-      "gfx.webrender.software" = true;
-      "gfx.webrender.software.opengl" = true;
+      #"gfx.webrender.compositor.force-enabled" = true;  # causes FF to crash when playing videos
+    # Webrender (CPU - forces software rendering)
+      #"gfx.webrender.software" = true;
+      #"gfx.webrender.software.opengl" = true;
     # WebGL
-      "webgl.force-enabled" = true;
+      #"webgl.force-enabled" = true;
     # prefer GPU > CPU
       "layers.gpu-process.enabled" = true;
-      "layers.gpu-process.force-enabled" = true;
+      #"layers.gpu-process.force-enabled" = true;  # 'Wayland does not work in the GPU process'
       "layers.mlgpu.enabled" = true;
-      "media.hardware-video-decoding.enabled" = true;
-      "media.hardware-video-decoding.force-enabled" = true;
       "media.gpu-process-decoder" = true;
-      "media.ffmpeg.vaapi.enabled" = true;
-    # HW/SW decoding
-      "gfx.webrender.dcomp-video-hw-overlay-win" = true;
-      "gfx.webrender.dcomp-video-hw-overlay-win-force-enabled" = true;
-      "gfx.webrender.dcomp-video-sw-overlay-win" = true;
-      "gfx.webrender.dcomp-video-sw-overlay-win-force-enabled" = true;
+      "media.hardware-video-decoding.enabled" = true;
+      "media.hardware-video-decoding.force-enabled" = lib.mkIf (lib.versionAtLeast ffVersion "137.0.0") true;
+      "media.ffmpeg.vaapi.enabled" = lib.mkIf (lib.versionOlder ffVersion "137.0.0") true;
 
     ### TRACKING PROTECTION ADV ###
     # ETP
@@ -540,7 +536,7 @@ in lib.mkMerge [
     # prevent scripts from moving/resizing windows
       "dom.disable_window_move_resize" = true;
     # leave the browser window open even after closing the last tab
-      "browser.tabs.closeWindowWithLastTab" = false;
+      #"browser.tabs.closeWindowWithLastTab" = false;
     # limit what can cause a pop-up
       "dom.popup_allowed_events" = "click dblclick";
 
@@ -576,10 +572,7 @@ in lib.mkMerge [
     # enable mobile bookmarks
       "browser.bookmarks.showMobileBookmarks" = true;
 
-    # auto-enable extensions loaded via HomeManager
-      "extensions.autoDisableScopes" = 0; # 1=profile, 2=user, 4=application, 8=system, 16=temporary, 31=all - default 15
-
-    # Native Linux file browser
+    # native Linux file browser
       "widget.use-xdg-desktop-portal.file-picker" = 1;
 
     # Switch tabs by scrolling
@@ -596,6 +589,10 @@ in lib.mkMerge [
       "sidebar.position_start" = true; # left=true, right=false(default)
     # sidebar contents
       "sidebar.main.tools" = "syncedtabs,history,bookmarks";
+    # decrease animation time
+      "sidebar.animation.expand-on-hover.duration-ms" = 100; # default=400
+    # disable animation
+      #"sidebar.animation.enabled" = false; # default=true
 
     ### ACCOUNT PROMOS ###
       "identity.fxaccounts.toolbar.pxiToolbarEnabled.monitorEnabled" = false;
@@ -603,7 +600,7 @@ in lib.mkMerge [
       "identity.fxaccounts.toolbar.pxiToolbarEnabled.vpnEnabled" = false;
 
     ### SYNC ACCOUNT ###
-      "identity.fxaccounts.account.device.name" = "${host}";
+      "identity.fxaccounts.account.device.name" = host;
     # only syncing addons/bookmarks/prefs/tabs
       "services.sync.declinedEngines" = "addresses,creditcards,forms,history,passwords";
       "services.sync.engine.addons" = true;
@@ -710,5 +707,8 @@ in lib.mkMerge [
 
     # Hub→'Profile and Account'→'Mozilla Account Sync Settings'→'Floorp Feature Sync Settings'→'Sync Floorp Notes to Mozilla Account (Experimental)'
       #"services.sync.prefs.sync.floorp.browser.note.memos" = true;
+
+    # disable PiP mode
+      "media.videocontrols.picture-in-picture.video-toggle.enabled" = false;
   })
 ]
