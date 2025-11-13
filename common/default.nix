@@ -96,12 +96,15 @@ in {
           clinfo                # OpenCL info | 'clinfo -l' or -a
           dmidecode             # Firmware | 'dmidecode -s bios-version'
           ffmpeg-full           # Hardware video acceleration
-          glxinfo               # OpenGL info
+          mesa-demos            # OpenGL info
+          libva-utils           # VAAPI | 'vainfo'
           lm_sensors            # Hardware sensors | 'sensors-detect'
           lshw                  # Hardware config
           nvme-cli              # Manage NVMe
           pciutils              # Manage PCI | 'lspci'
           usbutils              # Manage USB | 'lsusb'
+          vdpauinfo             # VDPAU
+          vulkan-tools          # 'vulkaninfo'
 
         # Images
           feh                   # Image viewer
