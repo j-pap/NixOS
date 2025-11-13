@@ -29,7 +29,7 @@ in {
 
         lutris-pkg = pkgs.lutris.override {
           extraLibraries = pkgs: (
-            if (pkgs.hostPlatform.is64bit) then
+            if (pkgs.stdenv.hostPlatform.is64bit) then
               config.hardware.graphics.extraPackages
             else
               config.hardware.graphics.extraPackages32
