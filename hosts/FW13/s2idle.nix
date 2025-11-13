@@ -13,7 +13,7 @@ pkgs.writeShellApplication {
         packaging
         pip
         pyudev
-        systemd
+        systemd-python
       ;
     }))
   ];
