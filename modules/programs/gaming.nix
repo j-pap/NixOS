@@ -74,6 +74,13 @@ in {
             ${lib.getExe' pkgs.jdk "java"} -cp "lod-game-cbb72c363c4425e53434bd75874d9d697a6cdda2.jar:libs/*" legend.game.Main -ea
           '';
         };
+
+        # Steam's "Allow background processing of Vulkan shaders"
+        ".steam/steam/steam_dev.cfg".text = let
+          cpuCount = pkgs.runCommandLocal "cpu-count" { } "grep --count ^processor /proc/cpuinfo > $out";
+        in ''
+          unShaderBackgroundProcessingThreads ${lib.strings.fileContents cpuCount}
+        '';
       };
 
       programs.mangohud = {
