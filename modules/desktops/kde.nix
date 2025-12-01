@@ -426,7 +426,6 @@ in {
                     "applications:discord.desktop"
                     "applications:steam.desktop"
                     "applications:spotify.desktop"
-                    "applications:plex-desktop.desktop"
                   ];
                 }
               ];

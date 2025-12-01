@@ -19,7 +19,6 @@
     };
 
     "1password".enable = true;
-    plex.enable = true;
     syncthing.enable = true;
   };
 

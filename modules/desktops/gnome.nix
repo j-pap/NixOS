@@ -392,7 +392,6 @@ in {
             "discord.desktop"
             "steam.desktop"
             "spotify.desktop"
-            "plex-desktop.desktop"
           ];
         };
         "org/gnome/shell/extensions/appindicator".icon-size = 16;

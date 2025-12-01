@@ -5,7 +5,6 @@
   ./git.nix
   ./kitty.nix
   ./openrgb.nix
-  ./plex.nix
   ./spicetify.nix
   ./stylix
   ./syncthing.nix
