@@ -86,6 +86,9 @@
     ];
 
     plugins = {
+      # Required for dap-x plugin(s)
+      dap.enable = true;
+
       # Install golang specific config
       dap-go.enable = true;
 
