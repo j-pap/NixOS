@@ -3,9 +3,9 @@
   buildFirefoxXpiAddon
 }:
 let
-  version = "4.2.3.0";
-  sha256 = "sha256-5IFIZQQKL8RQuj8C9OSKqyL5wCYcmOu3hEiTV26j1Dk=";
-  commit = "7c32388c4edc272721a9c7932914245e9694c590";
+  version = "4.2.5.5";
+  sha256 = "sha256-8ckpW6OLvlb0NfhAnD15CATgYL9xumoLbuxXiDH3jPk=";
+  commit = "05046a6bc70bf0dd5140bdc7331240659f1a6fbf";
 in
 buildFirefoxXpiAddon {
   pname = "bypass-paywalls-clean";
