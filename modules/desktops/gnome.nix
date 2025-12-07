@@ -217,6 +217,7 @@ in {
           appindicator
           bluetooth-quick-connect
           blur-my-shell
+          caffeine
           clipboard-indicator
           hibernate-status-button
           hot-edge

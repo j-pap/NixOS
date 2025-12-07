@@ -44,6 +44,11 @@ in {
         pkgs.cosmic-store    # Flatpak store
       ] ++ builtins.attrValues {
         inherit (pkgs)
+        # COSMIC
+          cosmic-ext-applet-caffeine  # Caffeine
+          cosmic-ext-applet-minimon   # Hardware usage
+          cosmic-ext-tweaks           # DE tweak tool
+
         # Text
           #neovide           # GUI launcher for neovim
         ;
