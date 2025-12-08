@@ -5,40 +5,66 @@
   cfgHosts,
   cfgOpts,
   cfgTerm,
-  inputs,
   myUser,
   ...
 }: let
   cfg = cfgOpts.desktops.hyprland;
 
   cursor = {
-    # Variants: Bibata-(Modern/Original)-(Amber/Classic/Ice)
-    name = "Bibata-Modern-Classic";
-    package = pkgs.bibata-cursors;
-    # Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96
-    size = 24;
+    name = cfg.cursor.name;
+    package = cfg.cursor.package;
+    size = cfg.cursor.size;
   };
   icon = {
-    # Variants: Papirus Papirus-Dark Papirus-Light
-    name = "Papirus-Dark";
-    # Folder color variants: https://github.com/PapirusDevelopmentTeam/papirus-folders
-    # adwaita black blue bluegrey breeze brown carmine cyan darkcyan deeporange
-    # green grey indigo magenta nordic orange palebrown paleorange pink red
-    # teal violet white yaru yellow
-    package = pkgs.papirus-icon-theme.override { color = "violet"; };
-  };
-  wallpaper = {
-    dir = "${inputs.self}/assets/wallpapers";
-    regreet = "${wallpaper.dir}/blobs-l.png";
+    name = cfg.icon.name;
+    package = cfg.icon.package;
   };
 in {
   imports = [
-    ./hyprland.nix
-    ./waybar.nix
+    ./greetd.nix
   ];
 
   options.myOptions.desktops.hyprland = {
     enable = lib.mkEnableOption "Hyprland desktop";
+
+    cursor = {
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.bibata-cursors;
+      };
+      name = lib.mkOption {
+        type = lib.types.str;
+        description = "Variants: Bibata-[Modern/Original]-[Amber/Classic/Ice]";
+        default = "Bibata-Modern-Classic";
+      };
+      size = lib.mkOption {
+        type = lib.types.enum [
+          16 20 22 24 28 32 40 48 56 64 72 80 88 96
+        ];
+        description = "Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96";
+        default = 24;
+      };
+    };
+
+    icon = {
+      package = lib.mkOption {
+        type = lib.types.package;
+        description = ''
+          Folder color variants: https://github.com/PapirusDevelopmentTeam/papirus-folders
+          adwaita black blue bluegrey breeze brown carmine cyan darkcyan deeporange green grey indigo magenta nordic orange palebrown paleorange pink red teal violet white yaru yellow
+        '';
+        example = pkgs.papirus-icon-theme.override { color = "blue"; };
+        default = pkgs.papirus-icon-theme.override { color = "violet"; };
+      };
+      name = lib.mkOption {
+        type = lib.types.enum [
+          "Papirus" "Papirus-Dark" "Papirus-Light"
+        ];
+        description = "Variants: Papirus Papirus-Dark Papirus-Light";
+        default = "Papirus";
+      };
+    };
+
     hyprApps = lib.mkOption {
       description = "Bins for Hyprland";
       type = lib.types.attrs;
@@ -73,34 +99,34 @@ in {
 
     environment = {
       sessionVariables = {
-        # Hint electron apps to use Wayland
-          NIXOS_OZONE_WL = 1;
-        # VMware?
-          WLR_RENDERER_ALLOW_SOFTWARE = 1;
+      # Hint electron apps to use Wayland
+        NIXOS_OZONE_WL = 1;
+      # VMware?
+        WLR_RENDERER_ALLOW_SOFTWARE = 1;
 
-        # XDG
-          XDG_CURRENT_DESKTOP = "Hyprland";
-          XDG_SESSION_DESKTOP = "Hyprland";
-          XDG_SESSION_TYPE = "wayland";
+      # XDG
+        XDG_CURRENT_DESKTOP = "Hyprland";
+        XDG_SESSION_DESKTOP = "Hyprland";
+        XDG_SESSION_TYPE = "wayland";
 
-        # Scaling
-          GDK_SCALE = builtins.toString cfgHosts.scale;
-          QT_AUTO_SCREEN_SCALE_FACTOR = builtins.toString cfgHosts.scale;
-        
-        # Toolkit Backend
-          GDK_BACKEND = "wayland,x11";
-          QT_QPA_PLATFORM = "wayland;xcb";
+      # Scaling
+        GDK_SCALE = builtins.toString cfgHosts.scale;
+        QT_AUTO_SCREEN_SCALE_FACTOR = builtins.toString cfgHosts.scale;
+      
+      # Toolkit Backend
+        GDK_BACKEND = "wayland,x11";
+        QT_QPA_PLATFORM = "wayland;xcb";
 
-        # Cursor
-          HYPRCURSOR_SIZE = cursor.size;
-          HYPRCURSOR_THEME = cursor.name;
-          XCURSOR_SIZE = cursor.size;
-          XCURSOR_THEME = cursor.name;
+      # Cursor
+        HYPRCURSOR_SIZE = cursor.size;
+        HYPRCURSOR_THEME = cursor.name;
+        XCURSOR_SIZE = cursor.size;
+        XCURSOR_THEME = cursor.name;
 
-        # Theming
-          #GTK_THEME = "Catppuccin-Frappe-Standard-Mauve-Dark";
-          #QT_QPA_PLATFORMTHEME = "Catppuccin-Frappe-Standard-Mauve-Dark";
-          QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
+      # Theming
+        #GTK_THEME = "Catppuccin-Frappe-Standard-Mauve-Dark";
+        #QT_QPA_PLATFORMTHEME = "Catppuccin-Frappe-Standard-Mauve-Dark";
+        QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
       };
 
       systemPackages = builtins.attrValues {
@@ -157,22 +183,28 @@ in {
           xwayland                # Interface X11 apps w/ Wayland
         ;
       } ++ [
-        # Wayland
-          pkgs.kdePackages.qtwayland      # QT6 Wayland support
-          pkgs.libsForQt5.qt5.qtwayland   # QT5 Wayland support
+      # Wayland
+        pkgs.kdePackages.qtwayland      # QT6 Wayland
+        pkgs.libsForQt5.qt5.qtwayland   # QT5 Wayland
       ] ++ lib.optional (config.services.flatpak.enable) [
-        pkgs.kdePackages.discover # Flatpak store
+        pkgs.kdePackages.discover       # Flatpak store
       ];
     };
 
     fonts.packages = builtins.attrValues {
       inherit (pkgs)
-        font-awesome    # Icons
-        inter           # Waybar
+        font-awesome  # Icons
+        inter         # Waybar
       ;
     };
 
-    home-manager.users.${myUser} = { config, lib, ... }: {
+    home-manager.users.${myUser} = { config, lib, osConfig, ... }: {
+      imports = [
+        ./hypr
+        ./waybar.nix
+        #./mako.nix
+      ];
+
       gtk = {
         enable = true;
         cursorTheme = {
@@ -192,7 +224,7 @@ in {
 
       home.pointerCursor = {
         gtk.enable = true;
-        # x11.enable = true;
+        #x11.enable = true;
         package = cursor.package;
         name = cursor.name;
         size = cursor.size;
@@ -211,10 +243,6 @@ in {
       */
 
       #qt.enable = true;
-
-      services = {
-        mako.enable = true;
-      };
 
       xdg = {
         # Create hyprland pywal template
@@ -272,7 +300,8 @@ in {
     programs = {
       hyprland = {
         enable = true;
-        # X11 compatability
+        package = pkgs.hyprland;
+        portalPackage = pkgs.xdg-desktop-portal-hyprland;
         xwayland.enable = true;
       };
 
@@ -280,70 +309,15 @@ in {
         enable = true;
         package = pkgs.hyprlock;
       };
-
-      regreet = {
-        enable = false;
-        settings = ''
-          [background]
-          path = "${wallpaper.regreet}"
-          # Available values: "Fill", "Contain", "Cover", "ScaleDown"
-          fit = "Contain"
-
-          [commands]
-          reboot = [ "systemctl", "reboot" ]
-          poweroff = [ "systemctl", "poweroff" ]
-
-          [env]
-          #ENV_VARIABLE = "value"
-
-          [GTK]
-          application_prefer_dark_theme = true
-          cursor_theme_name = "${cursor.name}"
-          font_name = "Cantarell 16"
-          icon_theme_name = "${icon.name}"
-          #theme_name = ""
-        '';
-      };
     };
 
     security = {
-      # Enable keyboard input after locking
-      #pam.services.swaylock = {};
-      pam.services.hyprlock = {};
+      pam.services.hyprlock = { };  # Enable keyboard input after locking
       polkit.enable = true;
     };
 
     services = {
       dbus.enable = true;
-
-      greetd = {
-        enable = true;
-        package = (
-          if (config.programs.regreet.enable) then
-            pkgs.regreet
-          else
-            pkgs.tuigreet
-        );
-        settings = let
-          hyprApps = cfg.hyprApps;
-        in {
-          default_session = {
-            command = (
-              if (config.programs.regreet.enable) then
-                # Regreet
-                "${hyprApps.hyprland}"
-              else
-                # Tuigreet
-                "${hyprApps.tuigreet} --asterisks --remember --remember-user-session --time --cmd ${hyprApps.hyprland}"
-            );
-            user = myUser;
-          };
-          # Auto login
-          #initial_session = config.services.greetd.settings.default_session;
-        };
-        #useTextGreeter = lib.mkIf (!config.programs.regreet.enable) true;
-      };
-
       hypridle = {
         enable = true;
         package = pkgs.hypridle;
@@ -364,7 +338,6 @@ in {
           #terminal = 14;
         };
       };
-      #targets.regreet.enable = false;
     };
 
     xdg.portal = {

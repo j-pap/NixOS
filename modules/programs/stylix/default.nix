@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   cfgOpts,
@@ -105,6 +106,7 @@ in {
           console.enable = true;  # TTY
           gtk.enable = true;
           #qt.enable = true;
+          regreet.enable = lib.mkIf (config.programs.regreet.enable) true;
         };
       };
 
@@ -115,7 +117,7 @@ in {
             enable = false;
             colorTheme.enable = false;
             firefoxGnomeTheme.enable = false;
-            profileNames = [ "${myUser}" ];
+            profileNames = [ myUser ];
           };
           bat.enable = true;
           btop.enable = true;
