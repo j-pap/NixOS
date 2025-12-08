@@ -9,7 +9,7 @@
 }: let
   cfg = cfgOpts.spicetify;
   stylix = config.stylix.enable;
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   options.myOptions.spicetify.enable = lib.mkEnableOption "Spicetify";
 
