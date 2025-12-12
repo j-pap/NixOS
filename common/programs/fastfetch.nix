@@ -1,7 +1,10 @@
 {
   myUser,
   ...
-}: {
+}:
+let
+  logo = ../../assets/logo.png;
+in {
   home-manager.users.${myUser} = {
     programs.fastfetch = {
       enable = true;
@@ -9,7 +12,7 @@
         "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
         logo = {
           type = "chafa";
-          source = ../../assets/logo.png;
+          source = logo;
           #source = "NixOS_small";
           width = 20;
           padding = {
@@ -18,18 +21,18 @@
           };
         };
         display = {
-          #color = {
+          color = {
             #title = "";
-            #keys = "";
-            #separator = "";
+            keys = "cyan";
+            separator = "yellow";
             #output = "";
-          #};
-          separator = "  ";
+          };
+          separator = "   ";
         };
         modules = [
           {
             type = "title";
-            format = "{6}{7}{8}";
+            format = "{user-name-colored}{at-symbol-colored}{host-name-colored}";
             #color = {
               #user = "";
               #at = "";
@@ -39,60 +42,63 @@
           "separator"
           {
             type = "os";
-            key = "";
-            format = "{3}";
+            key = "OS ";
+            format = "{pretty-name}";
           }
           {
             type = "kernel";
-            key = "";
-            format = "{2}";
-          }
-          {
-            type = "wm";
-            key = "";
-            format = "{2} ({3})";
-          }
-          {
-            type = "uptime";
-            key = "";
-          }
-          "separator"
-          {
-            type = "cpu";
-            key = "";
-            format = "{1} ({5}) @ {7}";
-          }
-          {
-            type = "gpu";
-            key = "󰢮";
-            #format = "{1} {2} @ {12} GHz";
-            format = "{1} {2}";
-          }
-          {
-            type = "memory";
-            key = "";
-            format = "{1} / {2} {4}";
-          }
-          {
-            type = "disk";
-            key = "󰋊";
-            #format = "{1} / {2} {13} - {9}";
-            format = "{1} / {2} {13}";
-          }
-          "separator"
-          {
-            type = "terminal";
-            key = "";
-            format = "{5} {6}";
+            key = " ├ ";
+            format = "{sysname} {release}";
           }
           {
             type = "shell";
-            key = "";
-            format = "{6} {4}";
+            key = " ├ ";
+            format = "{pretty-name} {version}";
           }
           {
             type = "packages";
-            key = "󰏖";
+            key = " └ 󰏖";
+          }
+          "break"
+          {
+            type = "wm";
+            key = "WM ";
+            format = "{pretty-name}{?version} {version}{?} ({protocol-name})";
+          }
+          {
+            type = "terminal";
+            key = " └ ";
+            format = "{pretty-name} {version}";
+          }
+          "break"
+          {
+            type = "host";
+            key = "PC 󰇅";
+            format = "{vendor} {name}";
+          }
+          {
+            type = "cpu";
+            key = " ├ ";
+            format = "{name} ({cores-logical}) @ {freq-max}";
+          }
+          {
+            type = "gpu";
+            key = " ├ 󰢮";
+            format = "{vendor} {name}{?frequency} @ {frequency} GHz{?}";
+          }
+          {
+            type = "memory";
+            key = " ├ ";
+            format = "{used} / {total} ({percentage})";
+          }
+          {
+            type = "disk";
+            key = " ├ 󰋊";
+            format = "{size-used} / {size-total} ({size-percentage}) - {filesystem}";
+          }
+          {
+            type = "uptime";
+            key = " └ ";
           }
           "break"
           {
