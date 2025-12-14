@@ -116,7 +116,7 @@
       diverged = '󰹹󰁝$ahead_count󰁅$behind_count'
       up_to_date = ""
       untracked = "?"
-      stashed = "$"
+      stashed = "\\$"
       modified = "!"
       staged = "[+\\($count\\)](green)"
       renamed = "󰄾"
