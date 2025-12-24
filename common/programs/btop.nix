@@ -1,4 +1,6 @@
 {
+  config,
+  lib,
   pkgs,
   cfgOpts,
   myUser,
@@ -23,5 +25,13 @@
         vim_keys = true;
       };
     };
+  };
+
+  security.wrappers.btop = {
+    enable = true;
+    owner = "root";
+    group = "root";
+    source = "${lib.getExe config.home-manager.users.${myUser}.programs.btop.package}";
+    capabilities = "cap_perfmon=ep";
   };
 }
