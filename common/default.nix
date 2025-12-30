@@ -132,6 +132,7 @@ in {
         # Nix
           nixfmt-rfc-style      # Officlal Nix formatter
           nix-tree              # Browse nix store
+          nvd                   # Package version diff tool
 
         # Notifications
           libnotify             # Notification engine
@@ -199,7 +200,7 @@ in {
       enable32Bit = true;
     };
 
-    home-manager.users.${myUser} = {
+    home-manager.users.${myUser} = { osConfig, ...}: {
       # `echo "use nix" >> .envrc && direnv allow`
       programs = {
         direnv = {
@@ -230,7 +231,7 @@ in {
       services.lorri = {
         enable = true;
         enableNotifications = false;
-        nixPackage = config.nix.package;
+        nixPackage = osConfig.nix.package;
       };
       xdg.userDirs.createDirectories = true;
     };
@@ -289,10 +290,12 @@ in {
         plugin-files = [ "${pkgs.nix-plugins}/lib/nix/plugins" ];
         substituters = [
           "https://nix-community.cachix.org"
+          "https://hyprland.cachix.org"
           "https://wezterm.cachix.org"
         ];
         trusted-public-keys = [
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
           "wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0="
         ];
         trusted-users = [ "@wheel" ];
@@ -343,6 +346,11 @@ in {
           PubkeyAuthentication = "yes";
           UseDns = true;
         };
+      };
+      udisks2 = {
+        enable = true;
+        mountOnMedia = true;
+        #settings = { };
       };
       xserver = {
         excludePackages = [ pkgs.xterm ];

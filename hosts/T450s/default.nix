@@ -3,7 +3,6 @@
   pkgs,
   cfgHosts,
   cfgOpts,
-  inputs,
   myUser,
   ...
 }: {
@@ -24,7 +23,7 @@
 
   myOptions = {
     desktops = {
-      cosmic.enable = false;
+      #cosmic.enable = true;
       hyprland.enable = true;
     };
 
@@ -39,7 +38,9 @@
   # System Packages / Variables
   ##########################################################
   environment = {
-    systemPackages = [ ];
+    systemPackages = [
+      pkgs.nvtopPackages.intel
+    ];
     # Set Firefox to use GPU for video codecs
     variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:00:02.0-render";
   };
@@ -50,9 +51,7 @@
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${myUser} = let
-    hyprApps = cfgOpts.desktops.hyprland.hyprApps;
-  in {
+  home-manager.users.${myUser} = {
     home.stateVersion = "24.11";
 
     programs = {
@@ -67,88 +66,58 @@
       };
 
       waybar.settings = lib.mkIf (cfgOpts.desktops.hyprland.enable) {
-        mainBar = {
-          # CPU Temperature
-          "temperature#cpu" = {
-            hwmon-path-abs = "/sys/devices/platform/coretemp.0/hwmon"; #hwmon6
-            input-filename = "temp1_input";
-            interval = 5;
-            format = "  {temperatureC}°C";
-            on-click = "${hyprApps.terminal} ${hyprApps.btop}";
-            tooltip = true;
-            tooltip-format = "{temperatureF}°Freedom Units";
-          };
+        mainBar = let
+          batteryCount = 2;
+        in {
+          "temperature#cpu".hwmon-path = "/sys/class/hwmon/hwmon6/temp1_input";
+          "temperature#gpu".hwmon-path = "/sys/class/hwmon/hwmon5/temp1_input";
 
-          # GPU Temperature
-          "temperature#gpu" = {
-            hwmon-path-abs = "/sys/devices/";
-            input-filename = "temp2_input";
-            interval = 5;
-            format = "󰢮  {temperatureC}°C";
-            on-click = "${hyprApps.terminal} ${hyprApps.nvtop}";
-            tooltip = true;
-            tooltip-format = "{temperatureF}°Freedom Units";
-          };
-
-          # Battery 1
-          "battery#bat0" = {
-            bat = "BAT0";
-            adapter = "AC";
-            interval = 5;
-            states = {
-              warning = 25;
-              critical = 10;
-            };
-            format = "{icon} {capacity}%";
-            format-time = "{H}h:{M}m";
-            format-icons = [ " " " " " " " " " " ];
-            format-charging = "{capacity}%";
-            format-plugged = " {capacity}%";
-            tooltip = true;
-            tooltip-format = "{time}";
-          };
-
-          # Battery 2
-          "battery#bat1" = {
-            bat = "BAT1";
-            adapter = "AC";
-            interval = 5;
-            states = {
-              warning = 25;
-              critical = 10;
-            };
-            format = "{icon} {capacity}%";
-            format-time = "{H}h:{M}m";
-            format-icons = [ " " " " " " " " " " ];
-            format-charging = "{capacity}%";
-            format-plugged = " {capacity}%";
-            tooltip = true;
-            tooltip-format = "{time}";
-          };
-        };
+          modules-right = lib.mkAfter (builtins.concatLists (
+            builtins.genList (i: [ "battery\#bat${toString i}" ]) batteryCount
+          ));
+        } // 
+        builtins.listToAttrs (
+          builtins.genList (
+            i: {
+              name = "battery#bat${toString i}";
+              value = {
+                bat = "BAT${toString i}";
+                adapter = "AC";
+                interval = 5;
+                states = {
+                  warning = 25;
+                  critical = 10;
+                };
+                format = "<span size='15pt' rise='-3000'>{icon}</span> {capacity}%";
+                format-time = "{H}h:{M}m";
+                format-icons = [ "" "" "" "" "" ];
+                format-charging = "󱐋 {capacity}%";
+                format-plugged = " {capacity}%";
+                tooltip = true;
+                tooltip-format = "{time}";
+              };
+            }
+          ) batteryCount
+        );
       };
     };
 
     wayland.windowManager.hyprland = lib.mkIf (cfgOpts.desktops.hyprland.enable) {
-      settings = {
-        # 'hyprctl monitors all' : name, widthxheight@rate, position, scale
-        monitor = [ "eDP-1, ${builtins.toString cfgHosts.width}x${builtins.toString cfgHosts.height}@${builtins.toString cfgHosts.refresh}, 0x0, ${builtins.toString cfgHosts.scale}" ];
-        bind = [
-          ", XF86AudioMute, exec, ${hyprApps.pw-volume} mute toggle"
-          #", XF86, exec, amixer sset Capture toggle"  # Mic disabled in firmware
-          #", XF86Display, ," # Presentation mode?
-          #", XF86WLAN, ," # Disables wifi by default
-          #", XF86Tools, ," # Settings shortcut?
-          #", XF86Search, ," # rofi search?
-          #", XF86LaunchA, exec, rofi -show drun"  # rofi launcher
-          #", XF86Explorer, exec, kitty spf"
-        ];
-        # Hold for continuous adjustment
-        binde = [
-          ", XF86AudioLowerVolume, exec, ${hyprApps.pw-volume} change -5%"
-          ", XF86AudioRaiseVolume, exec, ${hyprApps.pw-volume} change +5%"
-          ", XF86MonBrightnessDown, exec, ${hyprApps.brightnessctl} s 10%-"
-          ", XF86MonBrightnessUp, exec, ${hyprApps.brightnessctl} s +10%"
+      settings = let
+        name = "eDP-1";
+        width = builtins.toString cfgHosts.width;
+        height = builtins.toString cfgHosts.height;
+        refresh = builtins.toString cfgHosts.refresh;
+        scale = builtins.toString cfgHosts.scale;
+      in {
+        monitor = [ "${name}, ${width}x${height}@${refresh}, 0x0, ${scale}" ];
+        bindd = [
+          #", XF86Display, Presentation mode, , "
+          #", XF86WLAN, Airplane mode, , " # Disables wifi by default
+          #", XF86Tools, Settings, , "
+          #", XF86Search, App search, , "
+          #", XF86LaunchA, App launcher, exec, rofi -show drun"
+          #", XF86Explorer, File explorer, exec, kitty spf"
         ];
       };
     };

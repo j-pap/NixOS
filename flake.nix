@@ -17,6 +17,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprshutdown.url = "github:hyprwm/hyprshutdown";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
     lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
     nixvim.url = "github:nix-community/nixvim";

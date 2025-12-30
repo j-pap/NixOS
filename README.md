@@ -4,19 +4,19 @@ This is my flake for a multi-system NixOS installation. I've tried to craft it
 to be as secure as possible without being a complete inconvenience to the
 average user.
 
-My Framework 13 is running GNOME, because I feel like it is currently the most
+The Framework 13 is running GNOME, because I feel like it is currently the most
 integrated way of fully utilizing a laptop's features. Nearly all of GNOME's
 customizations are declared using dconf settings via home-manager.
 
 My gaming desktop is running KDE, which is customized with the plasma-manager
 flake via home-manager.
 
-I'm testing the alpha COSMIC DE on my T450s, and may eventually deploy it on
-the Framework once it gets a stable release. Depending on how it benchmarks
-running games, I may deploy it to the gaming desktop as well.
-
-I also have a half-baked Hyprland config, which I hope to eventually complete,
-but I haven't gotten around to finishing it.
+The T450s is a testing machine that I'm currently utilizing to test DEs:
+* COSMIC is very bare at the moment, but I plan on customizing it with
+cosmic-manager. It may eventually replace the DE on both the Framework & gaming
+desktop.
+* Hyprland is at a point where it can now be daily-driven, but I'll be updating/
+upgrading it more in the foreseeable future.
 
 ## Installation
 
