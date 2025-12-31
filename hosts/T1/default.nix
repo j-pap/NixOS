@@ -38,10 +38,9 @@ in {
       nvidia.enable = true;
     };
 
-    # "1password", gaming, kitty, openrgb, spicetify, syncthing, vm, wezterm, yubikey
+    # "1password", gaming, kitty, openrgb, syncthing, vm, wezterm, yubikey
     "1password".enable = true;
     gaming.enable = true;
-    spicetify.enable = true;
     syncthing.enable = true;
     vm.enable = true;
     yubikey.enable = true;

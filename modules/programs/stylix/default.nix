@@ -142,7 +142,6 @@ in {
           };
           #qt.enable = true;
           #rofi.enable = true;
-          #spicetify.enable = true; # Disabled to troubleshoot
           #tmux.enable = true;
           #waybar.enable = true;
           wezterm.enable = true;

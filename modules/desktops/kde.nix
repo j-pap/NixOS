@@ -425,7 +425,6 @@ in {
                     "applications:thunderbird.desktop"
                     "applications:discord.desktop"
                     "applications:steam.desktop"
-                    "applications:spotify.desktop"
                   ];
                 }
               ];

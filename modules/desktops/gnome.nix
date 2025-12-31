@@ -392,7 +392,6 @@ in {
             "thunderbird.desktop"
             "discord.desktop"
             "steam.desktop"
-            "spotify.desktop"
           ];
         };
         "org/gnome/shell/extensions/appindicator".icon-size = 16;

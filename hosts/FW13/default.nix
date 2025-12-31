@@ -43,11 +43,10 @@ in {
       bluetooth.enable = true;
     };
 
-    # "1password", containers, gaming, kitty, spicetify, stylix, syncthing, vm, wezterm, yubikey
+    # "1password", containers, gaming, kitty, stylix, syncthing, vm, wezterm, yubikey
     "1password".enable = true;
     containers.enable = true;
     gaming.enable = true;
-    spicetify.enable = true;
     stylix = {
       enable = false;
       wallpaper = {
