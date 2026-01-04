@@ -1,13 +1,16 @@
 {
+  config,
   lib,
   pkgs,
-  cfgOpts,
+  flk,
   myUser,
   ...
-}: let
-  cfg = cfgOpts.git;
-in {
-  options.myOptions.git = {
+}:
+let
+  cfg = config.flake.git;
+in
+{
+  options.flake.git = {
     libsecret.enable = lib.mkEnableOption "Git via Libsecret";
     oauth.enable = lib.mkEnableOption "Git via Oauth";
     ssh.enable = lib.mkEnableOption "Git via SSH";
@@ -29,7 +32,7 @@ in {
       }
     ];
 
-    myOptions.git.ssh.enable = lib.mkDefault true;
+    flake.git.ssh.enable = lib.mkDefault true;
 
     home-manager.users.${myUser} = lib.mkMerge [
       {
@@ -46,10 +49,12 @@ in {
       }
 
       # "git-credential-libsecret" stores credentials inside gnome-keyring / kde-wallet
-        # Gnome relies upon 'gnome-keyring' and 'seahorse'
-        # KDE relies upon 'kwallet', 'kwallet-pam', and 'kwalletmanager'
+      # Gnome relies upon 'gnome-keyring' and 'seahorse'
+      # KDE relies upon 'kwallet', 'kwallet-pam', and 'kwalletmanager'
       (lib.mkIf (cfg.libsecret.enable) {
-        programs.git.extraConfig.credential.helper = lib.getExe' pkgs.git.override { withLibsecret = true; } "git-credential-libsecret";
+        programs.git.extraConfig.credential.helper = lib.getExe' pkgs.git.override {
+          withLibsecret = true;
+        } "git-credential-libsecret";
       })
 
       (lib.mkIf (cfg.oauth.enable) {
@@ -62,43 +67,47 @@ in {
             commit.gpgsign = true;
             gpg = {
               format = "ssh";
-              ssh.program = (
-                if (cfgOpts."1password".enable) then
+              ssh.program =
+                if (flk."1password".enable) then
                   (lib.getExe' pkgs._1password-gui "op-ssh-sign")
                 else
-                  (lib.getExe' pkgs.openssh "ssh-keygen")
-              );
+                  (lib.getExe' pkgs.openssh "ssh-keygen");
             };
             user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINdsPgO+W30YwojR6rmyFQ7JOoracCgncClxVUAkTNoJ";
           };
 
-          ssh = let
-            hosts = [
-              "FW13"
-              "T1"
-              "T450s"
-            ];
-            identityAgent = (
-              if (cfgOpts."1password".enable) then
-                "/home/${myUser}/.1password/agent.sock"
-              else
-                (lib.getExe' pkgs.openssh "ssh-agent")
-            );
-          in {
-            enable = true;
-            matchBlocks = builtins.listToAttrs (builtins.map (host: {
-              name = host;
-              value = {
-                identityAgent = identityAgent;
-                forwardAgent = true;
-              };
-            }) hosts) // {
-              "github.com".match = ''
-                host github.com exec "test -z $SSH_TTY"
-                  IdentityAgent ${identityAgent}
-              '';
+          ssh =
+            let
+              hosts = [
+                "FW13"
+                "T1"
+                "T450s"
+              ];
+              identityAgent =
+                if (flk."1password".enable) then
+                  "/home/${myUser}/.1password/agent.sock"
+                else
+                  (lib.getExe' pkgs.openssh "ssh-agent");
+            in
+            {
+              enable = true;
+              matchBlocks =
+                builtins.listToAttrs (
+                  builtins.map (host: {
+                    name = host;
+                    value = {
+                      identityAgent = identityAgent;
+                      forwardAgent = true;
+                    };
+                  }) hosts
+                )
+                // {
+                  "github.com".match = ''
+                    host github.com exec "test -z $SSH_TTY"
+                      IdentityAgent ${identityAgent}
+                  '';
+                };
             };
-          };
         };
       })
     ];

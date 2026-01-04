@@ -1,9 +1,8 @@
 {
-  writeShellApplication,
   pkgs,
   ...
 }:
-writeShellApplication {
+pkgs.writeShellApplication {
   name = "privacydots.sh";
 
   runtimeInputs = [

@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
-  cfgOpts,
   myUser,
   ...
-}: let
-  cfg = cfgOpts.openrgb;
-in {
-  options.myOptions.openrgb.enable = lib.mkEnableOption "OpenRGB";
+}:
+let
+  cfg = config.flake.openrgb;
+in
+{
+  options.flake.openrgb.enable = lib.mkEnableOption "OpenRGB";
 
   config = lib.mkIf (cfg.enable) {
     environment.systemPackages = [ pkgs.i2c-tools ];
@@ -28,7 +29,7 @@ in {
         postPatch = ''
           patchShebangs scripts/build-udev-rules.sh
           substituteInPlace scripts/build-udev-rules.sh \
-            --replace "/usr/bin/env chmod" "${pkgs.coreutils}/bin/chmod"
+            --replace "/usr/bin/env chmod" "${lib.getExe' pkgs.coreutils "chmod"}"
         '';
       });
     };

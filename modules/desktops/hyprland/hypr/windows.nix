@@ -17,22 +17,22 @@
       #"match:class ^(1[p|P]assword)$, float, size (monitor_w*0.7) (monitor_h*0.8), center, noscreenshare"
 
       /*
-      # Not supported in v0.52
-      {
-        name = "ignore-maximize-events";
-        "match:class" = ".*";
-        suppress_event = "maximize";
-      }
-      {
-        name = "fix-xwayland-drags";
-        "match:class" = "^$";
-        "match:title" = "^$";
-        "match:xwayland" = true;
-        "match:float" = true;
-        "match:fullscreen" = false;
-        "match:pin" = false;
-        no_focus = true;
-      }
+        # Not supported in v0.52
+        {
+          name = "ignore-maximize-events";
+          "match:class" = ".*";
+          suppress_event = "maximize";
+        }
+        {
+          name = "fix-xwayland-drags";
+          "match:class" = "^$";
+          "match:title" = "^$";
+          "match:xwayland" = true;
+          "match:float" = true;
+          "match:fullscreen" = false;
+          "match:pin" = false;
+          no_focus = true;
+        }
       */
       # Ignore maximize events
       "suppressevent maximize, class:.*"
@@ -53,11 +53,9 @@
       #"match:title ^(Youtube)$, idle_inhibit always"
     ];
 
-
     # https://wiki.hypr.land/Configuring/Window-Rules/#layer-rules
     # `hyprctl layers`
     layerrule = [ ];
-
 
     # https://wiki.hypr.land/Configuring/Workspace-Rules/
     workspace = [

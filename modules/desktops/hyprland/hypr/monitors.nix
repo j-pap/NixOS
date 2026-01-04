@@ -1,7 +1,29 @@
 {
   lib,
+  osConfig,
   ...
-}: {
+}:
+let
+  flk = osConfig.flake.host.monitor;
+  name = flk.name or "";
+  width = flk.width;
+  height = flk.height;
+  refresh = flk.refresh;
+  whr =
+    if
+      lib.any (v: v == null) [
+        width
+        height
+        refresh
+      ]
+    then
+      "preferred"
+    else
+      "${width}x${height}@${refresh}";
+  position = "auto";
+  scale = if (flk.scale == null) then "auto" else "${lib.substring 0 4 (toString flk.scale)}";
+in
+{
   wayland.windowManager.hyprland.settings = {
     ################
     ### MONITORS ###
@@ -10,8 +32,8 @@
     # `hyprctl monitors all`
 
     monitor = lib.mkDefault [
-      # name, widthxheight@rate, position, scale
-      ", preferred, auto, auto"
+      #", preferred, auto, auto"
+      "${name}, ${whr}, ${position}, ${scale}"
     ];
 
     # https://wiki.hypr.land/Configuring/Variables/#misc

@@ -1,13 +1,15 @@
 {
+  config,
   lib,
   pkgs,
-  cfgOpts,
   myUser,
   ...
-}: let
-  cfg = cfgOpts.vm;
-in {
-  options.myOptions.vm.enable = lib.mkEnableOption "QEMU/KVM";
+}:
+let
+  cfg = config.flake.vm;
+in
+{
+  options.flake.vm.enable = lib.mkEnableOption "QEMU/KVM";
 
   config = lib.mkIf (cfg.enable) {
     programs.virt-manager.enable = true;
@@ -25,7 +27,7 @@ in {
     virtualisation.libvirtd = {
       enable = true;
       qemu.vhostUserPackages = [
-        pkgs.virtiofsd  # Shared directories
+        pkgs.virtiofsd # Shared directories
       ];
     };
   };

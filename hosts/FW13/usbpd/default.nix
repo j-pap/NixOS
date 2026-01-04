@@ -1,12 +1,16 @@
 {
   lib,
   pkgs,
-  kernel ? pkgs.linuxPackages_latest.kernel
+  kernel ? pkgs.linuxPackages_latest.kernel,
 }:
-
 pkgs.stdenv.mkDerivation {
   pname = "fw-usbpd-charger";
-  inherit (kernel) src version postPatch nativeBuildInputs;
+  inherit (kernel)
+    src
+    version
+    postPatch
+    nativeBuildInputs
+    ;
 
   kernel_dev = kernel.dev;
   kernelVersion = kernel.modDirVersion;

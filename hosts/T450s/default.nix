@@ -1,11 +1,11 @@
 {
   lib,
   pkgs,
-  cfgHosts,
-  cfgOpts,
+  flk,
   myUser,
   ...
-}: {
+}:
+{
   imports = [
     ./filesystems.nix
     ./hardware-configuration.nix
@@ -14,25 +14,36 @@
   ##########################################################
   # Custom Options
   ##########################################################
-  myHosts = {
-    width = 1920;
-    height = 1080;
-    refresh = 60;
-    scale = 1.25;
-  };
+  flake = {
+    "1password".enable = true;
 
-  myOptions = {
-    desktops = {
+    de = {
       #cosmic.enable = true;
       hyprland.enable = true;
     };
 
-    hardware.bluetooth.enable = false;
+    hw.bluetooth.enable = false;
 
-    # "1password", kitty, wezterm
-    "1password".enable = true;
+    host = {
+      isLaptop = true;
+      monitor = {
+        name = "eDP-1";
+        width = "1920";
+        height = "1080";
+        refresh = "60";
+        scale = 1.25;
+      };
+      theme = {
+        #dark = "";
+        #light = "";
+      };
+      wallpaper = {
+        dark = ./wallpaper/dark.png;
+        light = ./wallpaper/light.png;
+        #login = ./wallpaper/login.png;
+      };
+    };
   };
-
 
   ##########################################################
   # System Packages / Variables
@@ -41,21 +52,18 @@
     systemPackages = [
       pkgs.nvtopPackages.intel
     ];
-    # Set Firefox to use GPU for video codecs
-    variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:00:02.0-render";
+    variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:00:02.0-render"; # Set Firefox to use GPU for video codecs
   };
 
   system.stateVersion = "24.11";
-
 
   ##########################################################
   # Home Manager
   ##########################################################
   home-manager.users.${myUser} = {
-    home.stateVersion = "24.11";
 
     programs = {
-      plasma = lib.mkIf (cfgOpts.desktops.kde.enable) {
+      plasma = lib.mkIf (flk.de.kde.enable) {
         configFile."kcminputrc"."Libinput/1739/0/Synaptics TM3053-004" = {
           "ClickMethod" = 2;
           "NaturalScroll" = true;
@@ -65,20 +73,21 @@
         };
       };
 
-      waybar.settings = lib.mkIf (cfgOpts.desktops.hyprland.enable) {
-        mainBar = let
-          batteryCount = 2;
-        in {
-          "temperature#cpu".hwmon-path = "/sys/class/hwmon/hwmon6/temp1_input";
-          "temperature#gpu".hwmon-path = "/sys/class/hwmon/hwmon5/temp1_input";
+      waybar.settings = lib.mkIf (flk.de.hyprland.enable) {
+        mainBar =
+          let
+            batteryCount = 2;
+          in
+          {
+            "temperature#cpu".hwmon-path = "/sys/class/hwmon/hwmon6/temp1_input";
+            "temperature#gpu".hwmon-path = "/sys/class/hwmon/hwmon5/temp1_input";
 
-          modules-right = lib.mkAfter (builtins.concatLists (
-            builtins.genList (i: [ "battery\#bat${toString i}" ]) batteryCount
-          ));
-        } // 
-        builtins.listToAttrs (
-          builtins.genList (
-            i: {
+            modules-right = lib.mkAfter (
+              builtins.concatLists (builtins.genList (i: [ "battery\#bat${toString i}" ]) batteryCount)
+            );
+          }
+          // builtins.listToAttrs (
+            builtins.genList (i: {
               name = "battery#bat${toString i}";
               value = {
                 bat = "BAT${toString i}";
@@ -90,39 +99,36 @@
                 };
                 format = "<span size='15pt' rise='-3000'>{icon}</span> {capacity}%";
                 format-time = "{H}h:{M}m";
-                format-icons = [ "" "" "" "" "" ];
+                format-icons = [
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                ];
                 format-charging = "󱐋 {capacity}%";
                 format-plugged = " {capacity}%";
                 tooltip = true;
                 tooltip-format = "{time}";
               };
-            }
-          ) batteryCount
-        );
+            }) batteryCount
+          );
       };
     };
 
-    wayland.windowManager.hyprland = lib.mkIf (cfgOpts.desktops.hyprland.enable) {
-      settings = let
-        name = "eDP-1";
-        width = builtins.toString cfgHosts.width;
-        height = builtins.toString cfgHosts.height;
-        refresh = builtins.toString cfgHosts.refresh;
-        scale = builtins.toString cfgHosts.scale;
-      in {
-        monitor = [ "${name}, ${width}x${height}@${refresh}, 0x0, ${scale}" ];
-        bindd = [
-          #", XF86Display, Presentation mode, , "
-          #", XF86WLAN, Airplane mode, , " # Disables wifi by default
-          #", XF86Tools, Settings, , "
-          #", XF86Search, App search, , "
-          #", XF86LaunchA, App launcher, exec, rofi -show drun"
-          #", XF86Explorer, File explorer, exec, kitty spf"
-        ];
-      };
+    wayland.windowManager.hyprland = lib.mkIf (flk.de.hyprland.enable) {
+      settings.bindd = [
+        #", XF86Display, Presentation mode, , "
+        #", XF86WLAN, Airplane mode, , " # Disables wifi by default
+        #", XF86Tools, Settings, , "
+        #", XF86Search, App search, , "
+        #", XF86LaunchA, App launcher, exec, rofi -show drun"
+        #", XF86Explorer, File explorer, exec, kitty spf"
+      ];
     };
+
+    home.stateVersion = "24.11";
   };
-
 
   ##########################################################
   # Hardware
@@ -130,23 +136,26 @@
   hardware.graphics = {
     # Packages (listed for context) are imported from nixos-hardware/common/gpu/intel through T450s module
     /*
-    extraPackages = builtins.attrValues {
-      inherit (pkgs)
-        intel-compute-runtime
-        intel-media-driver
-        intel-vaapi-driver
-        vpl-gpu-rt
-      ;
-    };
-    extraPackages32 = builtins.attrValues {
-      inherit (pkgs.driversi686Linux)
-        intel-media-driver
-        intel-vaapi-driver
-      ;
-    };
+      extraPackages = builtins.attrValues {
+        inherit (pkgs)
+          intel-compute-runtime
+          intel-media-driver
+          intel-vaapi-driver
+          vpl-gpu-rt
+        ;
+      };
+      extraPackages32 = builtins.attrValues {
+        inherit (pkgs.driversi686Linux)
+          intel-media-driver
+          intel-vaapi-driver
+        ;
+      };
     */
   };
 
+  ##########################################################
+  # Network
+  ##########################################################
 
   ##########################################################
   # Boot
@@ -184,9 +193,4 @@
       "nfs"
     ];
   };
-
-
-  ##########################################################
-  # Network
-  ##########################################################
 }

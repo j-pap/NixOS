@@ -3,7 +3,8 @@
   pkgs,
   myUser,
   ...
-}: {
+}:
+{
   imports = [
     ./filesystems.nix
     ./hardware-configuration.nix
@@ -12,25 +13,21 @@
   ##########################################################
   # Custom Options
   ##########################################################
-  myOptions = {
-    desktops = {
+  flake = {
+    de = {
       gnome.enable = true;
       kde.enable = false;
     };
 
-    hardware.audio.enable = false;
-
-    # kitty, wezterm
+    hw.audio.enable = false;
   };
-
 
   ##########################################################
   # System Packages / Variables
   ##########################################################
   environment = {
     systemPackages = [ ];
-    # Set Firefox to use GPU for video codecs
-    variables.MOZ_DRM_DEVICE = "$(stat /dev/dri/* | grep card | cut -d':' -f 2 | tr -d ' ')";
+    variables.MOZ_DRM_DEVICE = "$(stat /dev/dri/* | grep card | cut -d':' -f 2 | tr -d ' ')"; # Set Firefox to use GPU for video codecs
   };
 
   # Bypass occasional login screen freeze
@@ -41,14 +38,12 @@
 
   system.stateVersion = "24.11";
 
-
   ##########################################################
   # Home Manager
   ##########################################################
   home-manager.users.${myUser} = {
     home.stateVersion = "24.11";
   };
-
 
   ##########################################################
   # Hardware
@@ -61,16 +56,19 @@
         intel-vaapi-driver
         libvpl
         vpl-gpu-rt
-      ;
+        ;
     };
     extraPackages32 = builtins.attrValues {
       inherit (pkgs.driversi686Linux)
         intel-media-driver
         intel-vaapi-driver
-      ;
+        ;
     };
   };
 
+  ##########################################################
+  # Network
+  ##########################################################
 
   ##########################################################
   # Boot
@@ -97,9 +95,4 @@
 
     supportedFilesystems = [ "btrfs" ];
   };
-
-
-  ##########################################################
-  # Network
-  ##########################################################
 }

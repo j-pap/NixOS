@@ -1,5 +1,5 @@
 {
-  description = "NixOS Multi-System Flake";
+  description = "NixOS Systems Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -32,7 +32,6 @@
     };
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    wezterm.url = "github:wez/wezterm?dir=nix";
   };
 
   outputs = { self, nixpkgs, stable, ... } @ inputs: let
@@ -98,14 +97,10 @@
 
 
     stdModules = hostName: specialArgs: [
-      ./common
-      ./hosts/${hostName}
       ({ config, ... }: {
         _module.args = {
-          cfgHosts = config.myHosts;
-          cfgOpts = config.myOptions;
-          cfgTerm = "kitty";  # kitty or wezterm
-          myUser = config.myUser;
+          flk = config.flake;
+          myUser = config.flake.user;
         };
         networking.hostName = hostName;
         nixpkgs = {
@@ -123,6 +118,8 @@
           ];
         };
       })
+      ./hosts/${hostName}
+      ./system
       inputs.disko.nixosModules.disko
       inputs.flake-programs-sqlite.nixosModules.programs-sqlite
       inputs.home-manager.nixosModules.home-manager {

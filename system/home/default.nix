@@ -1,0 +1,13 @@
+[
+  ./bash.nix
+  ./bat.nix
+  ./btop.nix
+  ./fastfetch.nix
+  ./firefox
+  ./kitty.nix
+  ./nixvim
+  ./starship.nix
+  ./wezterm.nix
+  ./yazi
+  ./zathura.nix
+]

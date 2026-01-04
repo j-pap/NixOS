@@ -36,30 +36,32 @@
               "--force"
               "--label NixOS"
             ];
-            subvolumes = let
-              defaultOptions = [
-                "compress=zstd"
-                "discard=async"
-                "noatime"
-              ];
-            in {
-              "root" = {
-                mountOptions = defaultOptions;
-                mountpoint = "/";
+            subvolumes =
+              let
+                defaultOptions = [
+                  "compress=zstd"
+                  "discard=async"
+                  "noatime"
+                ];
+              in
+              {
+                "root" = {
+                  mountOptions = defaultOptions;
+                  mountpoint = "/";
+                };
+                "home" = {
+                  mountOptions = lib.remove "noatime" defaultOptions;
+                  mountpoint = "/home";
+                };
+                "nix" = {
+                  mountOptions = defaultOptions;
+                  mountpoint = "/nix";
+                };
+                "swap" = {
+                  mountpoint = "/.swap";
+                  swap.swapfile.size = "32G";
+                };
               };
-              "home" = {
-                mountOptions = lib.remove "noatime" defaultOptions;
-                mountpoint = "/home";
-              };
-              "nix" = {
-                mountOptions = defaultOptions;
-                mountpoint = "/nix";
-              };
-              "swap" = {
-                mountpoint = "/.swap";
-                swap.swapfile.size = "32G";
-              };
-            };
           };
         };
       };

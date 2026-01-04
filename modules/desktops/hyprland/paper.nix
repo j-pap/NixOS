@@ -1,15 +1,11 @@
 {
-  inputs,
   osConfig,
   ...
-}: let
-  cfgHosts = osConfig.myHosts;
-  wallpaper = {
-    dir = "${inputs.self}/assets/wallpapers";
-    day = "${wallpaper.dir}/blobs-l.png";
-    night = "${wallpaper.dir}/blobs-d.png";
-  };
-in {
+}:
+let
+  wallpaper = osConfig.flake.host.wallpaper;
+in
+{
   # https://wiki.hypr.land/Hypr-Ecosystem/hyprpaper/
   services.hyprpaper = {
     enable = false;
@@ -21,12 +17,12 @@ in {
       ipc = true;
 
       preload = [
-        wallpaper.night
+        wallpaper.dark
       ];
 
       wallpaper = [
         # "[monitor], path, [fit_mode]" - contain | cover (default) | tile | fill
-        ", ${wallpaper.night}, "
+        ", ${wallpaper.dark}, "
       ];
     };
   };

@@ -1,22 +1,25 @@
 {
   config,
   lib,
-  osConfig,
   pkgs,
+  osConfig,
   ...
-}: let
-  runner = "hyprlauncher";
-  terminal = "kitty";
+}:
+let
+  hyprland = config.wayland.windowManager.hyprland;
+  hypr = hyprland.settings.general;
+  runner = hyprland.settings."$runner";
+  terminal = hyprland.settings."$terminal";
 
-  hypr = config.wayland.windowManager.hyprland.settings.general;
   trayIcons = config.programs.waybar.settings.mainBar."tray".icon-size;
   iconSize = toString (trayIcons - 3);
   iconWide = toString (trayIcons - 1);
-in {
+in
+{
   home.packages = builtins.attrValues {
     inherit (pkgs)
       wttrbar
-    ;
+      ;
   };
 
   programs.waybar = {
@@ -53,13 +56,17 @@ in {
           "temperature#cpu"
           "temperature#gpu"
           "tray"
-        ] ++ lib.optionals (lib.length (lib.attrsToList config.wayland.windowManager.hyprland.submaps) > 0) [
+        ]
+        ++ lib.optional (lib.length (lib.attrsToList hyprland.submaps) > 0) [
           "hyprland/submap"
-        ] ++ [
+        ]
+        ++ [
           "keyboard-state"
-        ] ++ lib.optionals (osConfig.hardware.bluetooth.enable) [
+        ]
+        ++ lib.optional (osConfig.hardware.bluetooth.enable) [
           "bluetooth"
-        ] ++ [
+        ]
+        ++ [
           "wireplumber"
           "network"
           "custom/notifications"
@@ -96,7 +103,7 @@ in {
             #"class<app>" # Match class
             #"title<name>" # Match title
             #"<app/name>" # Match any
-            "class<kitty|org.wezfurlong.wezterm|com.mitchellh.ghostty>" = "";
+            "class<(kitty|com.mitchellh.ghostty|com.system76.CosmicTerm|org.gnome.Console|org.kde.konsole|org.wezfurlong.wezterm)>" = "";
             "class<firefox>" = "󰈹";
           };
           window-rewrite-default = "";
@@ -209,7 +216,11 @@ in {
         "wireplumber" = {
           format = "{icon}";
           format-muted = "󰖁";
-          format-icons = [ "󰕿" "󰖀" "󰕾" ];
+          format-icons = [
+            "󰕿"
+            "󰖀"
+            "󰕾"
+          ];
           scroll-step = 5.0;
           #on-click = "";
           on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
@@ -241,7 +252,11 @@ in {
           format-linked = "";
           format-disconnected = "";
           format-icons = [
-            "󰤯" "󰤟" "󰤢" "󰤥" "󰤨"
+            "󰤯"
+            "󰤟"
+            "󰤢"
+            "󰤥"
+            "󰤨"
           ];
           on-click = "${terminal} nmtui";
           tooltip = true;
@@ -284,92 +299,94 @@ in {
       };
     };
 
-    style = let
-      waybarBg = "rgba(255,255,255,0.1)";
-      moduleBg = "rgba(0,50,50,0.5)";
-      wsActive = "rgba(0,50,50,0.75)";
-      wsHover = "rgba(128,128,128,0.5)";
-      fontColor = "#FFFFFF";
-    in ''
-      * {
-        color: ${fontColor};
-        font-family: "NotoSans Nerd Font Propo", sans-serif;
-        font-size: 14px;
-        margin: 0px;
-        padding: 0px;
-      }
+    style =
+      let
+        waybarBg = "rgba(255,255,255,0.1)";
+        moduleBg = "rgba(0,50,50,0.5)";
+        wsActive = "rgba(0,50,50,0.75)";
+        wsHover = "rgba(128,128,128,0.5)";
+        fontColor = "#FFFFFF";
+      in
+      ''
+        * {
+          color: ${fontColor};
+          font-family: "NotoSans Nerd Font Propo", sans-serif;
+          font-size: 14px;
+          margin: 0px;
+          padding: 0px;
+        }
 
-      window#waybar {
-        background-color: ${waybarBg};
-        border-radius: 10px;
-      }
+        window#waybar {
+          background-color: ${waybarBg};
+          border-radius: 10px;
+        }
 
-      .modules-left {
-        border-radius: 10px;
-        margin-left: 5px;
-      }
+        .modules-left {
+          border-radius: 10px;
+          margin-left: 5px;
+        }
 
-      .modules-center {
-        background-color: ${moduleBg};
-        border-radius: 10px;
-        padding: 0px 5px;
-      }
+        .modules-center {
+          background-color: ${moduleBg};
+          border-radius: 10px;
+          padding: 0px 5px;
+        }
 
-      .modules-right {
-        background-color: ${moduleBg};
-        border-radius: 10px;
-        padding: 0px 5px;
-      }
+        .modules-right {
+          background-color: ${moduleBg};
+          border-radius: 10px;
+          padding: 0px 5px;
+        }
 
-      #custom-menu {
-        border-radius: 100%;
-        font-size: 24px;
-      }
+        #custom-menu {
+          border-radius: 100%;
+          font-size: 24px;
+        }
 
-      #workspaces {
-        border: 0 solid ${moduleBg};
-        border-radius: 10px;
-      }
+        #workspaces {
+          border: 0 solid ${moduleBg};
+          border-radius: 10px;
+        }
 
-      #workspaces button {
-        background-color: ${moduleBg};
-        border-radius: 0px;
-        padding: 0px 7px;
-      }
+        #workspaces button {
+          background-color: ${moduleBg};
+          border-radius: 0px;
+          padding: 0px 7px;
+        }
 
-      #workspaces button:first-child {
-        border-radius: 10px 0px 0px 10px;
-      }
+        #workspaces button:first-child {
+          border-radius: 10px 0px 0px 10px;
+        }
 
-      #workspaces button:last-child {
-        border-radius: 0px 10px 10px 0px;
-      }
+        #workspaces button:last-child {
+          border-radius: 0px 10px 10px 0px;
+        }
 
-      #workspaces button:hover {
-        background: none;
-        background-color: ${wsHover};
-        border-color: transparent;
-        box-shadow: none;
-        text-shadow: none;
-      }
+        #workspaces button:hover {
+          background: none;
+          background-color: ${wsHover};
+          border-color: transparent;
+          box-shadow: none;
+          text-shadow: none;
+        }
 
-      #workspaces button.active {
-        background: transparent;
-        /* background-color: ${wsActive}; */
-        border: 1px solid ${fontColor};
-        font-weight: bold;
-      }
+        #workspaces button.active {
+          background: transparent;
+          /* background-color: ${wsActive}; */
+          border: 1px solid ${fontColor};
+          font-weight: bold;
+        }
 
-      #wireplumber,
-      #bluetooth,
-      #network,
-      #custom-notifications {
-        font-size: ${iconSize}pt;
-      }
+        #wireplumber,
+        #bluetooth,
+        #network,
+        #custom-notifications {
+          font-size: ${iconSize}pt;
+        }
 
-      #idle_inhibitor {
-        font-size: ${iconWide}pt;
-      }
-    '';
+        #idle_inhibitor {
+          font-size: ${iconWide}pt;
+        }
+      '';
   };
 }

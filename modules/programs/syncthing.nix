@@ -1,13 +1,14 @@
 {
-  cfgOpts,
   config,
   lib,
   myUser,
   ...
-}: let
-  cfg = cfgOpts.syncthing;
-in {
-  options.myOptions.syncthing.enable = lib.mkEnableOption "Syncthing";
+}:
+let
+  cfg = config.flake.syncthing;
+in
+{
+  options.flake.syncthing.enable = lib.mkEnableOption "Syncthing";
 
   config = lib.mkIf (cfg.enable) {
     services.syncthing = {
@@ -19,6 +20,7 @@ in {
       overrideDevices = true;
       overrideFolders = true;
       user = myUser;
+
       settings = {
         devices."NAS".id = "FN25ISC-P52A3WA-GRV4SIR-YI4KBMM-2I5BECF-32SLV5B-5DADP5B-YSMVIQ4";
         folders = {

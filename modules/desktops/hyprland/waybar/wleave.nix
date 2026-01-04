@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   programs.wleave = {
     enable = true;
     package = pkgs.wleave;

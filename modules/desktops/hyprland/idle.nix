@@ -36,11 +36,11 @@
           on-resume = "brightnessctl --device='*kbd_backlight' --restore";
         }
         /*
-        # 10min - suspend
-        {
-          timeout = 600;
-          on-timeout = "systemctl suspend";
-        }
+          # 10min - suspend
+          {
+            timeout = 600;
+            on-timeout = "systemctl suspend";
+          }
         */
       ];
     };

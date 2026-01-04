@@ -3,11 +3,9 @@
   ./containers.nix
   ./gaming.nix
   ./git.nix
-  ./kitty.nix
   ./openrgb.nix
   ./stylix
   ./syncthing.nix
   ./vm.nix
-  ./wezterm.nix
   ./yubikey.nix
 ]

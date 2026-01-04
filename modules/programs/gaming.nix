@@ -2,64 +2,69 @@
   config,
   lib,
   pkgs,
-  cfgHosts,
-  cfgOpts,
   myUser,
   ...
-}: let
-  cfg = cfgOpts.gaming;
+}:
+let
+  cfg = config.flake.gaming;
   stylix = config.stylix.enable;
-in {
-  options.myOptions.gaming.enable = lib.mkEnableOption "Gaming";
+  monitor = config.flake.host.monitor;
+in
+{
+  options.flake.gaming.enable = lib.mkEnableOption "Gaming";
 
   config = lib.mkIf (cfg.enable) {
     boot.kernel.sysctl = {
-      # Faster timeout so games can reuse their TCP ports
-      "net.ipv4.tcp_fin_timeout" = 5;
-      # Increase stability/performance of games
-      "vm.max_map_count" = lib.mkForce 2147483642;
+      "net.ipv4.tcp_fin_timeout" = 5; # Faster timeout so games can reuse their TCP ports
+      "vm.max_map_count" = lib.mkForce 2147483642; # Increase stability/performance of games
     };
 
     environment = {
-      systemPackages = let
-        gs-renice-pkg = pkgs.writeShellScriptBin "gs-renice" ''
-          (sleep 1; pgrep gamescope | xargs renice -n -20 -p)&
-          exec gamescope "$@"
-        '';
+      systemPackages =
+        let
+          gs-renice-pkg = pkgs.writeShellScriptBin "gs-renice" ''
+            (sleep 1; pgrep gamescope | xargs renice -n -20 -p)&
+            exec gamescope "$@"
+          '';
 
-        lutris-pkg = pkgs.lutris.override {
-          extraLibraries = pkgs: (
-            if (pkgs.stdenv.hostPlatform.is64bit) then
-              config.hardware.graphics.extraPackages
-            else
-              config.hardware.graphics.extraPackages32
-          );
-          extraPkgs = pkgs: builtins.attrValues {
-            inherit (pkgs)
-              dxvk
-              vkd3d
-              winetricks
+          lutris-pkg = pkgs.lutris.override {
+            extraLibraries =
+              pkgs:
+              if (pkgs.stdenv.hostPlatform.is64bit) then
+                config.hardware.graphics.extraPackages
+              else
+                config.hardware.graphics.extraPackages32;
+            extraPkgs =
+              pkgs:
+              builtins.attrValues {
+                inherit (pkgs)
+                  dxvk
+                  vkd3d
+                  winetricks
+                  ;
+              }
+              ++ [
+                # wineWow has both x86/64 - stable, staging, or wayland
+                pkgs.wineWowPackages.wayland
+              ];
+          };
+        in
+        [
+          gs-renice-pkg # Builds 'gs-renice' command to add to game launch options
+          lutris-pkg    # Game launcher - Epic, GOG, Humble Bundle, Steam
+        ]
+        ++ builtins.attrValues {
+          inherit (pkgs)
+            gamescope-wsi # Gamescope w/ WSI (breaks if declared in gamescope.package)
+            heroic        # Game launcher - Epic, GOG, Prime
+            jdk           # Java games
+            protonplus    # Proton-GE updater
             ;
-          } ++ [
-            # wineWow has both x86/64 - stable, staging, or wayland
-            pkgs.wineWowPackages.wayland
-          ];
         };
-      in [
-        gs-renice-pkg     # Builds 'gs-renice' command to add to game launch options
-        lutris-pkg        # Game launcher - Epic, GOG, Humble Bundle, Steam
-      ] ++ builtins.attrValues {
-        inherit (pkgs)
-          gamescope-wsi   # Gamescope w/ WSI (breaks if declared in gamescope.package)
-          heroic          # Game launcher - Epic, GOG, Prime
-          jdk             # Java games
-          protonplus      # Proton-GE updater
-        ;
-      };
 
       variables = {
         STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${myUser}/.steam/steam/compatibilitytools.d";
-        #STEAM_FORCE_DESKTOPUI_SCALING = "${builtins.toString cfgHosts.scale}";
+        #STEAM_FORCE_DESKTOPUI_SCALING = "${toString monitor.scale}";
       };
     };
 
@@ -76,11 +81,13 @@ in {
         };
 
         # Steam's "Allow background processing of Vulkan shaders"
-        ".steam/steam/steam_dev.cfg".text = let
-          cpuCount = pkgs.runCommandLocal "cpu-count" { } "grep --count ^processor /proc/cpuinfo > $out";
-        in ''
-          unShaderBackgroundProcessingThreads ${lib.strings.fileContents cpuCount}
-        '';
+        ".steam/steam/steam_dev.cfg".text =
+          let
+            cpuCount = pkgs.runCommandLocal "cpu-count" { } "grep --count ^processor /proc/cpuinfo > $out";
+          in
+          ''
+            unShaderBackgroundProcessingThreads ${lib.fileContents cpuCount}
+          '';
       };
 
       programs.mangohud = {
@@ -88,7 +95,7 @@ in {
         enableSessionWide = false;
         settings = {
           ### Performance ###
-          fps_limit = cfgHosts.refresh;
+          fps_limit = lib.toInt monitor.refresh;
           fps_limit_method = "late";
           vsync = 0;
           gl_vsync = -1;
@@ -140,10 +147,10 @@ in {
           #custom.start = "${lib.getExe pkgs.libnotify} -a 'GameMode' -i 'input-gaming' 'GameMode Activated'";
           #custom.end = "${lib.getExe pkgs.libnotify} -a 'GameMode' -i 'input-gaming' 'GameMode Deactivated'";
           general = {
-            inhibit_screensaver = 0;  # Prevents errors when screensaver not installed
-            renice = 20;  # Game process priority
-            reaper_freq = 5;  # Reaper checks every 5 secs for updates
-            softrealtime = "auto";  # Scheduler policy
+            inhibit_screensaver = 0; # Prevents errors when screensaver not installed
+            renice = 20; # Game process priority
+            reaper_freq = 5; # Reaper checks every 5 secs for updates
+            softrealtime = "auto"; # Scheduler policy
           };
         };
       };
@@ -151,20 +158,20 @@ in {
       gamescope = {
         enable = true;
         args = [
-          "-W ${builtins.toString cfgHosts.width}"                  # Output width
-          "-H ${builtins.toString cfgHosts.height}"                 # Output height
-          #"-w ${builtins.toString cfgHosts.width}"                  # Game width
-          #"-h ${builtins.toString cfgHosts.height}"                 # Game height
-          "-r ${builtins.toString cfgHosts.refresh}"                # Refresh rate
-          "-o 30"                                                   # Unfocused refresh rate
-          "-b"                                                      # Borderless window
-          #"-f"                                                      # Fullscreen window
-          #"--adaptive-sync"                                         # VRR (if available)
-          "--framerate-limit ${builtins.toString cfgHosts.refresh}" # Sync framerate to refresh rate
-          "--rt"                                                    # Real-time scheduling
+          "-W ${monitor.width}"                  # Output width
+          "-H ${monitor.height}"                 # Output height
+          #"-w ${monitor.width}"                 # Game width
+          #"-h ${monitor.height}"                # Game height
+          "-r ${monitor.refresh}"                # Refresh rate
+          "-o 30"                                # Unfocused refresh rate
+          "-b"                                   # Borderless window
+          #"-f"                                  # Fullscreen window
+          #"--adaptive-sync"                     # VRR (if available)
+          "--framerate-limit ${monitor.refresh}" # Sync framerate to refresh rate
+          "--rt"                                 # Real-time scheduling
         ];
         # capSysNice currently stops games from launching - "failed to inherit capabilities: Operation not permitted"
-          # Current workaround is using 'gs-renice' to replace gamescope in launch options mentioned above
+        # Current workaround is using 'gs-renice' to replace gamescope in launch options mentioned above
         #capSysNice = true;
       };
 
@@ -181,35 +188,40 @@ in {
 
         package = pkgs.steam.override {
           extraEnv.LD_PRELOAD = "${pkgs.gamemode.lib}/lib/libgamemode.so";
-          extraPkgs = pkgs: builtins.attrValues {
-            # Gamescope fixes for undefined symbols in X11 session
-            inherit (pkgs)
-              keyutils
-              libkrb5
-              libpng
-              libpulseaudio
-              libvorbis
-            ;
-            inherit (pkgs.xorg)
-              libXcursor
-              libXi
-              libXinerama
-              libXScrnSaver
-            ;
-          } ++ [
-            pkgs.stdenv.cc.cc.lib
-          ];
+          # Gamescope fixes for undefined symbols in X11 session
+          extraPkgs =
+            pkgs:
+            builtins.attrValues {
+              inherit (pkgs)
+                keyutils
+                libkrb5
+                libpng
+                libpulseaudio
+                libvorbis
+                ;
+              inherit (pkgs.xorg)
+                libXcursor
+                libXi
+                libXinerama
+                libXScrnSaver
+                ;
+            }
+            ++ [
+              pkgs.stdenv.cc.cc.lib
+            ];
         };
       };
     };
 
     # Gamemode process priority renice fix
-    security.pam.loginLimits = [{
-      domain = "@gamemode";
-      type = "-";
-      item = "nice";
-      value = -20;  # Range from -20 to 19
-    }];
+    security.pam.loginLimits = [
+      {
+        domain = "@gamemode";
+        type = "-";
+        item = "nice";
+        value = -20; # Range from -20 to 19
+      }
+    ];
 
     users.users.${myUser}.extraGroups = [ "gamemode" ];
   };

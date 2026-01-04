@@ -1,5 +1,4 @@
-(
-  import ./desktops ++ 
-  import ./hardware ++ 
-  import ./programs
-)
+(import ./desktops ++ import ./hardware ++ import ./programs)
+++ [
+  ./host.nix
+]

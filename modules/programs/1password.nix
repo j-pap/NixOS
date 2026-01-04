@@ -1,30 +1,30 @@
 {
-  cfgOpts,
   config,
   lib,
+  browser,
   myUser,
   ...
-}: let
-  cfg = cfgOpts."1password";
-in {
-  options.myOptions."1password".enable = lib.mkEnableOption "1Password";
+}:
+let
+  cfg = config.flake."1password";
+in
+{
+  options.flake."1password".enable = lib.mkEnableOption "1Password";
 
   config = lib.mkIf (cfg.enable) {
-    # Allow _1password-gui to communicate w/ its browser extension
+    # Allow _1password-gui to communicate w/ the browser extension
     environment.etc."1password/custom_allowed_browsers" = {
       mode = "0755";
-      text = ''
-        ${cfgOpts.browser}
-      '';
+      text = browser;
     };
 
-    home-manager.users.${myUser}.xdg.configFile."autostart/1password.desktop".text = let
-      onePassword-pkg = config.programs._1password-gui.package;
-    in (lib.replaceStrings
-      [ "Exec=1password %U" ]
-      [ "Exec=${lib.getExe onePassword-pkg} --silent %U" ]
-      (lib.fileContents "${onePassword-pkg}/share/applications/1password.desktop")
-    );
+    home-manager.users.${myUser}.xdg.configFile."autostart/1password.desktop".text =
+      let
+        opPkg = config.programs._1password-gui.package;
+      in
+      lib.replaceStrings [ "Exec=1password %U" ] [ "Exec=${lib.getExe opPkg} --silent %U" ] (
+        lib.fileContents "${opPkg}/share/applications/1password.desktop"
+      );
 
     programs = {
       _1password.enable = false; # CLI

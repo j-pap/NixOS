@@ -2,13 +2,13 @@
   config,
   lib,
   pkgs,
-  #cfgHosts,
-  cfgOpts,
   myUser,
   ...
-}: let
-  protonMB = pkgs.protonmail-bridge-gui;  # pkgs or pkgs.stable
-in {
+}:
+let
+  protonMB = pkgs.protonmail-bridge-gui; # pkgs or pkgs.stable
+in
+{
   imports = [
     ./filesystems.nix
     ./hardware-configuration.nix
@@ -17,15 +17,15 @@ in {
   ##########################################################
   # Custom Options
   ##########################################################
-  myHosts = {
-    width = 2560;
-    height = 1440;
-    refresh = 144;
-    scale = 1.25;
-  };
+  flake = {
+    # "1password", gaming, openrgb, syncthing, vm, yubikey
+    "1password".enable = true;
+    gaming.enable = true;
+    syncthing.enable = true;
+    vm.enable = true;
+    yubikey.enable = true;
 
-  myOptions = {
-    desktops = {
+    de = {
       hyprland.enable = false;
       kde = {
         enable = true;
@@ -33,79 +33,90 @@ in {
       };
     };
 
-    hardware = {
+    hw = {
       bluetooth.enable = false;
       nvidia.enable = true;
     };
 
-    # "1password", gaming, kitty, openrgb, syncthing, vm, wezterm, yubikey
-    "1password".enable = true;
-    gaming.enable = true;
-    syncthing.enable = true;
-    vm.enable = true;
-    yubikey.enable = true;
+    host = {
+      monitor = {
+        #name = "eDP-1";
+        width = "2560";
+        height = "1440";
+        refresh = "144";
+        scale = 1.25;
+      };
+      theme = {
+        #dark = "";
+        #light = "";
+      };
+      wallpaper = {
+        dark = ./wallpaper/dark.png;
+        light = ./wallpaper/light.png;
+        login = ./wallpaper/login.png;
+      };
+    };
   };
-
 
   ##########################################################
   # System Packages / Variables
   ##########################################################
   environment = {
     systemPackages = [
-      protonMB                # GUI bridge for Thunderbird
-    ] ++ builtins.attrValues {
+      protonMB # GUI bridge for Thunderbird
+    ]
+    ++ builtins.attrValues {
       inherit (pkgs)
-      # Browser
-        brave                   # Alt
+        # Browser
+        brave                 # Alt
 
-      # Communication
-        discord                 # Discord
-        signal-desktop          # Signal
-        thunderbird-latest      # Email client
+        # Communication
+        discord               # Discord
+        signal-desktop        # Signal
+        thunderbird-latest    # Email client
 
-      # Hardware
-        polychromatic           # Razer lighting GUI
+        # Hardware
+        polychromatic         # Razer lighting GUI
 
-      # Misc
-        calibre                 # Book organization
+        # Misc
+        calibre               # Book organization
 
-      # Multimedia
-        flacon                  # CUE converter
-        #jellyfin-media-player   # Jellyfin client
-        picard                  # Music tagger
-        pocket-casts            # Podcast player
-        tauon                   # Music player
-        tidal-dl                # Tidal downloader
-        tidal-hifi              # Tidal client
+        # Multimedia
+        flacon                # CUE converter
+        picard                # Music tagger
+        pocket-casts          # Podcast player
+        tauon                 # Music player
+        tidal-dl              # Tidal downloader
+        tidal-hifi            # Tidal client
 
-      # Productivity
-        libreoffice-qt6-fresh   # Office suite
-        obsidian                # Markdown notes
-      ;
+        # Productivity
+        libreoffice-qt6-fresh # Office suite
+        obsidian              # Markdown notes
+        ;
 
-      # Command & Conquer | openra
-      inherit (pkgs.openraPackages_2019.engines) bleed;
+      inherit (pkgs.openraPackages_2019.engines)
+        bleed # Command & Conquer | openra
+        ;
     };
-    # Set Firefox to use GPU for video codecs
     variables = {
-      MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render";  # Nvidia
-      #MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0d:00.0-render";  # AMD
+      MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render"; # Nvidia
+      #MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0d:00.0-render"; # AMD
+      TERMINAL = "kitty";
     };
   };
 
   programs = {
-    adb.enable = true;  # Android flashing
+    adb.enable = true; # Android flashing
     coolercontrol.enable = lib.mkIf (!config.hardware.fancontrol.enable) true;
 
     gamescope = {
       args = [
-        "--prefer-vk-device \"10de:2684\""  # lspci -nn | grep -i vga
+        "--prefer-vk-device \"10de:2684\"" # `lspci -nn | grep -i vga`
         "--hdr-enabled"
       ];
       env = {
         DXVK_HDR = "1";
-        # Not sure if required w/ pkgs.gamescope-wsi
-        ENABLE_GAMESCOPE_WSI = "1";
+        ENABLE_GAMESCOPE_WSI = "1"; # Not sure if required w/ pkgs.gamescope-wsi
       };
     };
   };
@@ -118,36 +129,30 @@ in {
     };
   };
 
-  system.stateVersion = "24.11";
   users.users.${myUser}.extraGroups = [ "fancontrol" ];
 
+  system.stateVersion = "24.11";
 
   ##########################################################
   # Home Manager
   ##########################################################
   home-manager.users.${myUser} = {
-    home.stateVersion = "24.11";
 
-    # lspci -D | grep -i vga
     programs.mangohud.settings = {
       gpu_voltage = true;
       gpu_fan = true;
-      pci_dev = "0:01:00.0";
+      pci_dev = "0:01:00.0"; # `lspci -D | grep -i vga`
       table_columns = lib.mkForce 6;
     };
 
-    wayland.windowManager.hyprland.settings = lib.mkIf (cfgOpts.desktops.hyprland.enable) {
-      # 'hyprctl monitors all' - "name, widthxheight@rate, position, scale"
-      #monitor = lib.mkForce [ "eDP-1, ${builtins.toString cfgHosts.width}x${builtins.toString cfgHosts.height}@${builtins.toString cfgHosts.refresh}, 0x0, ${builtins.toString cfgHosts.scale}" ];
-    };
-
-    xdg.configFile."autostart/ProtonMailBridge.desktop".text = (lib.replaceStrings
-      [ "Exec=protonmail-bridge-gui" ]
-      [ "Exec=${lib.getExe protonMB} --no-window" ]
-      (lib.fileContents "${protonMB}/share/applications/proton-bridge-gui.desktop")
+    xdg.configFile."autostart/ProtonMailBridge.desktop".text = (
+      lib.replaceStrings [ "Exec=protonmail-bridge-gui" ] [ "Exec=${lib.getExe protonMB} --no-window" ] (
+        lib.fileContents "${protonMB}/share/applications/proton-bridge-gui.desktop"
+      )
     );
-  };
 
+    home.stateVersion = "24.11";
+  };
 
   ##########################################################
   # Hardware
@@ -155,34 +160,36 @@ in {
   hardware = {
     fancontrol = {
       enable = true;
-      config = let
-      # Hardware
-        cpuMon = "hwmon1";
-        cpuName = "k10temp";
-        cpuPath = "devices/pci0000:00/0000:00:18.3";
-        fanMon = "hwmon4";
-        fanName = "nct6686";
-        fanPath = "devices/platform/nct6687.2592";
-      # Fan speeds -- value = percent * 2.55
-        caseMin = "100"; # 40%
-        caseMax = "102"; # 40%
-        cpuMin = "64"; # 25%
-        cpuMax = "217"; # 85%
-      in ''
-        INTERVAL=10
-        DEVPATH=${cpuMon}=${cpuPath} ${fanMon}=${fanPath}
-        DEVNAME=${cpuMon}=${cpuName} ${fanMon}=${fanName}
-        FCTEMPS=${fanMon}/pwm1=${cpuMon}/temp1_input ${fanMon}/pwm2=${cpuMon}/temp1_input
-        FCFANS=${fanMon}/pwm1=${fanMon}/fan1_input ${fanMon}/pwm2=${fanMon}/fan2_input
-        MINTEMP=${fanMon}/pwm1=40 ${fanMon}/pwm2=40
-        MAXTEMP=${fanMon}/pwm1=80 ${fanMon}/pwm2=80
-        MINSTART=${fanMon}/pwm1=30 ${fanMon}/pwm2=30
-        MINSTOP=${fanMon}/pwm1=${cpuMin} ${fanMon}/pwm2=${caseMin}
-        # Fans @ 25%/40% until 40 degress
-        MINPWM=${fanMon}/pwm1=${cpuMin} ${fanMon}/pwm2=${caseMin}
-        # CPU fan ramps to 85% @ 80 degrees
-        MAXPWM=${fanMon}/pwm1=${cpuMax} ${fanMon}/pwm2=${caseMax}
-      '';
+      config =
+        let
+          # Hardware
+          cpuMon = "hwmon1";
+          cpuName = "k10temp";
+          cpuPath = "devices/pci0000:00/0000:00:18.3";
+          fanMon = "hwmon4";
+          fanName = "nct6686";
+          fanPath = "devices/platform/nct6687.2592";
+          # Fan speeds -- value = percent * 2.55
+          caseMin = "100"; # 40%
+          caseMax = "102"; # 40%
+          cpuMin = "64"; # 25%
+          cpuMax = "217"; # 85%
+        in
+        ''
+          INTERVAL=10
+          DEVPATH=${cpuMon}=${cpuPath} ${fanMon}=${fanPath}
+          DEVNAME=${cpuMon}=${cpuName} ${fanMon}=${fanName}
+          FCTEMPS=${fanMon}/pwm1=${cpuMon}/temp1_input ${fanMon}/pwm2=${cpuMon}/temp1_input
+          FCFANS=${fanMon}/pwm1=${fanMon}/fan1_input ${fanMon}/pwm2=${fanMon}/fan2_input
+          MINTEMP=${fanMon}/pwm1=40 ${fanMon}/pwm2=40
+          MAXTEMP=${fanMon}/pwm1=80 ${fanMon}/pwm2=80
+          MINSTART=${fanMon}/pwm1=30 ${fanMon}/pwm2=30
+          MINSTOP=${fanMon}/pwm1=${cpuMin} ${fanMon}/pwm2=${caseMin}
+          # Fans @ 25%/40% until 40 degress
+          MINPWM=${fanMon}/pwm1=${cpuMin} ${fanMon}/pwm2=${caseMin}
+          # CPU fan ramps to 85% @ 80 degrees
+          MAXPWM=${fanMon}/pwm1=${cpuMax} ${fanMon}/pwm2=${caseMax}
+        '';
     };
 
     nvidia.prime = {
@@ -197,6 +204,9 @@ in {
     };
   };
 
+  ##########################################################
+  # Network
+  ##########################################################
 
   ##########################################################
   # Boot
@@ -204,18 +214,16 @@ in {
   boot = {
     initrd.systemd.enable = true;
 
-    blacklistedKernelModules = [ "amdgpu" ]; # Disable iGPU
+    blacklistedKernelModules = [
+      "amdgpu" # Disable iGPU
+    ];
     extraModulePackages = [ config.boot.kernelPackages.nct6687d ];
     kernelModules = [
       "nct6687"
       "nfs"
     ];
-    kernelPackages = (
-      if (config.services.scx.enable) then
-        pkgs.linuxPackages_cachyos
-      else
-        pkgs.linuxPackages_latest
-    );
+    kernelPackages =
+      if (config.services.scx.enable) then pkgs.linuxPackages_cachyos else pkgs.linuxPackages_latest;
     kernelParams = [
       "amd_pstate=active"
       "module_blacklist=amdgpu"
@@ -239,10 +247,12 @@ in {
     plymouth = {
       enable = false;
       theme = "loader"; # Previews: https://github.com/adi1090x/plymouth-themes
-      # Overriding installs a single theme instead of all 80, reducing the required size
-      themePackages = [ (pkgs.adi1090x-plymouth-themes.override {
-        selected_themes = [ "${config.boot.plymouth.theme}" ];
-      }) ];
+      themePackages = [
+        # Overriding installs a single theme instead of all 80, reducing the required size
+        (pkgs.adi1090x-plymouth-themes.override {
+          selected_themes = [ "${config.boot.plymouth.theme}" ];
+        })
+      ];
     };
 
     supportedFilesystems = [
@@ -250,9 +260,4 @@ in {
       "nfs"
     ];
   };
-
-
-  ##########################################################
-  # Network
-  ##########################################################
 }

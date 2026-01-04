@@ -3,59 +3,22 @@
   lib,
   pkgs,
   inputs,
-  cfgOpts,
-  cfgTerm,
+  browser,
   myUser,
+  terminal,
   ...
-}: let
-  cfg = cfgOpts.desktops.hyprland;
-in {
+}:
+let
+  cfg = config.flake.de.hyprland;
+  stylix = config.stylix;
+  editor = config.environment.variables.EDITOR;
+in
+{
   imports = [
     ./greetd.nix
   ];
 
-  options.myOptions.desktops.hyprland = {
-    enable = lib.mkEnableOption "Hyprland desktop";
-
-    cursor = {
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.bibata-cursors;
-      };
-      name = lib.mkOption {
-        type = lib.types.str;
-        description = "Variants: Bibata-[Modern/Original]-[Amber/Classic/Ice]";
-        default = "Bibata-Modern-Classic";
-      };
-      size = lib.mkOption {
-        type = lib.types.enum [
-          16 20 22 24 28 32 40 48 56 64 72 80 88 96
-        ];
-        description = "Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96";
-        default = 24;
-      };
-    };
-
-    icons = {
-      package = lib.mkOption {
-        type = lib.types.package;
-        description = ''
-          Folder color variants: https://github.com/PapirusDevelopmentTeam/papirus-folders
-          adwaita black blue bluegrey breeze brown carmine cyan darkcyan deeporange green grey indigo magenta nordic orange palebrown paleorange pink red teal violet white yaru yellow
-        '';
-        example = pkgs.papirus-icon-theme.override { color = "blue"; };
-        #default = pkgs.papirus-icon-theme.override { color = "violet"; };
-        default = pkgs.papirus-icon-theme;
-      };
-      name = lib.mkOption {
-        type = lib.types.enum [
-          "Papirus" "Papirus-Dark" "Papirus-Light"
-        ];
-        description = "Variants: Papirus Papirus-Dark Papirus-Light";
-        default = "Papirus";
-      };
-    };
-  };
+  options.flake.de.hyprland.enable = lib.mkEnableOption "Hyprland WM";
 
   config = lib.mkIf (cfg.enable) {
     environment = {
@@ -63,258 +26,276 @@ in {
 
       sessionVariables.NIXOS_OZONE_WL = 1;
 
-      systemPackages = builtins.attrValues {
-        inherit (pkgs)
-        # Application Launcher
-          #bc                     # calculator for rofi-wifi script
-          #hyprlauncher           # App launcher (via HM)
-          #iw                     # wireless config for rofi-wifi script
-          #rofi-wayland           #
-          #wofi                   # Launcher
+      systemPackages =
+        builtins.attrValues {
+          inherit (pkgs)
+            # Application Launcher
+            #bc                  # Calculator for rofi-wifi script
+            #hyprlauncher        # App launcher (via HM)
+            #iw                  # wireless config for rofi-wifi script
+            #rofi-wayland        #
+            #wofi                # Launcher
 
-        # Audio
-          hyprpwcenter            # Pipewire display
+            # Audio
+            hyprpwcenter         # Pipewire display
 
-        # Authorization Agent
-          #hyprpolkitagent        # Hypr's polkit agent (via HM)
-          #polkit_gnome           # Gnome's polkit agent (via HM)
+            # Authorization Agent
+            #hyprpolkitagent     # Hypr's polkit agent (via HM)
+            #polkit_gnome        # Gnome's polkit agent (via HM)
 
-        # Clipboard
-          cliphist                # Save clipboard history after closing apps
+            # Clipboard
+            cliphist             # Save clipboard history after closing apps
 
-        # File Manager
-          file-roller             # Gnome's GUI archive manager
-          pcmanfm                 # Independent file manager
+            # File Manager
+            file-roller          # Gnome's GUI archive manager
+            pcmanfm              # Independent file manager
 
-        # Hardware
-          brightnessctl           # Monitor brightness control
+            # Hardware
+            brightnessctl        # Monitor brightness control
 
-        # Hypr Ecosystem
-          hyprpicker              # Utility for picking a color from your screen
-          hyprshutdown            # GUI session manager (via Flake)
-          hyprsysteminfo          # Display system information
+            # Hypr Ecosystem
+            hyprpicker           # Utility for picking a color from your screen
+            hyprshutdown         # GUI session manager (via Flake)
+            hyprsysteminfo       # Display system information
 
-        # Status bar
-          networkmanagerapplet    # Show network tray icon (nm-applet --indicator)
-          #ashell
-          #dms-shell
+            # Status bar
+            networkmanagerapplet # Show network tray icon (nm-applet --indicator)
+            #ashell
+            #dms-shell
 
-        # Theming
-          #pywal                  # Theme colors from current wallpaper
-          #wpgtk                  # Pywal GUI
+            # Theming
+            #pywal               # Theme colors from current wallpaper
+            #wpgtk               # Pywal GUI
 
-        # Wallpaper
-          #swww                   # Wallpaper manager capable of GIFs (via HM)
-          #awww                   # New repo for swww
+            # Wallpaper
+            #swww                # Wallpaper manager capable of GIFs (via HM)
+            #awww                # New repo for swww
 
-        # Wayland
-          wayland-utils           # Wayland utilities | 'wayland-info'
-          wev                     # Keymapper
-        ;
-      } ++ [
-      # QT Wayland
-        pkgs.libsForQt5.qt5.qtwayland   # QT5 Wayland
-        pkgs.kdePackages.qtwayland      # QT6 Wayland
-      ] ++ lib.optional (config.services.flatpak.enable) [
-        pkgs.gnome-software             # Flatpak store
-      ];
+            # Wayland
+            wayland-utils        # Wayland utilities | 'wayland-info'
+            wev                  # Keymapper
+            ;
+        }
+        ++ [
+          # QT Wayland
+          pkgs.libsForQt5.qt5.qtwayland # QT5 Wayland
+          pkgs.kdePackages.qtwayland    # QT6 Wayland
+        ]
+        ++ lib.optional (config.services.flatpak.enable) [
+          pkgs.gnome-software # Flatpak store
+        ];
+      variables.TERMINAL = lib.mkDefault "kitty";
     };
 
     fonts.packages = builtins.attrValues {
       inherit (pkgs)
-        font-awesome  # Icons
-      ;
+        font-awesome # Icons
+        ;
 
       inherit (pkgs.nerd-fonts)
-        noto          # Waybar icons
-      ;
+        noto # Waybar icons
+        ;
     };
 
-    home-manager.users.${myUser} = { config, lib, osConfig, ... }: let
-      theme = {
-        #name = "";
-        #pkg = pkgs.;
-      };
-    in {
-      imports = [
-        ./hypr
-        ./waybar
-        ./idle.nix
-        ./lock.nix
-        ./launcher.nix
-        #./paper.nix
-        ./sunset.nix
-      ];
+    home-manager.users.${myUser} =
+      {
+        config,
+        lib,
+        osConfig,
+        ...
+      }:
+      let
+        theme = {
+          #name = "";
+          #pkg = pkgs.;
+        };
+      in
+      {
+        imports = [
+          ./hypr
+          ./waybar
+          ./idle.nix
+          ./lock.nix
+          ./launcher.nix
+          #./paper.nix
+          ./sunset.nix
+        ];
 
-      gtk = {
-        enable = true;
-        cursorTheme = {
-          name = cfg.cursor.name;
-          package = cfg.cursor.package;
-          size = cfg.cursor.size;
-        };
-        iconTheme = {
-          name = cfg.icons.name;
-          package = cfg.icons.package;
-        };
-        #theme = {
+        gtk = {
+          enable = true;
+          cursorTheme = {
+            name = stylix.cursor.name;
+            package = stylix.cursor.package;
+            size = stylix.cursor.size;
+          };
+          iconTheme = {
+            name = stylix.icons.dark;
+            package = stylix.icons.package;
+          };
+          #theme = {
           #name = theme.name;
           #package = theme.pkg;
-        #};
-      };
-
-      home = let
-        profileImg = ../../../assets/profile.png;
-      in {
-        file.".face".source = profileImg;
-        pointerCursor = {
-          enable = true;
-          gtk.enable = true;
-          hyprcursor.enable = true;
-          name = cfg.cursor.name;
-          package = cfg.cursor.package;
-          size = cfg.cursor.size;
-        };
-      };
-
-      programs = {
-        hyprshot = {
-          enable = true;
-          package = pkgs.hyprshot;
-          saveLocation = "$HOME/Pictures/hyprshot";
+          #};
         };
 
-        /*
-        # Use Pywal for terminal theming
-        bash.initExtra = ''
-          if command -v wal > /dev/null 2>&1 && [ "$TERM" = "${cfgTerm}" ]; then
-            wal -Rqe
-          fi
-        '';
-        kitty.extraConfig = ''include /home/${myUser}/.cache/wal/colors-kitty.conf'';
-        */
-      };
-
-      /*
-      qt = {
-        enable = true;
-        style = {
-          name = theme.name;
-          package = theme.pkg;
-      };
-      */
-
-      services = {
-        hyprpolkitagent.enable = true;
-        playerctld.enable = true;
-        #polkit-gnome.enable = true;
-        swww = {
-          enable = true;
-          extraArgs = [ ];
-        };
-        udiskie = {
-          enable = true;
-          automount = true;
-          notify = true;
-          tray = "auto";
-          settings = { };
-        };
-      };
-
-      # v0.52.2 - https://wiki.hypr.land/Configuring/
-      wayland.windowManager.hyprland = {
-        enable = true;
-        package = null; # Use NixOS module package
-        portalPackage = null; # Use NixOS module package
-        systemd = {
-          enable = true;
-          enableXdgAutostart = false;
-          variables = [ "--all" ];
-        };
-        xwayland.enable = true;
-
-        settings = {
-          # https://wiki.hypr.land/Configuring/Keywords/#sourcing-multi-file
-          source = [
-            # Import optional color schemes
-            #"/home/${myUser}/.cache/wal/colors-hyprland.conf"
-          ];
-
-          "$browser" = cfgOpts.browser;
-          "$editor" = "nvim";
-          "$files" = "pcmanfm";
-          "$runner" = "hyprlauncher";
-          "$screenshot" = "hyprshot";
-          "$terminal" = cfgTerm;
-        };
-      };
-
-      xdg = {
-        # Create hyprland pywal template
-        /*
-        configFile."wal/templates/colors-hyprland.conf".text = ''
-          $background = rgb({background.strip})
-          $foreground = rgb({foreground.strip})
-          $color0 = rgb({color0.strip})
-          $color1 = rgb({color1.strip})
-          $color2 = rgb({color2.strip})
-          $color3 = rgb({color3.strip})
-          $color4 = rgb({color4.strip})
-          $color5 = rgb({color5.strip})
-          $color6 = rgb({color6.strip})
-          $color7 = rgb({color7.strip})
-          $color8 = rgb({color8.strip})
-          $color9 = rgb({color9.strip})
-          $color10 = rgb({color10.strip})
-          $color11 = rgb({color11.strip})
-          $color12 = rgb({color12.strip})
-          $color13 = rgb({color13.strip})
-          $color14 = rgb({color14.strip})
-          $color15 = rgb({color15.strip})
-        '';
-        */
-
-        # Set default application file associations
-        mimeApps = let
-          mime = {
-            archive = [
-              "org.gnome.FileRoller.desktop"
-              #"org.kde.ark.desktop"
-            ];
-            audio = [ "" ];
-            browser = [ "${cfgOpts.browser}.desktop" ];
-            calendar = [ "" ];
-            connect = [ "" ];
-            email = [ "thunderbird.desktop" ];
-            image = [ "feh.desktop" ];
-            pdf = [
-              #"${cfgOpts.browser}.desktop"
-              "org.pwmt.zathura.desktop"
-            ];
-            text = [ "neovide.desktop" ];
-            video = [ "" ];
+        home =
+          let
+            profileImg = ../../../assets/profile.png;
+          in
+          {
+            file.".face".source = profileImg;
+            pointerCursor = {
+              enable = true;
+              gtk.enable = true;
+              hyprcursor.enable = true;
+              name = stylix.cursor.name;
+              package = stylix.cursor.package;
+              size = stylix.cursor.size;
+            };
           };
-        in {
+
+        programs = {
+          hyprshot = {
+            enable = true;
+            package = pkgs.hyprshot;
+            saveLocation = "$HOME/Pictures/hyprshot";
+          };
+
+          /*
+            # Use Pywal for terminal theming
+            bash.initExtra = ''
+              if command -v wal > /dev/null 2>&1 && [ "$TERM" = "${terminal}" ]; then
+                wal -Rqe
+              fi
+            '';
+            kitty.extraConfig = ''include /home/${myUser}/.cache/wal/colors-kitty.conf'';
+          */
+        };
+
+        /*
+          qt = {
+            enable = true;
+            style = {
+              name = theme.name;
+              package = theme.pkg;
+          };
+        */
+
+        services = {
+          hyprpolkitagent.enable = true;
+          playerctld.enable = true;
+          #polkit-gnome.enable = true;
+          swww = {
+            enable = true;
+            extraArgs = [ ];
+          };
+          udiskie = {
+            enable = true;
+            automount = true;
+            notify = true;
+            tray = "auto";
+            settings = { };
+          };
+        };
+
+        # v0.52.2 - https://wiki.hypr.land/Configuring/
+        wayland.windowManager.hyprland = {
           enable = true;
-          associations.added = config.xdg.mimeApps.defaultApplications;
-          defaultApplications = import ../mimeapps.nix { inherit mime; };
+          package = null; # Use NixOS module package
+          portalPackage = null; # Use NixOS module package
+          systemd = {
+            enable = true;
+            enableXdgAutostart = false;
+            variables = [ "--all" ];
+          };
+          xwayland.enable = true;
+
+          settings = {
+            # https://wiki.hypr.land/Configuring/Keywords/#sourcing-multi-file
+            source = [
+              # Import optional color schemes
+              #"/home/${myUser}/.cache/wal/colors-hyprland.conf"
+            ];
+
+            "$browser" = browser;
+            "$editor" = editor;
+            "$files" = "pcmanfm";
+            "$runner" = "hyprlauncher";
+            "$screenshot" = "hyprshot";
+            "$terminal" = terminal;
+          };
+        };
+
+        xdg = {
+          # Create hyprland pywal template
+          /*
+            configFile."wal/templates/colors-hyprland.conf".text = ''
+              $background = rgb({background.strip})
+              $foreground = rgb({foreground.strip})
+              $color0 = rgb({color0.strip})
+              $color1 = rgb({color1.strip})
+              $color2 = rgb({color2.strip})
+              $color3 = rgb({color3.strip})
+              $color4 = rgb({color4.strip})
+              $color5 = rgb({color5.strip})
+              $color6 = rgb({color6.strip})
+              $color7 = rgb({color7.strip})
+              $color8 = rgb({color8.strip})
+              $color9 = rgb({color9.strip})
+              $color10 = rgb({color10.strip})
+              $color11 = rgb({color11.strip})
+              $color12 = rgb({color12.strip})
+              $color13 = rgb({color13.strip})
+              $color14 = rgb({color14.strip})
+              $color15 = rgb({color15.strip})
+            '';
+          */
+
+          # Set default application file associations
+          mimeApps =
+            let
+              mime = {
+                archive = [
+                  "org.gnome.FileRoller.desktop"
+                  #"org.kde.ark.desktop"
+                ];
+                audio = [ "" ];
+                browser = [ "${browser}.desktop" ];
+                calendar = [ "" ];
+                connect = [ "" ];
+                email = [ "thunderbird.desktop" ];
+                image = [ "feh.desktop" ];
+                pdf = [
+                  #"${browser}.desktop"
+                  "org.pwmt.zathura.desktop"
+                ];
+                text = [ "neovide.desktop" ];
+                video = [ "" ];
+              };
+            in
+            {
+              enable = true;
+              associations.added = config.xdg.mimeApps.defaultApplications;
+              defaultApplications = import ../mimeapps.nix { inherit mime; };
+            };
         };
       };
-    };
 
     nixpkgs.overlays = [
       inputs.hyprshutdown.overlays.default
     ];
 
     programs = {
-      hyprland = let
-        hyprPkgs = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system};
-      in {
-        enable = true;
-        package = hyprPkgs.hyprland;
-        portalPackage = hyprPkgs.xdg-desktop-portal-hyprland;
-        xwayland.enable = true;
-      };
+      hyprland =
+        let
+          hyprPkgs = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system};
+        in
+        {
+          enable = true;
+          package = hyprPkgs.hyprland;
+          portalPackage = hyprPkgs.xdg-desktop-portal-hyprland;
+          xwayland.enable = true;
+        };
       seahorse.enable = true;
     };
 
@@ -334,11 +315,6 @@ in {
 
     stylix = {
       fonts = {
-        sansSerif = {
-          name = "Noto Sans";
-          package = pkgs.noto-fonts;
-        };
-        serif = config.stylix.fonts.sansSerif;
         sizes = {
           #applications = 10;
           #desktop = 10;

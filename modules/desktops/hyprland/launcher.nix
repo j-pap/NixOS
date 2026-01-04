@@ -1,10 +1,14 @@
 {
+  lib,
   osConfig,
   ...
-}: let
-  width = toString (builtins.ceil (osConfig.myHosts.width * .3));
-  height = toString (builtins.ceil (osConfig.myHosts.height * .3));
-in {
+}:
+let
+  monitor = osConfig.flake.host.monitor;
+  width = toString (builtins.ceil ((lib.toInt monitor.width) * .3));
+  height = toString (builtins.ceil ((lib.toInt monitor.height) * .3));
+in
+{
   # https://wiki.hypr.land/Hypr-Ecosystem/hyprlauncher/
   services.hyprlauncher = {
     enable = true;

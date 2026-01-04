@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
-  cfgOpts,
   myUser,
   ...
-}: let
-  cfg = cfgOpts.containers;
-in {
-  options.myOptions.containers = {
+}:
+let
+  cfg = config.flake.containers;
+in
+{
+  options.flake.containers = {
     enable = lib.mkEnableOption "Containers";
     docker = lib.mkEnableOption "Docker";
     podman = lib.mkEnableOption "Podman";
@@ -23,25 +24,23 @@ in {
         }
       ];
 
-      myOptions.containers.docker = lib.mkDefault true;
+      flake.containers.docker = lib.mkDefault true;
 
       environment.systemPackages = builtins.attrValues {
         inherit (pkgs)
-        # Docker
+          # Docker
           compose2nix
-        # Kubernetes Tools
+          # Kubernetes Tools
           #kind
           #kubectl
-        ;
+          ;
       };
 
       virtualisation.containers.enable = true;
     })
 
     (lib.mkIf (cfg.enable && cfg.docker) {
-      users.users.${myUser}.extraGroups = [
-        "docker"
-      ];
+      users.users.${myUser}.extraGroups = [ "docker" ];
 
       virtualisation = {
         oci-containers.backend = "docker";
@@ -67,9 +66,7 @@ in {
     })
 
     (lib.mkIf (cfg.enable && cfg.podman) {
-      users.users.${myUser}.extraGroups = [
-        "podman"
-      ];
+      users.users.${myUser}.extraGroups = [ "podman" ];
 
       virtualisation = {
         oci-containers.backend = "podman";

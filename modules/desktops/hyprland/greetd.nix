@@ -2,23 +2,20 @@
   config,
   lib,
   pkgs,
-  cfgOpts,
-  inputs,
+  flk,
   ...
 }:
 let
-  cfg = cfgOpts.desktops.hyprland;
-  wallpaper = {
-    dir = "${inputs.self}/assets/wallpapers";
-    regreet = "${wallpaper.dir}/blobs-l.png";
-  };
-in {
+  cfg = config.flake.de.hyprland;
+  stylix = config.stylix;
+in
+{
   config = lib.mkIf (cfg.enable) {
     programs.regreet = {
       enable = false;
       font = {
-        name = "Cantarell";
-        package = pkgs.cantarell-fonts;
+        name = "Adwaita Sans Regular";
+        package = pkgs.adwaita-fonts;
         size = 16;
       };
       theme = {
@@ -26,22 +23,28 @@ in {
         package = pkgs.gnome-themes-extra;
       };
       cursorTheme = {
-        name = cfg.cursor.name;
-        package = cfg.cursor.package;
+        name = stylix.cursor.name;
+        package = stylix.cursor.package;
       };
       iconTheme = {
-        name = cfg.icons.name;
-        package = cfg.icons.package;
+        name = stylix.icons.dark;
+        package = stylix.icons.package;
       };
       settings = {
         #appearance.greeting_msg = "";
         background = {
-          path = wallpaper.regreet;
+          path = flk.host.wallpaper.login;
           fit = "Contain"; # Fill | Contain | Cover | ScaleDown
         };
         commands = {
-          poweroff = [ "systemctl" "poweroff" ];
-          reboot = [ "systemctl" "reboot" ];
+          poweroff = [
+            "systemctl"
+            "poweroff"
+          ];
+          reboot = [
+            "systemctl"
+            "reboot"
+          ];
         };
         #env = { };
         GTK = {
@@ -60,18 +63,17 @@ in {
       enable = true;
       useTextGreeter = lib.mkIf (!config.programs.regreet.enable) true;
       settings = {
-        default_session.command = (
+        default_session.command =
           if (config.programs.regreet.enable) then
             "${lib.getExe config.programs.regreet.package} --cmd Hyprland"
           else
-            "${lib.getExe pkgs.tuigreet} --cmd Hyprland --time --remember --remember-user-session --asterisks --theme 'text=white;time=lightyellow;container=darkgray;border=lightmagenta;prompt=lightgreen;input=white;button=white;action=gray'"
-        );
+            "${lib.getExe pkgs.tuigreet} --cmd Hyprland --time --remember --remember-user-session --asterisks --theme 'text=white;time=lightyellow;container=darkgray;border=lightmagenta;prompt=lightgreen;input=white;button=white;action=gray'";
         /*
-        # Auto login
-        initial_session = {
-          command = config.services.greetd.settings.default_session.command;
-          user = myUser;
-        };
+          # Auto login
+          initial_session = {
+            command = config.services.greetd.settings.default_session.command;
+            user = myUser;
+          };
         */
         terminal.vt = 1;
       };

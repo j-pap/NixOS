@@ -4,10 +4,12 @@
   pkgs,
   modulesPath,
   ...
-}: let
+}:
+let
   latestKernel = false;
   nvidia = false;
-in {
+in
+{
   imports = [
     (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
     #(modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix")
@@ -20,18 +22,17 @@ in {
           #"nct6687"
         ];
         extraModulePackages = builtins.attrValues {
-          #inherit (config.boot.kernelPackages)
+          inherit (config.boot.kernelPackages)
             #nct6687d
-          #;
+            ;
         };
-        kernelPackages = (
+        kernelPackages =
           if (latestKernel) then
             # ZFS won't build against 6.15.x, even w/ allowBroken
             pkgs.linuxPackages_latest
           else
-            # 6.12 (LTS) is currently the latest that builds successfully
-            pkgs.linuxPackages_6_12
-        );
+            # LTS builds successfully
+            pkgs.linuxPackages;
       };
 
       environment.systemPackages = builtins.attrValues {
@@ -47,14 +48,17 @@ in {
           usbutils
           vim
           wget
-        ;
+          ;
       };
 
       isoImage.squashfsCompression = "gzip";
 
       nix.settings = {
         download-buffer-size = 536870912; # 512MB in Bytes
-        experimental-features = [ "nix-command" "flakes" ];
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
         substituters = [ "https://nix-community.cachix.org" ];
         trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
       };

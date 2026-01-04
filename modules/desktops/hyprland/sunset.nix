@@ -1,7 +1,6 @@
 {
   services.hyprsunset = {
     enable = true;
-
     settings = {
       max-gamma = 100;
       profile = [

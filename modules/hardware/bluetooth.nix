@@ -1,12 +1,14 @@
 {
+  config,
   lib,
   pkgs,
-  cfgOpts,
   ...
-}: let
-  cfg = cfgOpts.hardware.bluetooth;
-in {
-  options.myOptions.hardware.bluetooth.enable = lib.mkEnableOption "Bluetooth";
+}:
+let
+  cfg = config.flake.hw.bluetooth;
+in
+{
+  options.flake.hw.bluetooth.enable = lib.mkEnableOption "Bluetooth";
 
   config = lib.mkIf (cfg.enable) {
     hardware.bluetooth = {
@@ -14,9 +16,9 @@ in {
       powerOnBoot = true;
       settings = {
         General = {
-          ControllerMode = "dual";  # bredr, le, or dual
-          Experimental = true;  # Battery level info / LE BAP
-          KernelExperimental = true;  # LE BAP ISO Socket
+          ControllerMode = "dual"; # bredr, le, or dual
+          Experimental = true; # Battery level info / LE BAP
+          KernelExperimental = true; # LE BAP ISO Socket
         };
       };
     };

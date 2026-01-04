@@ -2,7 +2,8 @@
   lib,
   osConfig,
   ...
-}: {
+}:
+{
   # https://wiki.hypr.land/Hypr-Ecosystem/hyprlock
   programs.hyprlock = {
     enable = true;
@@ -13,7 +14,7 @@
         ignore_empty_input = true;
       };
 
-      auth.fingerprint.enabled = lib.mkIf (osConfig.networking.hostName == "FW13") true;
+      auth.fingerprint.enabled = lib.mkIf (osConfig.services.fprintd.enable) true;
 
       animations = {
         enabled = true;

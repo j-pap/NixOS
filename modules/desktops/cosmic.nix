@@ -2,57 +2,40 @@
   config,
   lib,
   pkgs,
-  cfgOpts,
-  inputs,
+  browser,
+  flk,
   myUser,
+  terminal,
   ...
-}: let
-  cfg = cfgOpts.desktops.cosmic;
-
+}:
+let
+  cfg = config.flake.de.cosmic;
+  stylix = config.stylix;
+  wallpaper = flk.host.wallpaper;
   profileImg = ../../assets/profile.png;
-  cursor = {
-    # Variants: Bibata-(Modern/Original)-(Amber/Classic/Ice)
-    name = "Bibata-Modern-Classic";
-    package = pkgs.bibata-cursors;
-    # Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96
-    size = 24;
-  };
-  icon = {
-    # Variants: Papirus Papirus-Dark Papirus-Light
-    name = "Papirus";
-    # Folder color variants: https://github.com/PapirusDevelopmentTeam/papirus-folders
-    # adwaita black blue bluegrey breeze brown carmine cyan darkcyan deeporange
-    # green grey indigo magenta nordic orange palebrown paleorange pink red
-    # teal violet white yaru yellow
-    package = pkgs.papirus-icon-theme.override { color = "violet"; };
-  };
-  wallpaper = {
-    day = "${inputs.self}/assets/wallpapers/blobs-l.png";
-    night = "${inputs.self}/assets/wallpapers/blobs-d.png";
-  };
-in {
-  options.myOptions.desktops.cosmic.enable = lib.mkEnableOption "Cosmic desktop";
+in
+{
+  options.flake.de.cosmic.enable = lib.mkEnableOption "COSMIC DE";
 
   config = lib.mkIf (cfg.enable) {
     environment = {
       cosmic.excludePackages = [ ];
       systemPackages = [
-      # Theming
-        #cursor.package      # Cursor theme
-        #icon.package        # Icon theme
-      ] ++ lib.optional (config.services.flatpak.enable) [
-        pkgs.cosmic-store    # Flatpak store
-      ] ++ builtins.attrValues {
+        #stylix.cursor.package
+        #stylix.icons.package
+      ]
+      ++ lib.optional (config.services.flatpak.enable) [
+        pkgs.cosmic-store # Flatpak store
+      ]
+      ++ builtins.attrValues {
         inherit (pkgs)
-        # COSMIC
-          cosmic-ext-applet-caffeine  # Caffeine
-          cosmic-ext-applet-minimon   # Hardware usage
-          cosmic-ext-tweaks           # DE tweak tool
-
-        # Text
-          #neovide           # GUI launcher for neovim
-        ;
+          # Extensions
+          cosmic-ext-applet-caffeine # Caffeine
+          cosmic-ext-applet-minimon  # Hardware usage
+          cosmic-ext-tweaks          # DE tweak tool
+          ;
       };
+      variables.TERMINAL = lib.mkDefault "cosmic-term";
     };
 
     programs.seahorse.enable = true;
@@ -72,45 +55,48 @@ in {
     };
 
     stylix.fonts = {
-      sansSerif = {
-        #name = "";
-        #package = ;
+      monospace = {
+        name = "Noto Sans Mono";
+        package = pkgs.noto-fonts;
       };
-      serif = config.stylix.fonts.sansSerif;
+      sansSerif = {
+        name = "Open Sans";
+        package = pkgs.open-sans;
+      };
+      /*
       sizes = {
         #applications = 10;
         #desktop = 10;
         #popups = 10;
         #terminal = 14;
       };
+      */
     };
 
     home-manager.users.${myUser} = {
-      # Sets profile image
-      home.file.".face".source = profileImg;
+      home.file.".face".source = profileImg; # Sets profile image
 
       # Set default application file associations
-      xdg.mimeApps = let
-        mime = {
-          archive = [ "org.gnome.FileRoller.desktop" ];
-          audio = [ "com.system76.CosmicPlayer.desktop" ];
-          browser = [ "${cfgOpts.browser}.desktop" ];
-          #calendar = [ "thunderbird.desktop" ];
-          connect = [ "" ];
-          #email = [ "thunderbird.desktop" ];
-          image = [ "org.gnome.eog.desktop" ];
-          pdf = [ "org.gnome.Evince.desktop" ];
-          text = [
-            "com.system76.CosmicEdit.desktop"
-            #"neovide.desktop"
-          ];
-          video = [ "com.system76.CosmicPlayer.desktop" ];
+      xdg.mimeApps =
+        let
+          mime = {
+            archive = [ "org.gnome.FileRoller.desktop" ];
+            audio = [ "com.system76.CosmicPlayer.desktop" ];
+            browser = [ "${browser}.desktop" ];
+            #calendar = [ "thunderbird.desktop" ];
+            connect = [ "" ];
+            email = [ "thunderbird.desktop" ];
+            image = [ "org.gnome.eog.desktop" ];
+            pdf = [ "org.gnome.Evince.desktop" ];
+            text = [ "com.system76.CosmicEdit.desktop" ];
+            video = [ "com.system76.CosmicPlayer.desktop" ];
+          };
+        in
+        {
+          enable = false;
+          associations.added = config.xdg.mimeApps.defaultApplications;
+          defaultApplications = import ./mimeapps.nix { inherit mime; };
         };
-      in {
-        enable = false;
-        associations.added = config.xdg.mimeApps.defaultApplications;
-        defaultApplications = import ./mimeapps.nix { inherit mime; };
-      };
     };
   };
 }
