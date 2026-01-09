@@ -19,12 +19,30 @@ in
     {
       stylix = {
         autoEnable = false;
+
         cursor = lib.mkDefault {
           # Variants: Bibata-(Modern/Original)-(Amber/Classic/Ice)
           name = "Bibata-Modern-Classic";
           package = pkgs.bibata-cursors;
           # Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96
           size = 24;
+        };
+        fonts = {
+          monospace = lib.mkDefault {
+            name = "Iosvmata";
+            package = pkgs.iosvmata;
+          };
+          sansSerif = lib.mkDefault {
+            name = "Noto Sans";
+            package = pkgs.noto-fonts;
+          };
+          serif = config.stylix.fonts.sansSerif;
+          sizes = lib.mkDefault {
+            #applications = 12;
+            #desktop = 10;
+            #popups = 10;
+            terminal = 14;
+          };
         };
         icons = lib.mkDefault {
           #enable = true;
@@ -54,28 +72,9 @@ in
 
       stylix = {
         enable = true;
-        autoEnable = false;
         base16Scheme = lib.mkDefault "${base16}/${lib.toLower flk.host.theme.dark}.yaml";
         image = lib.mkDefault "${flk.host.wallpaper.dark}";
         polarity = lib.mkDefault "dark";
-
-        fonts = {
-          monospace = lib.mkDefault {
-            name = "Iosvmata";
-            package = pkgs.iosvmata;
-          };
-          sansSerif = lib.mkDefault {
-            name = "Noto Sans";
-            package = pkgs.noto-fonts;
-          };
-          serif = config.stylix.fonts.sansSerif;
-          sizes = lib.mkDefault {
-            #applications = 12;
-            #desktop = 10;
-            #popups = 10;
-            terminal = 14;
-          };
-        };
 
         opacity = lib.mkDefault {
           #applications = 1.0;
