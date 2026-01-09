@@ -93,7 +93,6 @@ in
 
           # Framework Hardware
           framework-tool      # Swiss army knife for FWs
-          iio-sensor-proxy    # Ambient light sensor | 'monitor-sensor'
           sbctl               # Secure boot key manager
 
           # Monitoring
@@ -135,8 +134,6 @@ in
     in
     {
       #imports = [ ./fetch-logo.nix ];
-
-      dconf.settings."org/gnome/settings-daemon/plugins/power".ambient-enabled = false; # Auto screen brightness
 
       programs.mangohud.settings.pci_dev = "0:c1:00.0"; # `lspci -D | grep -i vga`
 
@@ -221,6 +218,7 @@ in
     bluetooth.powerOnBoot = lib.mkForce false;
     enableAllFirmware = true;
     firmware = [ pkgs.linux-firmware ];
+    sensor.iio.enable = true; # Ambient light sensor | 'monitor-sensor'
     wirelessRegulatoryDatabase = true; # Allow 5GHz wifi
   };
 
@@ -231,8 +229,7 @@ in
   };
 
   services = {
-    # 'sudo fprintd-enroll'
-    fprintd.enable = if (useFP) then lib.mkForce true else lib.mkForce false;
+    fprintd.enable = if (useFP) then lib.mkForce true else lib.mkForce false; # 'sudo fprintd-enroll'
 
     fwupd = {
       enable = true;
