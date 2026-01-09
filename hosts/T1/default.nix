@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -130,14 +130,14 @@ in
     };
   };
 
-  users.users.${myUser}.extraGroups = [ "fancontrol" ];
+  users.users.${flk.user}.extraGroups = [ "fancontrol" ];
 
   system.stateVersion = "24.11";
 
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${myUser} = {
+  home-manager.users.${flk.user} = {
 
     programs.mangohud.settings = {
       gpu_voltage = true;
@@ -201,7 +201,7 @@ in
 
     openrazer = {
       enable = true;
-      users = [ myUser ];
+      users = [ flk.user ];
     };
   };
 

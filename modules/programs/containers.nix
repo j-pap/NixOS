@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -40,7 +40,7 @@ in
     })
 
     (lib.mkIf (cfg.enable && cfg.docker) {
-      users.users.${myUser}.extraGroups = [ "docker" ];
+      users.users.${flk.user}.extraGroups = [ "docker" ];
 
       virtualisation = {
         oci-containers.backend = "docker";
@@ -66,7 +66,7 @@ in
     })
 
     (lib.mkIf (cfg.enable && cfg.podman) {
-      users.users.${myUser}.extraGroups = [ "podman" ];
+      users.users.${flk.user}.extraGroups = [ "podman" ];
 
       virtualisation = {
         oci-containers.backend = "podman";

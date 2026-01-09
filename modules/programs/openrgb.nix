@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -45,6 +45,6 @@ in
       wantedBy = [ "graphical-session.target" ];
     };
 
-    users.users.${myUser}.extraGroups = [ "i2c" ];
+    users.users.${flk.user}.extraGroups = [ "i2c" ];
   };
 }

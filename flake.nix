@@ -100,7 +100,6 @@
       ({ config, ... }: {
         _module.args = {
           flk = config.flake;
-          myUser = config.flake.user;
         };
         networking.hostName = hostName;
         nixpkgs = {

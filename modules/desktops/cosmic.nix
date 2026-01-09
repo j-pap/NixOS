@@ -4,7 +4,6 @@
   pkgs,
   browser,
   flk,
-  myUser,
   ...
 }:
 let
@@ -74,7 +73,7 @@ in
       pkgs.cosmic-store # Flatpak store
     ];
 
-    home-manager.users.${myUser} = {
+    home-manager.users.${flk.user} = {
       home.file.".face".source = profileImg; # Sets profile image
 
       # Set default application file associations

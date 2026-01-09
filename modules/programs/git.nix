@@ -3,7 +3,6 @@
   lib,
   pkgs,
   flk,
-  myUser,
   ...
 }:
 let
@@ -34,7 +33,7 @@ in
 
     flake.git.ssh.enable = lib.mkDefault true;
 
-    home-manager.users.${myUser} = lib.mkMerge [
+    home-manager.users.${flk.user} = lib.mkMerge [
       {
         programs.git = {
           enable = true;
@@ -85,7 +84,7 @@ in
               ];
               identityAgent =
                 if (flk."1password".enable) then
-                  "/home/${myUser}/.1password/agent.sock"
+                  "/home/${flk.user}/.1password/agent.sock"
                 else
                   (lib.getExe' pkgs.openssh "ssh-agent");
             in

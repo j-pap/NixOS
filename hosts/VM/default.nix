@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 {
@@ -33,7 +33,7 @@
   # Bypass occasional login screen freeze
   services.displayManager.autoLogin = {
     enable = lib.mkForce true;
-    user = myUser;
+    user = flk.user;
   };
 
   system.stateVersion = "24.11";
@@ -41,7 +41,7 @@
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${myUser} = {
+  home-manager.users.${flk.user} = {
     home.stateVersion = "24.11";
   };
 

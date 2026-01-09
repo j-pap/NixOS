@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -37,6 +37,6 @@ in
       pulseaudio.enable = false; # Must be disabled w/ PipeWire
     };
 
-    users.users.${myUser}.extraGroups = [ "audio" ];
+    users.users.${flk.user}.extraGroups = [ "audio" ];
   };
 }

@@ -4,7 +4,6 @@
   pkgs,
   browser,
   flk,
-  myUser,
   ...
 }:
 let
@@ -125,15 +124,15 @@ in
     # Workaround to display profile image at login screen
     system.activationScripts.showProfileImage.text = ''
       mkdir -p /var/lib/AccountsService/{icons,users}
-      cp /home/${myUser}/.face /var/lib/AccountsService/icons/${myUser}
-      echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${myUser}\n" > /var/lib/AccountsService/users/${myUser}
+      cp /home/${flk.user}/.face /var/lib/AccountsService/icons/${flk.user}
+      echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${flk.user}\n" > /var/lib/AccountsService/users/${flk.user}
     '';
 
     systemd.packages = lib.optional (config.services.flatpak.enable) [
       pkgs.kdePackages.discover # Flatpak store
     ];
 
-    home-manager.users.${myUser} =
+    home-manager.users.${flk.user} =
       { config, osConfig, ... }:
       let
         polo = config.programs.plasma.kwin.scripts.polonium.enable;
@@ -198,7 +197,7 @@ in
             configFile = {
               "baloofilerc"."Basic Settings"."Indexing-Enabled" = false; # Disable file indexing
               "dolphinrc"."General" = {
-                "HomeUrl" = "/home/${myUser}";
+                "HomeUrl" = "/home/${flk.user}";
                 "RememberOpenedTabs" = false;
               };
               "kactivitymanagerdrc"."Plugins"."org.kde.ActivityManager.ResourceScoringEnabled" = false; # Do not remember file history
@@ -506,7 +505,7 @@ in
             enable = true;
             darkModeScripts = {
               kitty = ''
-                ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.dark}.conf /home/${myUser}/.config/kitty/current-theme.conf
+                ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.dark}.conf /home/${flk.user}/.config/kitty/current-theme.conf
                 kill -SIGUSR1 $(pidof kitty) 2>/dev/null
               '';
               plasma_global_theme = "${plasma.lookandfeel} --apply ${plasmaTheme.dark}";
@@ -516,7 +515,7 @@ in
 
             lightModeScripts = {
               kitty = ''
-                ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.light}.conf /home/${myUser}/.config/kitty/current-theme.conf
+                ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.light}.conf /home/${flk.user}/.config/kitty/current-theme.conf
                 kill -SIGUSR1 $(pidof kitty) 2>/dev/null
               '';
               plasma_global_theme = "${plasma.lookandfeel} --apply ${plasmaTheme.light}";

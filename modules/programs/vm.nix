@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -19,7 +19,7 @@ in
       spice-vdagentd.enable = true; # Shared clipboard
     };
 
-    users.users.${myUser}.extraGroups = [
+    users.users.${flk.user}.extraGroups = [
       "libvirtd"
       "qemu-libvirtd"
     ];

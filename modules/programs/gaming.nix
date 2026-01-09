@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -63,12 +63,12 @@ in
         };
 
       variables = {
-        STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${myUser}/.steam/steam/compatibilitytools.d";
+        STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${flk.user}/.steam/steam/compatibilitytools.d";
         #STEAM_FORCE_DESKTOPUI_SCALING = lib.substring 0 4 monitor.scale;
       };
     };
 
-    home-manager.users.${myUser} = {
+    home-manager.users.${flk.user} = {
       home.file = {
         "Games/Severed_Chains_Linux/launch" = {
           executable = true;
@@ -223,6 +223,6 @@ in
       }
     ];
 
-    users.users.${myUser}.extraGroups = [ "gamemode" ];
+    users.users.${flk.user}.extraGroups = [ "gamemode" ];
   };
 }

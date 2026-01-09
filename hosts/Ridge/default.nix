@@ -2,7 +2,7 @@
   config,
   inputs,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 {
@@ -65,7 +65,7 @@
   jovian = {
     decky-loader = {
       enable = true;
-      user = myUser;
+      user = flk.user;
     };
 
     hardware = {
@@ -77,7 +77,7 @@
       enable = true; # Enable SteamOS UI
       autoStart = true; # Boot into SteamOS UI
       desktopSession = "plasma"; # Switch to desktop - Use 'gamescope-wayland' for no desktop
-      user = myUser;
+      user = flk.user;
     };
   };
 
@@ -109,7 +109,7 @@
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${myUser} = {
+  home-manager.users.${flk.user} = {
     /*
       programs.mangohud.settings = {
         gpu_voltage = true;
@@ -206,7 +206,7 @@
         memtest86.enable = true;
         theme = pkgs.sleek-grub-theme.override { withStyle = "dark"; };
         useOSProber = true;
-        #users.${myUser}.hashedPasswordFile = "/etc/users/grub";
+        #users.${flk.user}.hashedPasswordFile = "/etc/users/grub";
       };
       timeout = 1;
     };

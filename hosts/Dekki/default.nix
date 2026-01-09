@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  myUser,
+  flk,
   ...
 }:
 {
@@ -37,7 +37,7 @@
   jovian = {
     decky-loader = {
       enable = true;
-      user = myUser;
+      user = flk.user;
     };
 
     devices.steamdeck = {
@@ -52,7 +52,7 @@
       enable = true; # Enable SteamOS UI
       autoStart = true; # Boot into SteamOS UI
       desktopSession = "gnome"; # Switch to desktop - Use 'gamescope-wayland' for no desktop
-      user = myUser;
+      user = flk.user;
     };
   };
 
@@ -62,7 +62,7 @@
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${myUser} =
+  home-manager.users.${flk.user} =
     let
       gnomeExts = [
         pkgs.gnomeExtensions.dash-to-dock
@@ -142,7 +142,7 @@
         memtest86.enable = true;
         theme = pkgs.sleek-grub-theme.override { withStyle = "dark"; };
         useOSProber = true;
-        #users.${myUser}.hashedPasswordFile = "/etc/users/grub";
+        #users.${flk.user}.hashedPasswordFile = "/etc/users/grub";
       };
       systemd-boot = {
         enable = true;

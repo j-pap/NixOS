@@ -2,7 +2,6 @@
   lib,
   pkgs,
   flk,
-  myUser,
   ...
 }:
 {
@@ -60,7 +59,7 @@
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${myUser} = {
+  home-manager.users.${flk.user} = {
 
     programs = {
       plasma = lib.mkIf (flk.de.kde.enable) {

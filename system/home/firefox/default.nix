@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   osConfig,
@@ -22,9 +21,9 @@ in
       ]);
     policies = import ./policies.nix;
 
-    profiles.${config.home.username} = {
+    profiles.${flk.user} = {
       id = 0;
-      name = osConfig.users.users.${config.home.username}.description;
+      name = osConfig.users.users.${flk.user}.description;
       isDefault = true;
 
       containers = import ./containers.nix;

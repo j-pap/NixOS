@@ -3,7 +3,6 @@
   lib,
   pkgs,
   flk,
-  myUser,
   ...
 }:
 let
@@ -127,7 +126,7 @@ in
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${myUser} =
+  home-manager.users.${flk.user} =
     let
       easyPreset = "fw13-easy-effects";
     in

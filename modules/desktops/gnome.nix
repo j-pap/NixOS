@@ -4,7 +4,6 @@
   pkgs,
   browser,
   flk,
-  myUser,
   ...
 }:
 let
@@ -174,20 +173,20 @@ in
       # Workaround to display profile image on GDM
       gdmProfileImage.text = ''
         mkdir -p /var/lib/AccountsService/{icons,users}
-        cp /home/${myUser}/.face /var/lib/AccountsService/icons/${myUser}
-        echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${myUser}\nSession=gnome\nSystemAccount=false\n" > /var/lib/AccountsService/users/${myUser}
+        cp /home/${flk.user}/.face /var/lib/AccountsService/icons/${flk.user}
+        echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${flk.user}\nSession=gnome\nSystemAccount=false\n" > /var/lib/AccountsService/users/${flk.user}
       '';
       # Set GNOME fractional scaling
       monitorScale.text =
         let
-          file = "/home/${myUser}/.config/monitors.xml";
+          file = "/home/${flk.user}/.config/monitors.xml";
         in
         ''
           [ -f ${file} ] && ${lib.getExe' pkgs.toybox "sed"} -i '7s|>.*</|>${flk.host.monitor.scale}</|' ${file}
         '';
     };
 
-    home-manager.users.${myUser} =
+    home-manager.users.${flk.user} =
       let
         gnomeExts =
           builtins.attrValues {
@@ -694,13 +693,13 @@ in
                 CURRENT_THEME=$(gsettings get org.gnome.desktop.interface color-scheme | cut -d "'" -f 2)
                 if [[ "$CURRENT_THEME" = "default" ]]; then
                   # Kitty
-                  ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.light}.conf /home/${myUser}/.config/kitty/current-theme.conf
+                  ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.light}.conf /home/${flk.user}/.config/kitty/current-theme.conf
                   kill -SIGUSR1 $(pidof kitty) 2>/dev/null
                   # Wallpaper
                   gsettings set org.gnome.desktop.background picture-uri '${flk.host.wallpaper.light}'
                 elif [[ "$CURRENT_THEME" = "prefer-dark" ]]; then
                   # Kitty
-                  ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.dark}.conf /home/${myUser}/.config/kitty/current-theme.conf
+                  ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.dark}.conf /home/${flk.user}/.config/kitty/current-theme.conf
                   kill -SIGUSR1 $(pidof kitty) 2>/dev/null
                   # Wallpaper
                   gsettings set org.gnome.desktop.background picture-uri-dark '${flk.host.wallpaper.dark}'

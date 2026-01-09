@@ -5,7 +5,6 @@
   inputs,
   browser,
   flk,
-  myUser,
   ...
 }:
 let
@@ -98,7 +97,7 @@ in
         ;
     };
 
-    home-manager.users.${myUser} =
+    home-manager.users.${flk.user} =
       {
         config,
         lib,
@@ -169,7 +168,7 @@ in
                 wal -Rqe
               fi
             '';
-            kitty.extraConfig = ''include /home/${myUser}/.cache/wal/colors-kitty.conf'';
+            kitty.extraConfig = ''include /home/${flk.user}/.cache/wal/colors-kitty.conf'';
           */
         };
 
@@ -215,7 +214,7 @@ in
             # https://wiki.hypr.land/Configuring/Keywords/#sourcing-multi-file
             source = [
               # Import optional color schemes
-              #"/home/${myUser}/.cache/wal/colors-hyprland.conf"
+              #"/home/${flk.user}/.cache/wal/colors-hyprland.conf"
             ];
 
             "$browser" = browser;

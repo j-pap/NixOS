@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ffVariant,
+  flk,
   inputs,
-  myUser,
   ...
 }:
 {
@@ -25,7 +25,7 @@
     _module.args = {
       browser = config.environment.variables.BROWSER;
       ffVariant = "firefox"; # firefox, floorp, or librewolf
-      ffVersion = config.home-manager.users.${myUser}.programs.${ffVariant}.package.version;
+      ffVersion = config.home-manager.users.${flk.user}.programs.${ffVariant}.package.version;
       nixSecrets =
         assert lib.assertMsg (builtins ? extraBuiltins.readSops)
           "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.extra-builtins-file' is defined correctly.";
@@ -198,7 +198,7 @@
       enable32Bit = true;
     };
 
-    home-manager.users.${myUser} =
+    home-manager.users.${flk.user} =
       { osConfig, ... }:
       {
         imports = (import ./home);
@@ -318,7 +318,7 @@
         enable = true;
         owner = "root";
         group = "root";
-        source = "${lib.getExe config.home-manager.users.${myUser}.programs.btop.package}";
+        source = "${lib.getExe config.home-manager.users.${flk.user}.programs.btop.package}";
         capabilities = "cap_perfmon=ep";
       };
     };
@@ -387,7 +387,7 @@
     users = {
       mutableUsers = false; # All users/passwords setup via declaration
       users = {
-        ${myUser} = {
+        ${flk.user} = {
           description = "Jason";
           extraGroups = [
             "adbusers"
@@ -399,7 +399,7 @@
           hashedPasswordFile = config.sops.secrets."user/password".path;
           isNormalUser = true;
           openssh.authorizedKeys.keys = [
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAMoEb31xABf0fovDku5zBfBDI2sKCixc31wndQj5VhT ${myUser}"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAMoEb31xABf0fovDku5zBfBDI2sKCixc31wndQj5VhT ${flk.user}"
           ];
         };
 

@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -13,13 +13,13 @@ in
   config = lib.mkIf (cfg.enable) {
     services.syncthing = {
       enable = true;
-      configDir = "/home/${myUser}/.config/syncthing";
-      dataDir = "/home/${myUser}";
+      configDir = "/home/${flk.user}/.config/syncthing";
+      dataDir = "/home/${flk.user}";
       guiAddress = "127.0.0.1:8384";
       openDefaultPorts = true;
       overrideDevices = true;
       overrideFolders = true;
-      user = myUser;
+      user = flk.user;
 
       settings = {
         devices."NAS".id = "FN25ISC-P52A3WA-GRV4SIR-YI4KBMM-2I5BECF-32SLV5B-5DADP5B-YSMVIQ4";
@@ -28,14 +28,14 @@ in
             enable = true;
             devices = [ "NAS" ];
             label = "Music";
-            path = "/home/${myUser}/Music";
+            path = "/home/${flk.user}/Music";
           };
 
           "obsidian" = {
             enable = true;
             devices = [ "NAS" ];
             label = "Obsidian";
-            path = "/home/${myUser}/Obsidian";
+            path = "/home/${flk.user}/Obsidian";
             versioning = {
               type = "simple";
               params = {
@@ -50,6 +50,6 @@ in
       };
     };
 
-    users.users.${myUser}.extraGroups = [ "syncthing" ];
+    users.users.${flk.user}.extraGroups = [ "syncthing" ];
   };
 }

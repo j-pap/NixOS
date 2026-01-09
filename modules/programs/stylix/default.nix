@@ -4,7 +4,6 @@
   pkgs,
   ffVariant,
   flk,
-  myUser,
   ...
 }:
 let
@@ -93,13 +92,13 @@ in
         };
       };
 
-      home-manager.users.${myUser} = {
+      home-manager.users.${flk.user} = {
         stylix.targets = {
           ${ffVariant} = {
             enable = false; # Disabled as browser currently looks strange with Stylix applied
             colorTheme.enable = false;
             firefoxGnomeTheme.enable = false;
-            profileNames = [ myUser ];
+            profileNames = [ flk.user ];
           };
           bat.enable = true;
           btop.enable = true;

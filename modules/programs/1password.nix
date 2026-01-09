@@ -2,7 +2,7 @@
   config,
   lib,
   browser,
-  myUser,
+  flk,
   ...
 }:
 let
@@ -18,7 +18,7 @@ in
       text = browser;
     };
 
-    home-manager.users.${myUser}.xdg.configFile."autostart/1password.desktop".text =
+    home-manager.users.${flk.user}.xdg.configFile."autostart/1password.desktop".text =
       let
         opPkg = config.programs._1password-gui.package;
       in
@@ -30,10 +30,10 @@ in
       _1password.enable = false; # CLI
       _1password-gui = {
         enable = true;
-        polkitPolicyOwners = [ myUser ];
+        polkitPolicyOwners = [ flk.user ];
       };
     };
 
-    users.users.${myUser}.extraGroups = [ "onepassword" ];
+    users.users.${flk.user}.extraGroups = [ "onepassword" ];
   };
 }

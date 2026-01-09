@@ -72,7 +72,7 @@ in
           # Auto login
           initial_session = {
             command = config.services.greetd.settings.default_session.command;
-            user = myUser;
+            user = flk.user;
           };
         */
         terminal.vt = 1;
