@@ -20,14 +20,14 @@ in
     {
       stylix = {
         autoEnable = false;
-        cursor = {
+        cursor = lib.mkDefault {
           # Variants: Bibata-(Modern/Original)-(Amber/Classic/Ice)
           name = "Bibata-Modern-Classic";
           package = pkgs.bibata-cursors;
           # Sizes: 16 20 22 24 28 32 40 48 56 64 72 80 88 96
           size = 24;
         };
-        icons = {
+        icons = lib.mkDefault {
           #enable = true;
           # Color variant overrides: https://github.com/PapirusDevelopmentTeam/papirus-folders
           # adwaita black blue bluegrey breeze brown carmine cyan darkcyan deeporange
