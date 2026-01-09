@@ -111,8 +111,7 @@
               };
             };
           };
-          overlays = [
-            (import ./overlays.nix)
+          overlays = (map import (import ./overlays)) ++ [
             inputs.nur.overlays.default
           ];
         };
