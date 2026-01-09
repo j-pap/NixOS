@@ -8,7 +8,7 @@
   ...
 }:
 {
-  imports = (import ../modules);
+  imports = (import ../modules) ++ [ ../libs ];
 
   options.flake = {
     terminal = lib.mkOption {
