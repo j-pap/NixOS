@@ -38,10 +38,10 @@
         type = lib.types.nullOr lib.types.str;
       };
       scale = lib.mkOption {
-        default = null;
+        default = "1";
         description = "Scale of monitor's resolution.";
         example = "1.25";
-        type = lib.types.nullOr lib.types.str;
+        type = lib.types.str;
       };
     };
 

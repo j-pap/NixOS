@@ -5,7 +5,7 @@
 }:
 let
   flk = osConfig.flake.host.monitor;
-  name = flk.name or "";
+  name = if (flk.name == null) then "" else flk.name;
   width = flk.width;
   height = flk.height;
   refresh = flk.refresh;
@@ -21,7 +21,7 @@ let
     else
       "${width}x${height}@${refresh}";
   position = "auto";
-  scale = if (flk.scale == null) then "auto" else (lib.substring 0 4 flk.scale);
+  scale = if (flk.scale == "") then "auto" else (lib.substring 0 4 flk.scale);
 in
 {
   wayland.windowManager.hyprland.settings = {
