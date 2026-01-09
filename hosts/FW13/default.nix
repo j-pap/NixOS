@@ -15,7 +15,7 @@ let
 
   # pkgs or pkgs.stable
   protonMB = pkgs.protonmail-bridge-gui;
-  protonVPN = pkgs.stable.protonvpn-gui;
+  protonVPN = pkgs.protonvpn-gui;
 in
 {
   imports = [
@@ -161,7 +161,7 @@ in
           "autostart/ProtonVPN.desktop".text = lib.concatLines [
             (lib.replaceStrings [ "Exec=protonvpn-app" ] [ "Exec=${lib.getExe protonVPN} --start-minimized" ]
               (lib.fileContents
-              "${protonVPN}/share/applications/protonvpn-app.desktop")
+              "${protonVPN}/share/applications/proton.vpn.app.gtk.desktop")
             )
             "X-GNOME-Autostart-enabled=true"
           ];
