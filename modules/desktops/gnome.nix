@@ -216,18 +216,18 @@ in
           # Settings->Displays->Night Light
           "org/gnome/settings-daemon/plugins/color" = {
             night-light-enabled = true;
-            night-light-schedule-automatic = true;
+            #night-light-schedule-automatic = true;
             night-light-temperature = lib.gvariant.mkUint32 4700;
           };
 
           # Settings->Power->General
-          "org/gnome/settings-daemon/plugins/power".power-button-action = "suspend";
+          #"org/gnome/settings-daemon/plugins/power".power-button-action = "suspend";
           "org/gnome/desktop/interface".show-battery-percentage = true;
           # Settings->Power->Power Saving
           "org/gnome/settings-daemon/plugins/power" = {
-            ambient-enabled = lib.mkDefault true; # Auto screen brightness
-            idle-dim = true;
-            power-saver-profile-on-low-battery = true;
+            #ambient-enabled = true;
+            #idle-dim = true;
+            #power-saver-profile-on-low-battery = true;
             sleep-inactive-battery-timeout = 600; # 10 minutes
             sleep-inactive-ac-timeout = 1800; # 30 minutes
           };
@@ -235,8 +235,8 @@ in
           # Settings->Multitasking
           #"org/gnome/desktop/interface".enable-hot-corners = true;
           "org/gnome/mutter" = {
-            edge-tiling = true;
-            dynamic-workspaces = true;
+            #edge-tiling = true;
+            #dynamic-workspaces = true;
             workspaces-only-on-primary = false;
           };
           #"org/gnome/desktop/wm/preferences".num-workspaces = 4; # Number for fixed workspaces
@@ -420,7 +420,10 @@ in
             #begin-resize = [ "<Alt>F8" ];
             #unmaximize = [ "<Super>Down" "<Alt>F5" ];
             toggle-fullscreen = [ "<Super>F11" ];
-            #toggle-maximized = [ "<Alt>F10" ];
+            toggle-maximized = [
+              #"<Alt>F10"
+              "<Super>m"
+            ];
             #toggle-on-all-workspaces = [ ];
           };
           "org/gnome/shell/keybindings" = {
@@ -440,7 +443,10 @@ in
             #focus-active-notification = [ "<Super>n" ];
             #toggle-quick-settings = [ "<Super>s" ];
             #toggle-application-view = [ "<Super>a" ];
-            #toggle-message-tray = [ "<Super>v" "<Super>m" ];
+            toggle-message-tray = [
+              "<Super>v"
+              #"<Super>m"
+            ];
             #toggle-overview = [ ];
 
             # Reassign to empty from <Super>#
@@ -497,7 +503,7 @@ in
             name = "Launch Color Picker";
           };
           # Settings->Keyboard->Keyboard Shortcuts->Activities Overview Shortcut
-          "org/gnome/mutter".overlay-key = "Super";
+          #"org/gnome/mutter".overlay-key = "Super";
 
           # Settings->Privacy & Security->Screen Lock
           "org/gnome/desktop/screensaver" = {
@@ -505,14 +511,14 @@ in
             lock-delay = lib.gvariant.mkUint32 5;
           };
           # Settings->Privacy & Security->Location
-          "org/gnome/system/location".enabled = true;
+          #"org/gnome/system/location".enabled = false;
           "org/gnome/desktop/privacy" = {
             # Settings->Privacy & Security->File History & Trash
             remember-recent-files = false;
             recent-files-max-age = 0;
             remove-old-trash-files = true;
             remove-old-temp-files = true;
-            old-files-age = lib.gvariant.mkUint32 30;
+            #old-files-age = lib.gvariant.mkUint32 30;
             # Settings->Privacy & Security->Cameras
             #disable-camera = false;
             # Hidden options
@@ -523,11 +529,11 @@ in
 
           # Settings->System->Date & Time
           "org/gnome/desktop/datetime".automatic-timezone = true;
-          "org/gtk/settings/file-chooser".clock-format = "24h";
+          #"org/gtk/settings/file-chooser".clock-format = "24h";
           "org/gnome/desktop/interface" = {
-            clock-format = "24h";
+            #clock-format = "24h";
             clock-show-weekday = true;
-            clock-show-date = true;
+            #clock-show-date = true;
           };
 
           # GNOME Tweaks
@@ -550,7 +556,7 @@ in
             resize-with-right-button = true;
             focus-mode = "mouse";
           };
-          "org/gnome/mutter".center-new-windows = true;
+          #"org/gnome/mutter".center-new-windows = true;
 
           # Nautilus
           "org/gnome/nautilus/compression".default-compression-format = "tar.xz";
@@ -565,7 +571,6 @@ in
           "org/gtk/gtk4/settings/file-chooser".show-hidden = true;
           #"com/github/stunkymonkey/nautilus-open-any-terminal" = lib.optionalAttrs (terminal != "kgx") {
           "com/github/stunkymonkey/nautilus-open-any-terminal" = {
-            new-tab = true;
             terminal = terminal;
           };
 
@@ -594,7 +599,7 @@ in
               "steam.desktop"
             ];
 
-            disable-user-extensions = false;
+            #disable-user-extensions = false;
             enabled-extensions = (map (extension: extension.extensionUuid) gnomeExts) ++ [
               # Enable extensions that ship, but aren't enabled by default
               "drive-menu@gnome-shell-extensions.gcampax.github.com"
