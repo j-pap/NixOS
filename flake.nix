@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    stable.url = "github:nixos/nixpkgs/nixos-25.11";
     ###
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     disko.url = "github:nix-community/disko";
@@ -31,110 +31,122 @@
       };
     };
     sops-nix.url = "github:Mic92/sops-nix";
-    stylix.url = "github:danth/stylix";
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, stable, ... } @ inputs: let
-    # 'nixos-rebuild switch --flake .#hostname'
-    hosts = {
-      /*
-      Dekki.modules = [
-        inputs.chaotic.nixosModules.default
-        inputs.jovian.nixosModules.jovian
-      ];
-      */
-
-      FW13.modules = [
-        {
-          nixpkgs.overlays = [
-            inputs.framework-plymouth.overlays.default
+  outputs =
+    {
+      self,
+      nixpkgs,
+      stable,
+      ...
+    }@inputs:
+    let
+      # 'nixos-rebuild switch --flake .#hostname'
+      hosts = {
+        /*
+          Dekki.modules = [
+            inputs.chaotic.nixosModules.default
+            inputs.jovian.nixosModules.jovian
           ];
-        }
-        inputs.hardware.nixosModules.framework-13-7040-amd
-        inputs.lanzaboote.nixosModules.lanzaboote
-      ];
+        */
 
-      # 'nix build .#nixosConfigurations.iso.config.system.build.isoImage'
-      iso = {
-        hostIsBare = true;
-        modules = [
-          ./hosts/iso
+        FW13.modules = [
+          {
+            nixpkgs.overlays = [
+              inputs.framework-plymouth.overlays.default
+            ];
+          }
+          inputs.hardware.nixosModules.framework-13-7040-amd
+          inputs.lanzaboote.nixosModules.lanzaboote
         ];
+
+        # 'nix build .#nixosConfigurations.iso.config.system.build.isoImage'
+        iso = {
+          hostIsBare = true;
+          modules = [
+            ./hosts/iso
+          ];
+        };
+
+        /*
+          Ridge.modules = [
+            inputs.chaotic.nixosModules.default
+            inputs.jovian.nixosModules.jovian
+          ];
+        */
+
+        T1.modules = [
+          inputs.chaotic.nixosModules.default
+        ];
+
+        T450s.modules = [
+          inputs.hardware.nixosModules.lenovo-thinkpad-t450s
+        ];
+
+        VM.modules = [ ];
       };
 
-      /*
-      Ridge.modules = [
-        inputs.chaotic.nixosModules.default
-        inputs.jovian.nixosModules.jovian
-      ];
-      */
-
-      T1.modules = [
-        inputs.chaotic.nixosModules.default
-      ];
-
-      T450s.modules = [
-        inputs.hardware.nixosModules.lenovo-thinkpad-t450s
-      ];
-
-      VM.modules = [ ];
-    };
-
-
-    mkSystem = hostName: hostOpts: let
-      hostIsBare = hostOpts.hostIsBare or false;
-      hostModules = hostOpts.modules;
-      specialArgs = { inherit inputs; };
-    in nixpkgs.lib.nixosSystem {
-      modules = (
-        if (hostIsBare) then
-          ([ ])
-        else
-          (stdModules hostName specialArgs)
-      ) ++ hostModules;
-      specialArgs = specialArgs;
-    };
-
-
-    stdModules = hostName: specialArgs: [
-      ({ config, ... }: {
-        _module.args = {
-          flk = config.flake;
+      mkSystem =
+        hostName: hostArgs:
+        let
+          hostIsBare = hostArgs.hostIsBare or false;
+          hostModules = hostArgs.modules;
+          specialArgs = { inherit inputs; };
+        in
+        nixpkgs.lib.nixosSystem {
+          modules = (if (hostIsBare) then ([ ]) else (stdModules hostName specialArgs)) ++ hostModules;
+          specialArgs = specialArgs;
         };
-        networking.hostName = hostName;
-        nixpkgs = {
-          config = {
-            allowUnfree = true;
-            packageOverrides = pkgs: {
-              stable = import stable {
-                inherit (pkgs) config overlays system;
-              };
+
+      stdModules = hostName: specialArgs: [
+        (
+          { config, ... }:
+          {
+            _module.args = {
+              flk = config.flake;
             };
+            networking.hostName = hostName;
+            nixpkgs = {
+              config = {
+                allowUnfree = true;
+                packageOverrides = pkgs: {
+                  stable = import stable {
+                    inherit (pkgs) config overlays;
+                    inherit (pkgs.stdenv.hostPlatform) system;
+                  };
+                };
+              };
+              overlays = (map import (import ./overlays)) ++ [
+                inputs.nur.overlays.default
+              ];
+            };
+          }
+        )
+        ./hosts/${hostName}
+        ./system
+        inputs.disko.nixosModules.disko
+        inputs.flake-programs-sqlite.nixosModules.programs-sqlite
+        inputs.home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            extraSpecialArgs = specialArgs;
+            sharedModules = [
+              inputs.plasma-manager.homeModules.plasma-manager
+            ];
+            useGlobalPkgs = true;
+            useUserPackages = true;
           };
-          overlays = (map import (import ./overlays)) ++ [
-            inputs.nur.overlays.default
-          ];
-        };
-      })
-      ./hosts/${hostName}
-      ./system
-      inputs.disko.nixosModules.disko
-      inputs.flake-programs-sqlite.nixosModules.programs-sqlite
-      inputs.home-manager.nixosModules.home-manager {
-        home-manager = {
-          extraSpecialArgs = specialArgs;
-          sharedModules = [
-            inputs.plasma-manager.homeModules.plasma-manager
-          ];
-          useGlobalPkgs = true;
-          useUserPackages = true;
-        };
-      }
-      inputs.nur.modules.nixos.default
-      inputs.sops-nix.nixosModules.sops
-      inputs.stylix.nixosModules.stylix
-    ];
-  in {
-    nixosConfigurations = builtins.mapAttrs mkSystem hosts;
-  };
+        }
+        inputs.nur.modules.nixos.default
+        inputs.sops-nix.nixosModules.sops
+        inputs.stylix.nixosModules.stylix
+      ];
+    in
+    {
+      nixosConfigurations = builtins.mapAttrs mkSystem hosts;
+    };
 }
