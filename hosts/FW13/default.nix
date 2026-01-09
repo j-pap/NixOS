@@ -56,7 +56,7 @@ in
         width = "2256";
         height = "1504";
         refresh = "60";
-        scale = 1.33;
+        scale = "1.3333333730697632";
       };
       theme = {
         #dark = "";
@@ -175,9 +175,6 @@ in
           # Set GNOME fractional scaling
           "monitors.xml" = lib.mkIf (flk.de.gnome.enable) {
             text =
-              let
-                scale = "1.3333333730697632";
-              in
               ''
                 <monitors version="2">
                   <configuration>
@@ -185,7 +182,7 @@ in
                     <logicalmonitor>
                       <x>0</x>
                       <y>0</y>
-                      <scale>${scale}</scale>
+                      <scale>${flk.host.monitor.scale}</scale>
                       <primary>yes</primary>
                       <monitor>
                         <monitorspec>

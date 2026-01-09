@@ -64,7 +64,7 @@ in
 
       variables = {
         STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${myUser}/.steam/steam/compatibilitytools.d";
-        #STEAM_FORCE_DESKTOPUI_SCALING = "${toString monitor.scale}";
+        #STEAM_FORCE_DESKTOPUI_SCALING = lib.substring 0 4 monitor.scale;
       };
     };
 

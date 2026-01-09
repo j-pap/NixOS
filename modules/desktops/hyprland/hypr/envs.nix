@@ -1,4 +1,5 @@
 {
+  lib,
   osConfig,
   ...
 }:
@@ -42,7 +43,7 @@ in
       "ELECTRON_OZONE_PLATFORM_HINT,auto"
 
       # XWayland Scaling
-      "GDK_SCALE,${toString flk.host.monitor.scale}"
+      "GDK_SCALE,${lib.substring 0 4 flk.host.monitor.scale}"
     ];
   };
 }

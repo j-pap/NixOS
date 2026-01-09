@@ -241,7 +241,7 @@ in
                   "ElectricBorderDelay" = 150; # Screen edge delay in ms
                   "FocusPolicy" = "FocusFollowsMouse"; # Focus follows mouse instead of clicking
                 };
-                "Xwayland"."Scale" = flk.host.monitor.scale; # Set host scaling
+                "Xwayland"."Scale" = lib.substring 0 4 flk.host.monitor.scale; # Set host scaling
               };
               "plasmaparc"."General"."AudioFeedback" = false; # No audio feedback on volume change
             };

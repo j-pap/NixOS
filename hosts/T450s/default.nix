@@ -31,7 +31,7 @@
         width = "1920";
         height = "1080";
         refresh = "60";
-        scale = 1.25;
+        scale = "1.25";
       };
       theme = {
         #dark = "";

@@ -21,7 +21,7 @@ let
     else
       "${width}x${height}@${refresh}";
   position = "auto";
-  scale = if (flk.scale == null) then "auto" else "${lib.substring 0 4 (toString flk.scale)}";
+  scale = if (flk.scale == null) then "auto" else (lib.substring 0 4 flk.scale);
 in
 {
   wayland.windowManager.hyprland.settings = {

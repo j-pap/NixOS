@@ -40,7 +40,7 @@
         width = "2560";
         height = "1440";
         refresh = "144";
-        scale = 1.25;
+        scale = "1.25";
       };
       theme = {
         #dark = "";
