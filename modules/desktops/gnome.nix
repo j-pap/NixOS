@@ -170,12 +170,22 @@ in
       };
     };
 
-    # Workaround to display profile image on GDM
-    system.activationScripts.showProfileImage.text = ''
-      mkdir -p /var/lib/AccountsService/{icons,users}
-      cp /home/${myUser}/.face /var/lib/AccountsService/icons/${myUser}
-      echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${myUser}\nSession=gnome\nSystemAccount=false\n" > /var/lib/AccountsService/users/${myUser}
-    '';
+    system.activationScripts = {
+      # Workaround to display profile image on GDM
+      gdmProfileImage.text = ''
+        mkdir -p /var/lib/AccountsService/{icons,users}
+        cp /home/${myUser}/.face /var/lib/AccountsService/icons/${myUser}
+        echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${myUser}\nSession=gnome\nSystemAccount=false\n" > /var/lib/AccountsService/users/${myUser}
+      '';
+      # Set GNOME fractional scaling
+      monitorScale.text =
+        let
+          file = "/home/${myUser}/.config/monitors.xml";
+        in
+        ''
+          [ -f ${file} ] && ${lib.getExe' pkgs.toybox "sed"} -i '7s|>.*</|>${flk.host.monitor.scale}</|' ${file}
+        '';
+    };
 
     home-manager.users.${myUser} =
       let

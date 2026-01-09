@@ -171,37 +171,6 @@ in
           "easyeffects/output/${easyPreset}.json".source = fwRepo + "/easy-effects/${easyPreset}.json";
           "easyeffects/irs/IR_22ms_27dB_5t_15s_0c.irs".source =
             fwRepo + "/easy-effects/irs/IR_22ms_27dB_5t_15s_0c.irs";
-
-          # Set GNOME fractional scaling
-          "monitors.xml" = lib.mkIf (flk.de.gnome.enable) {
-            text =
-              ''
-                <monitors version="2">
-                  <configuration>
-                    <layoutmode>logical</layoutmode>
-                    <logicalmonitor>
-                      <x>0</x>
-                      <y>0</y>
-                      <scale>${flk.host.monitor.scale}</scale>
-                      <primary>yes</primary>
-                      <monitor>
-                        <monitorspec>
-                          <connector>eDP-1</connector>
-                          <vendor>BOE</vendor>
-                          <product>0x0bca</product>
-                          <serial>0x00000000</serial>
-                        </monitorspec>
-                        <mode>
-                          <width>${flk.host.monitor.width}</width>
-                          <height>${flk.host.monitor.height}</height>
-                          <rate>59.999</rate>
-                        </mode>
-                      </monitor>
-                    </logicalmonitor>
-                  </configuration>
-                </monitors>
-              '';
-          };
         };
 
       home.stateVersion = "24.11";
