@@ -25,9 +25,6 @@ in
         #stylix.cursor.package
         #stylix.icons.package
       ]
-      ++ lib.optional (config.services.flatpak.enable) [
-        pkgs.cosmic-store # Flatpak store
-      ]
       ++ builtins.attrValues {
         inherit (pkgs)
           # Extensions
@@ -72,6 +69,10 @@ in
       };
       */
     };
+
+    systemd.packages = lib.optional (config.services.flatpak.enable) [
+      pkgs.cosmic-store # Flatpak store
+    ];
 
     home-manager.users.${myUser} = {
       home.file.".face".source = profileImg; # Sets profile image

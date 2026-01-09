@@ -63,7 +63,6 @@ in
         sddm-astronaut-pkg
       ]
       ++ lib.optional (config.services.flatpak.enable) [
-        pkgs.kdePackages.discover    # Flatpak store
         pkgs.kdePackages.flatpak-kcm # Flatpak settings
       ]
       ++ builtins.attrValues {
@@ -129,6 +128,10 @@ in
       cp /home/${myUser}/.face /var/lib/AccountsService/icons/${myUser}
       echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${myUser}\n" > /var/lib/AccountsService/users/${myUser}
     '';
+
+    systemd.packages = lib.optional (config.services.flatpak.enable) [
+      pkgs.kdePackages.discover # Flatpak store
+    ];
 
     home-manager.users.${myUser} =
       { config, osConfig, ... }:
