@@ -5,7 +5,6 @@
   browser,
   flk,
   myUser,
-  terminal,
   ...
 }:
 let
@@ -18,6 +17,8 @@ in
   options.flake.de.cosmic.enable = lib.mkEnableOption "COSMIC DE";
 
   config = lib.mkIf (cfg.enable) {
+    flake.terminal = lib.mkDefault "cosmic-term";
+
     environment = {
       cosmic.excludePackages = [ ];
       systemPackages = [
@@ -35,7 +36,6 @@ in
           cosmic-ext-tweaks          # DE tweak tool
           ;
       };
-      variables.TERMINAL = lib.mkDefault "cosmic-term";
     };
 
     programs.seahorse.enable = true;

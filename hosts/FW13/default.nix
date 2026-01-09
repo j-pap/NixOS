@@ -37,6 +37,8 @@ in
     vm.enable = true;
     yubikey.enable = true;
 
+    terminal = "kitty";
+
     de = {
       cosmic.enable = false;
       gnome.enable = true;
@@ -112,10 +114,7 @@ in
           obsidian            # Markdown notes
           ;
       };
-    variables = {
-      MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # Set Firefox to use GPU for video codecs
-      TERMINAL = "kitty";
-    };
+    variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # Set Firefox to use GPU for video codecs
   };
 
   programs = {

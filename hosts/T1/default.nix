@@ -25,6 +25,8 @@ in
     vm.enable = true;
     yubikey.enable = true;
 
+    terminal = "kitty";
+
     de = {
       hyprland.enable = false;
       kde = {
@@ -101,7 +103,6 @@ in
     variables = {
       MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render"; # Nvidia
       #MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0d:00.0-render"; # AMD
-      TERMINAL = "kitty";
     };
   };
 

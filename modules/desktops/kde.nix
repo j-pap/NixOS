@@ -5,7 +5,6 @@
   browser,
   flk,
   myUser,
-  terminal,
   ...
 }:
 let
@@ -53,6 +52,8 @@ in
   };
 
   config = lib.mkIf (cfg.enable) {
+    flake.terminal = lib.mkDefault "konsole";
+
     environment = {
       plasma6.excludePackages = [ ];
 
@@ -84,7 +85,6 @@ in
           dragon            # Media player
           ;
       };
-      variables.TERMINAL = lib.mkDefault "konsole";
     };
 
     programs.kdeconnect.enable = true;
@@ -385,7 +385,7 @@ in
                 widgets = [
                   {
                     iconTasks.launchers = [
-                      "applications:${terminal}.desktop"
+                      "applications:${flk.terminal}.desktop"
                       "applications:org.kde.dolphin.desktop"
                       "applications:${browser}.desktop"
                       "applications:thunderbird.desktop"
@@ -475,7 +475,7 @@ in
               };
 
               "services/${browser}.desktop"."_launch" = "Meta+W";
-              "services/${terminal}.desktop"."_launch" = "Meta+Return";
+              "services/${flk.terminal}.desktop"."_launch" = "Meta+Return";
               "services/darkman.desktop"."_launch" = "Meta+Shift+T";
               "services/org.kde.krunner.desktop"."_launch" = [
                 ""

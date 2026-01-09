@@ -4,8 +4,8 @@
   pkgs,
   inputs,
   browser,
+  flk,
   myUser,
-  terminal,
   ...
 }:
 let
@@ -21,6 +21,8 @@ in
   options.flake.de.hyprland.enable = lib.mkEnableOption "Hyprland WM";
 
   config = lib.mkIf (cfg.enable) {
+    flake.terminal = lib.mkDefault "kitty";
+
     environment = {
       pathsToLink = [ "/share/icons" ];
 
@@ -84,7 +86,6 @@ in
         ++ lib.optional (config.services.flatpak.enable) [
           pkgs.gnome-software # Flatpak store
         ];
-      variables.TERMINAL = lib.mkDefault "kitty";
     };
 
     fonts.packages = builtins.attrValues {
@@ -164,7 +165,7 @@ in
           /*
             # Use Pywal for terminal theming
             bash.initExtra = ''
-              if command -v wal > /dev/null 2>&1 && [ "$TERM" = "${terminal}" ]; then
+              if command -v wal > /dev/null 2>&1 && [ "$TERM" = "${flk.terminal}" ]; then
                 wal -Rqe
               fi
             '';
@@ -222,7 +223,7 @@ in
             "$files" = "pcmanfm";
             "$runner" = "hyprlauncher";
             "$screenshot" = "hyprshot";
-            "$terminal" = terminal;
+            "$terminal" = flk.terminal;
           };
         };
 

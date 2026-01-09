@@ -5,7 +5,6 @@
   browser,
   flk,
   myUser,
-  terminal,
   ...
 }:
 let
@@ -19,6 +18,8 @@ in
 
   # GNOME v49.X
   config = lib.mkIf (cfg.enable) {
+    flake.terminal = lib.mkDefault "kgx";
+
     environment = {
       gnome.excludePackages = builtins.attrValues {
         inherit (pkgs)
@@ -54,7 +55,8 @@ in
 
       systemPackages = [
         stylix.cursor.package # GDM
-        #] ++ lib.optionals (terminal != "kgx") [
+      ]
+      ++ lib.optionals (flk.terminal != "kgx") [
         pkgs.nautilus-python            # Allow custom nautilus scripts/open-any-terminal
         pkgs.nautilus-open-any-terminal # Open custom terminals in nautilus
       ]
@@ -74,8 +76,6 @@ in
           celluloid # GTK MPV frontend w/ Wayland
           ;
       };
-
-      variables.TERMINAL = lib.mkDefault "kgx"; # GNOME terminal
     };
 
     nixpkgs.overlays = [
@@ -479,17 +479,17 @@ in
           ];
           "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
             binding = "<Super>Return";
-            command = terminal;
+            command = flk.terminal;
             name = "Launch Terminal";
           };
           "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
             binding = "<Shift><Super>n";
-            command = "${terminal} nvim";
+            command = "${flk.terminal} nvim";
             name = "Launch Neovim";
           };
           "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
             binding = "<Shift><Super>y";
-            command = "${terminal} yazi";
+            command = "${flk.terminal} yazi";
             name = "Launch Yazi";
           };
           "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3" = {
@@ -569,9 +569,8 @@ in
             show-delete-permanently = true;
           };
           "org/gtk/gtk4/settings/file-chooser".show-hidden = true;
-          #"com/github/stunkymonkey/nautilus-open-any-terminal" = lib.optionalAttrs (terminal != "kgx") {
-          "com/github/stunkymonkey/nautilus-open-any-terminal" = {
-            terminal = terminal;
+          "com/github/stunkymonkey/nautilus-open-any-terminal" = lib.optionalAttrs (flk.terminal != "kgx") {
+            terminal = flk.terminal;
           };
 
           "org/gnome/Console" = {
@@ -591,7 +590,7 @@ in
 
           "org/gnome/shell" = {
             favorite-apps = [
-              "${terminal}.desktop"
+              "${flk.terminal}.desktop"
               "org.gnome.Nautilus.desktop"
               "${browser}.desktop"
               "thunderbird.desktop"
