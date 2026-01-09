@@ -38,8 +38,8 @@
         #light = "";
       };
       wallpaper = {
-        dark = ./wallpaper/dark.png;
-        light = ./wallpaper/light.png;
+        dark = "${pkgs.gnome-backgrounds}/share/backgrounds/gnome/blobs-d.svg";
+        light = "${pkgs.gnome-backgrounds}/share/backgrounds/gnome/blobs-l.svg";
         #login = ./wallpaper/login.png;
       };
     };
