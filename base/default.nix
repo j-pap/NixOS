@@ -2,15 +2,18 @@
   config,
   lib,
   pkgs,
-  ffVariant,
   flk,
   inputs,
   ...
 }:
 {
-  imports = (import ../modules) ++ [ ../libs ];
+  imports = (import ../modules ++ import ./system) ++ [ ../libs ];
 
   options.flake = {
+    browser = lib.mkOption {
+      default = "firefox";
+      type = lib.types.str;
+    };
     terminal = lib.mkOption {
       default = null;
       type = lib.types.nullOr lib.types.str;
@@ -23,9 +26,6 @@
 
   config = {
     _module.args = {
-      browser = config.environment.variables.BROWSER;
-      ffVariant = "firefox"; # firefox, floorp, or librewolf
-      ffVersion = config.home-manager.users.${flk.user}.programs.${ffVariant}.package.version;
       nixSecrets =
         assert lib.assertMsg (builtins ? extraBuiltins.readSops)
           "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.extra-builtins-file' is defined correctly.";
@@ -176,7 +176,7 @@
       };
 
       variables = {
-        BROWSER = lib.mkDefault "firefox";
+        BROWSER = config.flake.browser;
         EDITOR = "nvim";
         TERMINAL = config.flake.terminal;
       };

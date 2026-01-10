@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  browser,
   flk,
   ...
 }:
@@ -601,7 +600,7 @@ in
             favorite-apps = [
               "${flk.terminal}.desktop"
               "org.gnome.Nautilus.desktop"
-              "${browser}.desktop"
+              "${flk.browser}.desktop"
               "thunderbird.desktop"
               "discord.desktop"
               "steam.desktop"
@@ -780,7 +779,7 @@ in
                   "io.bassi.Amberol.desktop"
                   "org.gnome.Music.desktop"
                 ];
-                browser = [ "${browser}.desktop" ];
+                browser = [ "${flk.browser}.desktop" ];
                 calendar = [
                   "org.gnome.Calendar.desktop"
                   #"thunderbird.desktop"

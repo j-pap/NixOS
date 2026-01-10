@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  browser,
   flk,
   ...
 }:
@@ -82,7 +81,7 @@ in
           mime = {
             archive = [ "org.gnome.FileRoller.desktop" ];
             audio = [ "com.system76.CosmicPlayer.desktop" ];
-            browser = [ "${browser}.desktop" ];
+            browser = [ "${flk.browser}.desktop" ];
             #calendar = [ "thunderbird.desktop" ];
             connect = [ "" ];
             email = [ "thunderbird.desktop" ];

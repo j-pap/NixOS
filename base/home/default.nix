@@ -3,7 +3,6 @@
   ./bat.nix
   ./btop.nix
   ./fastfetch.nix
-  ./firefox
   ./kitty.nix
   ./nixvim
   ./starship.nix

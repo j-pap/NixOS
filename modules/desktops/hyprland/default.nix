@@ -3,7 +3,6 @@
   lib,
   pkgs,
   inputs,
-  browser,
   flk,
   ...
 }:
@@ -217,7 +216,7 @@ in
               #"/home/${flk.user}/.cache/wal/colors-hyprland.conf"
             ];
 
-            "$browser" = browser;
+            "$browser" = flk.browser;
             "$editor" = editor;
             "$files" = "pcmanfm";
             "$runner" = "hyprlauncher";
@@ -260,13 +259,13 @@ in
                   #"org.kde.ark.desktop"
                 ];
                 audio = [ "" ];
-                browser = [ "${browser}.desktop" ];
+                browser = [ "${flk.browser}.desktop" ];
                 calendar = [ "" ];
                 connect = [ "" ];
                 email = [ "thunderbird.desktop" ];
                 image = [ "feh.desktop" ];
                 pdf = [
-                  #"${browser}.desktop"
+                  #"${flk.browser}.desktop"
                   "org.pwmt.zathura.desktop"
                 ];
                 text = [ "neovide.desktop" ];

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  browser,
   flk,
   ...
 }:
@@ -15,7 +14,7 @@ in
     # Allow _1password-gui to communicate w/ the browser extension
     environment.etc."1password/custom_allowed_browsers" = {
       mode = "0755";
-      text = browser;
+      text = flk.browser;
     };
 
     home-manager.users.${flk.user} =

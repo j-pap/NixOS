@@ -126,8 +126,8 @@
             };
           }
         )
+        ./base
         ./hosts/${hostName}
-        ./system
         inputs.disko.nixosModules.disko
         inputs.flake-programs-sqlite.nixosModules.programs-sqlite
         inputs.home-manager.nixosModules.home-manager

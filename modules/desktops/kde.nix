@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  browser,
   flk,
   ...
 }:
@@ -389,7 +388,7 @@ in
                     iconTasks.launchers = [
                       "applications:${flk.terminal}.desktop"
                       "applications:org.kde.dolphin.desktop"
-                      "applications:${browser}.desktop"
+                      "applications:${flk.browser}.desktop"
                       "applications:thunderbird.desktop"
                       "applications:discord.desktop"
                       "applications:steam.desktop"
@@ -476,7 +475,7 @@ in
                 "manage activities" = [ ];
               };
 
-              "services/${browser}.desktop"."_launch" = "Meta+W";
+              "services/${flk.browser}.desktop"."_launch" = "Meta+W";
               "services/${flk.terminal}.desktop"."_launch" = "Meta+Return";
               "services/darkman.desktop"."_launch" = "Meta+Shift+T";
               "services/org.kde.krunner.desktop"."_launch" = [
@@ -566,7 +565,7 @@ in
               mime = {
                 archive = [ "org.kde.ark.desktop" ];
                 audio = [ "org.kde.elisa.desktop" ];
-                browser = [ "${browser}.desktop" ];
+                browser = [ "${flk.browser}.desktop" ];
                 calendar = [ "thunderbird.desktop" ];
                 email = [ "thunderbird.desktop" ];
                 connect = [

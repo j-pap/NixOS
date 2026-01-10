@@ -1,12 +1,12 @@
 {
+  config,
   lib,
   ffVariant,
   ffVersion,
-  osConfig,
   ...
 }: let
-  host = osConfig.networking.hostName;
-  isLaptop = osConfig.flake.host.isLaptop;
+  host = config.networking.hostName;
+  isLaptop = config.flake.host.isLaptop;
 in lib.mkMerge [
   {
     /****************************************************************************
