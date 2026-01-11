@@ -49,32 +49,33 @@ in
     (lib.mkIf (cfg.enable) {
       environment.systemPackages =
         builtins.attrValues {
+          inherit (pkgs.nvtopPackages) amd; # GPU stats
           inherit (pkgs)
-            amdgpu_top  # GPU stats
-            lact        # AMDGPU controller
+            amdgpu_top # GPU stats
+
+            # Video acceleration libraries
+            libva1-minimal
+            libvdpau
             ;
         }
-        ++ [
-          pkgs.nvtopPackages.amd # GPU stats
+        ++ lib.optionals (config.hardware.amdgpu.opencl.enable) [
+          pkgs.clinfo # OpenCL info | 'clinfo -l' or -a
         ];
 
       hardware = {
         amdgpu = {
-          # boot.initrd.kernelModules: "amdgpu"
-          initrd.enable = true;
-          # hardware.graphics.extraPackages: pkgs.rocmPackages.clr/.icd
-          opencl.enable = true;
+          initrd.enable = true; # boot.initrd.kernelModules: "amdgpu"
+          opencl.enable = lib.mkDefault false; # hardware.graphics.extraPackages: pkgs.rocmPackages.clr/.icd
         };
 
         graphics = {
           # Mesa drivers
           enable = true;
-          enable32Bit = true;
+          #enable32Bit = true;
 
           # Hardware acceleration
           extraPackages = builtins.attrValues {
             inherit (pkgs)
-              libva1
               libva-vdpau-driver
               libvdpau-va-gl
               ;
@@ -89,22 +90,24 @@ in
       };
 
       programs.gamescope.args = [ "-F fsr" ];
-      services.xserver.enable = true;
 
-      # LACT daemon service
-      systemd = {
-        # Create service from package
-        packages = [ pkgs.lact ];
-        # Autostart service at boot
-        services.lactd.wantedBy = [ "multi-user.target" ];
+      services = {
+        lact = {
+          enable = true; # AMDGPU controller
+          #settings = { };
+        };
+        xserver.videoDrivers = lib.mkDefault [ "modesetting" ];
       };
     })
 
     (lib.mkIf (cfg.enable && cfg.uv.enable) {
       # Undervolt GPU - https://wiki.archlinux.org/title/AMDGPU#Boot_parameter
-      boot.kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
-      # Restart GPU undervolt service upon resume
-      powerManagement.resumeCommands = "systemctl restart amdgpu-undervolt.service";
+      hardware.amdgpu.overdrive = {
+        enable = true;
+        ppfeaturemask = lib.mkDefault "0xffffffff"; # boot.kernelParams: "amdgpu.ppfeaturemask=0x..."
+      };
+
+      powerManagement.resumeCommands = "systemctl restart amdgpu-undervolt.service"; # Restart GPU undervolt service upon resume
 
       # Create a service to undervolt GPU
       systemd.services.amdgpu-undervolt =

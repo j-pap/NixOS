@@ -95,7 +95,6 @@
           zip               # Zip files
 
           # Hardware
-          clinfo            # OpenCL info | 'clinfo -l' or -a
           dmidecode         # Firmware | 'dmidecode -s bios-version'
           ffmpeg-full       # Hardware video acceleration
           mesa-demos        # OpenGL info
