@@ -31,7 +31,6 @@
           vramClock = 1124; # Default: 1124
         };
       };
-      bluetooth.enable = true;
     };
 
     host = {
@@ -83,13 +82,7 @@
 
   #programs.gamescope.args = [ "--prefer-vk-device \"1002:73a5\"" ]; # `lspci -nn | grep -i vga`
 
-  services = {
-    desktopManager.plasma6.enable = true;
-    scx = {
-      enable = true;
-      scheduler = "scx_rusty"; # or "scx_lavd"
-    };
-  };
+  services.desktopManager.plasma6.enable = true;
 
   system.autoUpgrade = {
     enable = false;
@@ -126,6 +119,8 @@
   # Hardware
   ##########################################################
   hardware = {
+    bluetooth.enable = true;
+
     fancontrol = {
       enable = true;
       config =
@@ -185,8 +180,7 @@
       "nfs"
       "zenpower"
     ];
-    kernelPackages =
-      if (config.services.scx.enable) then pkgs.linuxPackages_cachyos else pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore;
     kernelParams = [
       "amd_pstate=active"
       "quiet"

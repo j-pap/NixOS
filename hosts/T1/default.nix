@@ -122,13 +122,7 @@ in
     };
   };
 
-  services = {
-    fwupd.enable = true;
-    scx = {
-      enable = true;
-      scheduler = "scx_rusty"; # or "scx_lavd"
-    };
-  };
+  services.fwupd.enable = true;
 
   users.users.${flk.user}.extraGroups = [ "fancontrol" ];
 
@@ -223,8 +217,7 @@ in
       "nct6687"
       "nfs"
     ];
-    kernelPackages =
-      if (config.services.scx.enable) then pkgs.linuxPackages_cachyos else pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore;
     kernelParams = [
       "amd_pstate=active"
       "module_blacklist=amdgpu"

@@ -5,7 +5,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stable.url = "github:nixos/nixpkgs/nixos-25.11";
     ###
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     disko.url = "github:nix-community/disko";
     flake-programs-sqlite = {
       url = "github:wamserma/flake-programs-sqlite";
@@ -21,6 +20,7 @@
     hyprshutdown.url = "github:hyprwm/hyprshutdown";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
     lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     nixvim.url = "github:nix-community/nixvim";
     nur.url = "github:nix-community/NUR";
     plasma-manager = {
@@ -49,7 +49,6 @@
       hosts = {
         /*
           Dekki.modules = [
-            inputs.chaotic.nixosModules.default
             inputs.jovian.nixosModules.jovian
           ];
         */
@@ -74,14 +73,11 @@
 
         /*
           Ridge.modules = [
-            inputs.chaotic.nixosModules.default
             inputs.jovian.nixosModules.jovian
           ];
         */
 
-        T1.modules = [
-          inputs.chaotic.nixosModules.default
-        ];
+        T1.modules = [ ];
 
         T450s.modules = [
           inputs.hardware.nixosModules.lenovo-thinkpad-t450s
@@ -121,6 +117,7 @@
                 };
               };
               overlays = (map import (import ./overlays)) ++ [
+                inputs.nix-cachyos-kernel.overlays.default
                 inputs.nur.overlays.default
               ];
             };

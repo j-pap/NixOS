@@ -18,7 +18,6 @@
 
     hw = {
       #amdgpu.enable = true;
-      bluetooth.enable = true;
     };
   };
 
@@ -56,7 +55,7 @@
     };
   };
 
-  services.xserver.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true;
   system.stateVersion = "24.11";
 
   ##########################################################
@@ -100,12 +99,15 @@
   ##########################################################
   # Hardware
   ##########################################################
-  hardware.graphics = {
-    extraPackages = [
-      pkgs.jovian-chaotic.mesa-radeonsi-jupiter
-      pkgs.jovian-chaotic.mesa-radv-jupiter
-    ];
-    extraPackages32 = [ ];
+  hardware = {
+    bluetooth.enable = true;
+    graphics = {
+      extraPackages = [
+        pkgs.mesa-radeonsi-jupiter
+        pkgs.mesa-radv-jupiter
+      ];
+      extraPackages32 = [ ];
+    };
   };
 
   ##########################################################
@@ -121,6 +123,7 @@
     kernelPackages =
       if (config.jovian.devices.steamdeck.enable) then
         pkgs.linuxPackages_jovian
+        #pkgs.cachyosKernels.linuxPackages-cachyos-deckify
       else
         pkgs.linuxPackages_latest;
     kernelParams = [

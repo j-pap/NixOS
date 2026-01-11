@@ -76,7 +76,7 @@
   boot = {
     initrd.systemd.enable = true;
 
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages;
     kernelParams = [ ];
 
     loader = {
