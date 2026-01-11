@@ -87,7 +87,7 @@ in
         # Multimedia
         flacon                # CUE converter
         picard                # Music tagger
-        pocket-casts          # Podcast player
+        #pocket-casts          # Podcast player
         tauon                 # Music player
         tidal-dl              # Tidal downloader
         tidal-hifi            # Tidal client
