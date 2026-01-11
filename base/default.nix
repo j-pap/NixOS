@@ -132,7 +132,7 @@
           whois             # Domain lookup
 
           # Nix
-          nixfmt-rfc-style  # Officlal Nix formatter
+          nixfmt            # Officlal Nix formatter
           nix-tree          # Browse nix store
           nvd               # Package version diff tool
 

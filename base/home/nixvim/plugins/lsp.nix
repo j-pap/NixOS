@@ -12,7 +12,7 @@ in
     autoGroups.kickstart-lsp-attach.clear = true;
     extraPackages = builtins.attrValues {
       inherit (pkgs)
-        #nixfmt-rfc-style
+        #nixfmt
         ;
     };
 
