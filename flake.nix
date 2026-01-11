@@ -19,7 +19,10 @@
     hyprland.url = "github:hyprwm/Hyprland";
     hyprshutdown.url = "github:hyprwm/hyprshutdown";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
-    lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     nixvim.url = "github:nix-community/nixvim";
     nur.url = "github:nix-community/NUR";

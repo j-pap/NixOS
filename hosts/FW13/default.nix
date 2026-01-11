@@ -281,7 +281,7 @@ in
       "ipv6.disable=1"
     ];
 
-    # https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md
+    # https://nix-community.github.io/lanzaboote/
     lanzaboote = {
       enable = true;
       pkiBundle = "/etc/secureboot";
