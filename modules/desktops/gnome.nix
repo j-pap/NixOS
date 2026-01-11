@@ -8,8 +8,8 @@
 let
   cfg = config.flake.de.gnome;
   stylix = config.stylix;
-  logoImg = ../../assets/logo.png;
-  profileImg = ../../assets/profile.png;
+  logoImg = ../../base/logo.png;
+  profileImg = ../../base/profile.png;
 in
 {
   options.flake.de.gnome.enable = lib.mkEnableOption "GNOME Desktop Environment";

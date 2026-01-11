@@ -9,7 +9,7 @@ let
   cfg = config.flake.de.kde;
   stylix = config.stylix;
 
-  profileImg = ../../assets/profile.png;
+  profileImg = ../../base/profile.png;
   plasmaTheme = {
     dark = "org.kde.breezedark.desktop";
     light = "org.kde.breeze.desktop";

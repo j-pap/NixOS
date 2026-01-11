@@ -5,7 +5,7 @@
       "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
       logo = {
         type = "chafa";
-        source = ../../assets/logo.png;
+        source = ../logo.png;
         #source = "NixOS_small";
         width = 20;
         padding = {

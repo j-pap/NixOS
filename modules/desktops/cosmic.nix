@@ -9,7 +9,7 @@ let
   cfg = config.flake.de.cosmic;
   stylix = config.stylix;
   wallpaper = flk.host.wallpaper;
-  profileImg = ../../assets/profile.png;
+  profileImg = ../../base/profile.png;
 in
 {
   options.flake.de.cosmic.enable = lib.mkEnableOption "COSMIC DE";

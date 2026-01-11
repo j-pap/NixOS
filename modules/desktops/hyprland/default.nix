@@ -10,6 +10,7 @@ let
   cfg = config.flake.de.hyprland;
   stylix = config.stylix;
   editor = config.environment.variables.EDITOR;
+  profileImg = ../../../base/profile.png;
 in
 {
   imports = [
@@ -137,21 +138,17 @@ in
           #};
         };
 
-        home =
-          let
-            profileImg = ../../../assets/profile.png;
-          in
-          {
-            file.".face".source = profileImg;
-            pointerCursor = {
-              enable = true;
-              gtk.enable = true;
-              hyprcursor.enable = true;
-              name = stylix.cursor.name;
-              package = stylix.cursor.package;
-              size = stylix.cursor.size;
-            };
+        home = {
+          file.".face".source = profileImg;
+          pointerCursor = {
+            enable = true;
+            gtk.enable = true;
+            hyprcursor.enable = true;
+            name = stylix.cursor.name;
+            package = stylix.cursor.package;
+            size = stylix.cursor.size;
           };
+        };
 
         programs = {
           hyprshot = {
