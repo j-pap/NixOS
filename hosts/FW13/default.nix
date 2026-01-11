@@ -96,6 +96,9 @@ in
           framework-tool      # Swiss army knife for FWs
           sbctl               # Secure boot key manager
 
+          # Misc
+          android-tools       # Android flashing
+
           # Monitoring
           powertop            # Power stats
           zenmonitor          # CPU stats
@@ -116,10 +119,7 @@ in
     variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # Set Firefox to use GPU for video codecs
   };
 
-  programs = {
-    adb.enable = true; # Android flashing
-    gamescope.args = [ "--prefer-vk-device \"1002:15bf\"" ]; # `lspci -nn | grep -i vga`
-  };
+  programs.gamescope.args = [ "--prefer-vk-device \"1002:15bf\"" ]; # `lspci -nn | grep -i vga`
 
   system.stateVersion = "24.11";
 

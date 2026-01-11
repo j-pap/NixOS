@@ -81,6 +81,7 @@ in
         polychromatic         # Razer lighting GUI
 
         # Misc
+        android-tools         # Android flashing
         calibre               # Book organization
 
         # Multimedia
@@ -107,7 +108,6 @@ in
   };
 
   programs = {
-    adb.enable = true; # Android flashing
     coolercontrol.enable = lib.mkIf (!config.hardware.fancontrol.enable) true;
 
     gamescope = {
