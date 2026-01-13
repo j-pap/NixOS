@@ -1,35 +1,30 @@
 # NixOS System(s) Flake
 
-This is my flake for a multi-system NixOS installation. I've tried to craft it
-to be as secure as possible without being a complete inconvenience to the
-average user.
+This is my flake for a multi-system NixOS installation. It's constantly being
+updated and tweaked to be as efficient and secure as possible. The following is
+a brief summary of the hosts:
 
-The Framework 13 is running GNOME, because I feel like it is currently the most
-integrated way of fully utilizing a laptop's features. Nearly all of GNOME's
-customizations are declared using dconf settings via home-manager.
-
-My gaming desktop is running KDE, which is customized with the plasma-manager
-flake via home-manager.
-
-The T450s is a testing machine that I'm currently utilizing to test DEs:
-* COSMIC is very bare at the moment, but I plan on customizing it with
-cosmic-manager. It may eventually replace the DE on both the Framework & gaming
-desktop.
-* Hyprland is at a point where it can now be daily-driven, but I'll be updating/
-upgrading it more in the foreseeable future.
+* Framework 13 is running GNOME at the moment, because in my opinion, it
+currently feels like the most integrated DE to embrace a laptop's features.
+COSMIC may eventually replace GNOME once I've tested & configured it further.
+* T1 (gaming desktop) is currently running KDE, but may eventually switch to
+Hyprland once it's configured further.
+* T450s is a spare laptop that I'm currently utilizing to test & configure
+DEs.
 
 ## Installation
 
-The system's are entirely declarative, even using [disko](https://github.com/nix-community/disko)
+The systems are entirely declarative, even using [disko](https://github.com/nix-community/disko)
 to format & partition the drives before installing the OS. Be sure to
-setup/remove [sops-nix](https://github.com/Mic92/sops-nix) prior to building
-the system, or else you won't be able to login, as the user password is stored
+setup or remove [sops-nix](https://github.com/Mic92/sops-nix) prior to building
+the system, or else you won't be able to login since the user password is stored
 as a secret.
 
-To deploy this flake, I'm booting from an .iso I build using hosts/iso, which
-includes the tools I need, and running these commands as root:
+To deploy this flake, I've declared an ISO configuration which includes all the
+necessary tools required. Once it's been built and booted, run the following
+commands as root:
 
-```sh
+```
 nix run github:nix-community/disko -- --mode disko --flake github:j-pap/NixOS#<host>
 mkdir -p /mnt/etc/ssh
 ssh-keygen -t ed25519 -f /mnt/etc/ssh/ssh_host_ed25519_key -C "root@<host>"
@@ -46,21 +41,20 @@ ssh-to-age -i /mnt/etc/ssh/ssh_host_ed25519_key.pub
     [sops-nix's instructions](https://github.com/Mic92/sops-nix?tab=readme-ov-file#usage-example)
     before running the commands in the code block below:
 
-```sh
+```
 mkdir -p /mnt/etc/nixos && cd $_
 git clone https://github.com/j-pap/NixOS.git /mnt/etc/nixos
 git remote set-url origin git@github.com:j-pap/NixOS.git
 nixos-install --no-root-passwd --flake .#<host>
 ```
 
-## Breakdown
+## Directory Tree & Breakdown
 
 ```sh
 nixos
-├── assets
-│   └── wallpapers
-├── common
-│   └── programs
+├── base
+│   ├── home
+│   └── system
 ├── hosts
 │   ├── FW13
 │   ├── iso
@@ -71,36 +65,64 @@ nixos
 ├── modules
 │   ├── desktops
 │   ├── hardware
-│   └── programs
+│   ├── programs
+│   └── host.nix
+├── overlays
 ├── pkgs
-└── secrets
+│   └── fonts
+├── secrets
+├── flake.lock
+└── flake.nix
 ```
 
-### Common
+#### Base
 
-* default.nix is the base system configuration that is imported with each
-system, alongside their system-specific config(s). Base programs, fonts, nix settings,
-users, etc are setup here.
-* /programs: contain additional programs that are included by default, that
-are not modules, but are separated out for easier management.
+* ./default.nix is the base configuration applied to every host, unless
+declared as a standalone system in flake.nix (fonts, programs/services, users,
+etc). Libs and modules are imported from here.
+* ./home: Default programs that are separated out, configured, and imported
+through Home-Manager.
+* ./system: Default programs that are separated out, configured, and imported
+through NixOS.
 
-### Hosts
+#### Hosts
 
-* Each host/system has its own directory with its independent configuration file(s)
-inside of it.
-* The iso directory is used to define & build a custom, bootable .iso file
-used for fresh installs.
+* Each host has its own directory with system-specific configuration files.
+* ./iso: Defines a custom, bootable .iso file used for fresh OS installs.
 
-### Modules
+#### Libs
 
-This is where all modules imported via /common/default.nix are managed. Each directory
-has a default.nix that imports the individual modules. You'll notice that these utilize
-custom options to easily enable them with boolean values in the system configurations.
+Custom libraries/functions are declared & imported in ./default.nix, with each
+function having its own separate file.
 
-* default.nix: imports the three directories below.
-* /desktops: contain the individual desktop environments and their requirements
-(COSMIC/GNOME/Hyprland/KDE).
-* /hardware: contain the configs to enable individual hardware on systems
-(audio, bluetooth, GPUs, etc).
-* /programs: contain applications that can be enabled/disabled, usually
-via the host configs.
+#### Modules
+
+Each directory's default.nix imports the modules contained within that
+directory. These utilize custom options to define and configure each system's
+configuration.
+
+* ./default.nix: Imports the directories and files below.
+* ./desktops: Contain individual desktop environments and their dependencies.
+  * COSMIC: Very bare at the moment, but I plan on customizing it using
+cosmic-manager.
+  * GNOME: Declared using home-manager's dconf settings.
+  * Hyprland: At a point where it's now usable, but I'll be updating/upgrading
+  it more in the foreseeable future.
+  * KDE Plasma: Declared using plasma-manager.
+* ./hardware: Hardware configurations that are potentially used across multiple
+hosts (audio, bluetooth, GPUs, etc).
+* ./programs: Configured applications that can easily be enabled/disabled.
+* ./host.nix: Declares host options, which are then individually configured per
+system (monitor, themes, wallpapers, etc).
+
+#### Overlays
+
+Modify existing and/or add Nix packages. Imported through flake.nix.
+
+#### Pkgs
+
+Programs packaged for Nix and made available through overlays.
+
+#### Secrets
+
+Self-explanatory.
