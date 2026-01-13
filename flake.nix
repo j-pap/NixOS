@@ -114,8 +114,9 @@
                 allowUnfree = true;
                 packageOverrides = pkgs: {
                   stable = import stable {
-                    inherit (pkgs) config overlays;
                     inherit (pkgs.stdenv.hostPlatform) system;
+                    inherit (pkgs) overlays;
+                    config.allowUnfree = true;
                   };
                 };
               };
@@ -126,19 +127,19 @@
             };
           }
         )
-        ./base
         ./hosts/${hostName}
+        ./base
         inputs.disko.nixosModules.disko
         inputs.flake-programs-sqlite.nixosModules.programs-sqlite
         inputs.home-manager.nixosModules.home-manager
         {
           home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
             extraSpecialArgs = specialArgs;
             sharedModules = [
               inputs.plasma-manager.homeModules.plasma-manager
             ];
-            useGlobalPkgs = true;
-            useUserPackages = true;
           };
         }
         inputs.nur.modules.nixos.default
