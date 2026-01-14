@@ -1,18 +1,17 @@
 let
   matchStripInput = builtins.match "[[:space:]]*0*(-?[[:digit:]]+)[[:space:]]*";
   matchZero = builtins.match "0+";
+
+  strCheck = s: matchStripInput s;
+  isZero = s: matchZero (builtins.head (strCheck s)) == [ ];
+  strParsed = s: builtins.fromJSON (builtins.head (strCheck s));
 in
-s:
+str:
 let
-  str = builtins.substring 0 4 s; # Reduces string down to two decimal places
+  wStr = builtins.elemAt (builtins.splitVersion str) 0;
+  dStr = builtins.substring 0 2 (builtins.elemAt (builtins.splitVersion str) 1);
 
-  whole = builtins.fromJSON (builtins.elemAt (builtins.splitVersion str) 0);
-  decStr = builtins.elemAt (builtins.splitVersion str) 1;
-
-  decCheck = matchStripInput decStr;
-  isZero = matchZero (builtins.head decCheck) == [ ];
-  decParsed = builtins.fromJSON (builtins.head decCheck);
-
-  decimal = if isZero then 0 else decParsed;
+  whole = if (isZero wStr) then 0 else (strParsed wStr);
+  decimal = if (isZero dStr) then 0 else (strParsed dStr);
 in
 whole + (decimal / 100.0)
