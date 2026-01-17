@@ -366,10 +366,6 @@
         mountOnMedia = true;
         #settings = { };
       };
-      xserver = {
-        excludePackages = [ pkgs.xterm ];
-        xkb.layout = "us";
-      };
     };
 
     sops = {
