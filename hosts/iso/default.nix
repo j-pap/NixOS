@@ -1,12 +1,11 @@
 {
   config,
   lib,
-  pkgs,
   modulesPath,
+  pkgs,
   ...
 }:
 let
-  latestKernel = false;
   nvidia = false;
 in
 {
@@ -26,13 +25,7 @@ in
             #nct6687d
             ;
         };
-        kernelPackages =
-          if (latestKernel) then
-            # ZFS won't build against 6.15.x, even w/ allowBroken
-            pkgs.linuxPackages_latest
-          else
-            # LTS builds successfully
-            pkgs.linuxPackages;
+        kernelPackages = pkgs.linuxPackages;
       };
 
       environment.systemPackages = builtins.attrValues {
@@ -65,13 +58,13 @@ in
 
       nixpkgs = {
         config = {
-          #allowBroken = true; # Bypass broken ZFS module
+          #allowBroken = true; # Bypass potential broken ZFS module
           allowUnfree = true;
         };
         hostPlatform = lib.mkDefault "x86_64-linux";
       };
 
-      time.timeZone = "America/Chicago";
+      time.timeZone = lib.mkDefault "America/Chicago";
 
       users.users.nixos = {
         isNormalUser = true;
@@ -95,10 +88,7 @@ in
         };
       };
 
-      services.xserver = {
-        enable = true;
-        videoDrivers = [ "nvidia" ];
-      };
+      services.xserver.videoDrivers = [ "nvidia" ];
     })
   ];
 }
