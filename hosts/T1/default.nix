@@ -28,10 +28,10 @@ in
     terminal = "kitty";
 
     de = {
-      hyprland.enable = false;
+      #hyprland.enable = true;
       kde = {
         enable = true;
-        gpuWidget = "gpu/gpu0/temperature";
+        gpuWidget = "gpu/gpu1/temperature";
       };
     };
 
@@ -132,7 +132,6 @@ in
   # Home Manager
   ##########################################################
   home-manager.users.${flk.user} = {
-
     programs.mangohud.settings = {
       gpu_voltage = true;
       gpu_fan = true;

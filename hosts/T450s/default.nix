@@ -18,7 +18,9 @@
 
     de = {
       #cosmic.enable = true;
+      #gnome.enable = true;
       hyprland.enable = true;
+      #kde.enable = true;
     };
 
     hw.bluetooth.enable = false;
@@ -59,64 +61,53 @@
   ##########################################################
   # Home Manager
   ##########################################################
-  home-manager.users.${flk.user} = {
+  home-manager.users.${flk.user} = lib.mkMerge [
+    {
+      home.stateVersion = "24.11";
+    }
 
-    programs = {
-      plasma = lib.mkIf (flk.de.kde.enable) {
-        configFile."kcminputrc"."Libinput/1739/0/Synaptics TM3053-004" = {
-          "ClickMethod" = 2;
-          "NaturalScroll" = true;
-          "PointerAccelerationProfile" = 1;
-          "ScrollFactor" = 0.5;
-          "TapDragLock" = true;
-        };
-      };
+    (lib.mkIf (flk.de.hyprland.enable) {
+      programs.waybar.settings.mainBar =
+        let
+          batteryCount = 2;
+        in
+        {
+          "temperature#cpu".hwmon-path = "/sys/class/hwmon/hwmon6/temp1_input";
+          "temperature#gpu".hwmon-path = "/sys/class/hwmon/hwmon5/temp1_input";
 
-      waybar.settings = lib.mkIf (flk.de.hyprland.enable) {
-        mainBar =
-          let
-            batteryCount = 2;
-          in
-          {
-            "temperature#cpu".hwmon-path = "/sys/class/hwmon/hwmon6/temp1_input";
-            "temperature#gpu".hwmon-path = "/sys/class/hwmon/hwmon5/temp1_input";
-
-            modules-right = lib.mkAfter (
-              builtins.concatLists (builtins.genList (i: [ "battery\#bat${toString i}" ]) batteryCount)
-            );
-          }
-          // builtins.listToAttrs (
-            builtins.genList (i: {
-              name = "battery#bat${toString i}";
-              value = {
-                bat = "BAT${toString i}";
-                adapter = "AC";
-                interval = 5;
-                states = {
-                  warning = 25;
-                  critical = 10;
-                };
-                format = "<span size='15pt' rise='-3000'>{icon}</span> {capacity}%";
-                format-time = "{H}h:{M}m";
-                format-icons = [
-                  ""
-                  ""
-                  ""
-                  ""
-                  ""
-                ];
-                format-charging = "󱐋 {capacity}%";
-                format-plugged = " {capacity}%";
-                tooltip = true;
-                tooltip-format = "{time}";
-              };
-            }) batteryCount
+          modules-right = lib.mkAfter (
+            builtins.concatLists (builtins.genList (i: [ "battery\#bat${toString i}" ]) batteryCount)
           );
-      };
-    };
+        }
+        // builtins.listToAttrs (
+          builtins.genList (i: {
+            name = "battery#bat${toString i}";
+            value = {
+              bat = "BAT${toString i}";
+              adapter = "AC";
+              interval = 5;
+              states = {
+                warning = 25;
+                critical = 10;
+              };
+              format = "<span size='15pt' rise='-3000'>{icon}</span> {capacity}%";
+              format-time = "{H}h:{M}m";
+              format-icons = [
+                ""
+                ""
+                ""
+                ""
+                ""
+              ];
+              format-charging = "󱐋 {capacity}%";
+              format-plugged = " {capacity}%";
+              tooltip = true;
+              tooltip-format = "{time}";
+            };
+          }) batteryCount
+        );
 
-    wayland.windowManager.hyprland = lib.mkIf (flk.de.hyprland.enable) {
-      settings.bindd = [
+      wayland.windowManager.hyprland.settings.bindd = [
         #", XF86Display, Presentation mode, , "
         #", XF86WLAN, Airplane mode, , " # Disables wifi by default
         #", XF86Tools, Settings, , "
@@ -124,10 +115,21 @@
         #", XF86LaunchA, App launcher, exec, rofi -show drun"
         #", XF86Explorer, File explorer, exec, kitty spf"
       ];
-    };
+    })
 
-    home.stateVersion = "24.11";
-  };
+    (lib.mkIf (flk.de.kde.enable) {
+      programs.plasma.input.touchpads = lib.singleton {
+        name = "Synaptics TM3053-004"; # /proc/bus/input/devices
+        vendorId = "06cb";
+        productId = "0000";
+        middleButtonEmulation = true;
+        scrollSpeed = 1.5; # 0.1 - 20
+        naturalScroll = true;
+        tapDragLock = true;
+        rightClickMethod = "twoFingers"; # bottomRight, twoFingers
+      };
+    })
+  ];
 
   ##########################################################
   # Hardware
