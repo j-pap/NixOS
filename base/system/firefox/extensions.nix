@@ -18,6 +18,8 @@ builtins.listToAttrs [
   (mkExt "addon@darkreader.org")
   # Firefox Multi-Account Containters
   (mkExt "@testpilot-containers")
+  # Firefox PWA
+  (mkExt "firefoxpwa@filips.si")
   # Proton VPN
   (mkExt "vpn@proton.ch")
   # SimpleLogin
