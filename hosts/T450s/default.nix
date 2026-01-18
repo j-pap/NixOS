@@ -134,25 +134,7 @@
   ##########################################################
   # Hardware
   ##########################################################
-  hardware.graphics = {
-    # Packages (listed for context) are imported from nixos-hardware/common/gpu/intel through T450s module
-    /*
-      extraPackages = builtins.attrValues {
-        inherit (pkgs)
-          intel-compute-runtime
-          intel-media-driver
-          intel-vaapi-driver
-          vpl-gpu-rt
-        ;
-      };
-      extraPackages32 = builtins.attrValues {
-        inherit (pkgs.driversi686Linux)
-          intel-media-driver
-          intel-vaapi-driver
-        ;
-      };
-    */
-  };
+  # Packages are imported from nixos-hardware/common/gpu/intel via T450s module
 
   ##########################################################
   # Network

@@ -69,10 +69,7 @@ in
         };
 
         graphics = {
-          # Mesa drivers
-          enable = true;
-          #enable32Bit = true;
-
+          enable = true; # Mesa drivers
           # Hardware acceleration
           extraPackages = builtins.attrValues {
             inherit (pkgs)

@@ -68,6 +68,8 @@ in
       };
     };
 
+    #hardware.graphics.enable32Bit = true;
+
     home-manager.users.${flk.user} = {
       home.file = {
         "Games/Severed_Chains_Linux/launch" = {
