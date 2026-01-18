@@ -1,8 +1,7 @@
 {
   config,
   lib,
-  ffVariant,
-  ffVersion,
+  ff,
   ...
 }: let
   host = config.networking.hostName;
@@ -270,8 +269,8 @@ in lib.mkMerge [
       "layers.mlgpu.enabled" = true;
       "media.gpu-process-decoder" = true;
       "media.hardware-video-decoding.enabled" = true;
-      "media.hardware-video-decoding.force-enabled" = lib.mkIf (lib.versionAtLeast ffVersion "137.0.0") true;
-      "media.ffmpeg.vaapi.enabled" = lib.mkIf (lib.versionOlder ffVersion "137.0.0") true;
+      "media.hardware-video-decoding.force-enabled" = lib.mkIf (lib.versionAtLeast ff.version "137.0.0") true;
+      "media.ffmpeg.vaapi.enabled" = lib.mkIf (lib.versionOlder ff.version "137.0.0") true;
 
     ### TRACKING PROTECTION ADV ###
     # ETP
@@ -654,7 +653,7 @@ in lib.mkMerge [
     "network.connectivity-service.enabled" = false;
   })
 
-  (lib.mkIf (ffVariant == "floorp") {
+  (lib.mkIf (ff.variant == "floorp") {
     /****************************************************************************
      * Floorp version: 12.2.x                                                   *
     ****************************************************************************/

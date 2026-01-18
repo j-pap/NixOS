@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  ffVariant,
+  ff,
   flk,
   ...
 }:
@@ -93,7 +93,7 @@ in
 
       home-manager.users.${flk.user} = {
         stylix.targets = {
-          ${ffVariant} = {
+          ${ff.variant} = {
             enable = false; # Disabled as browser currently looks strange with Stylix applied
             colorTheme.enable = false;
             firefoxGnomeTheme.enable = false;

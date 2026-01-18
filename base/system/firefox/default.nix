@@ -2,8 +2,7 @@
   config,
   lib,
   pkgs,
-  ffVariant,
-  ffVersion,
+  ff,
   flk,
   ...
 }:
@@ -27,9 +26,9 @@ let
       null;
 in
 {
-  _module.args = {
-    ffVariant = "firefox"; # firefox, floorp, or librewolf
-    ffVersion = config.home-manager.users.${flk.user}.programs.${ffVariant}.package.version;
+  _module.args.ff = {
+    variant = "firefox"; # firefox, floorp, or librewolf
+    version = config.home-manager.users.${flk.user}.programs.${ff.variant}.package.version;
   };
 
   environment = {
@@ -43,7 +42,7 @@ in
   };
 
   home-manager.users.${flk.user} = {
-    programs.${ffVariant} = {
+    programs.${ff.variant} = {
       enable = true;
       nativeMessagingHosts = lib.optionals (gnome || kde) [ nmPkg ];
       policies = import ./policies.nix;
@@ -60,8 +59,7 @@ in
           inherit
             config
             lib
-            ffVariant
-            ffVersion
+            ff
             ;
         };
 

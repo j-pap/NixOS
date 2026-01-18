@@ -2,8 +2,7 @@
   config,
   lib,
   pkgs,
-  ffVariant,
-  ffVersion,
+  ff,
   flk,
   ...
 }:
@@ -58,8 +57,8 @@ in
       };
 
       # Firefox about:config setting(s)
-      home-manager.users.${flk.user}.programs.${ffVariant}.profiles.${flk.user}.settings = {
-        "media.rdd-ffmpeg.enabled" = lib.mkIf (lib.versionOlder ffVersion "97.0.0") true; # FF97+ defaults to true
+      home-manager.users.${flk.user}.programs.${ff.variant}.profiles.${flk.user}.settings = {
+        "media.rdd-ffmpeg.enabled" = lib.mkIf (lib.versionOlder ff.version "97.0.0") true; # FF97+ defaults to true
       };
 
       programs.gamescope.args = [ "-F nis" ];
