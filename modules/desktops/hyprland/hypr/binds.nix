@@ -34,8 +34,8 @@
       bindd = [
         ### APPLICATIONS
         "$mod SHIFT, code:61, Password manager, exec, 1password --toggle" # 61=SLASH/QUESTION
-        "$mod SHIFT, B, Browser, exec, $browser"
-        "$mod SHIFT ALT, B, Browser (Private), exec, $browser --private-window"
+        "$mod, B, Browser, exec, $browser"
+        "$mod ALT, B, Browser (Private), exec, $browser --private-window"
         "$mod SHIFT, N, Open editor, exec, $terminal $editor"
         /*
           #"$mod, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
@@ -89,10 +89,10 @@
         # Move current workspace between monitors
         "$mod SHIFT ALT, LEFT, Move workspace to left monitor, movecurrentworkspacetomonitor, l"
         "$mod SHIFT ALT, H, Move workspace to left monitor, movecurrentworkspacetomonitor, l"
-        "$mod SHIFT ALT, DOWN, Move workspace to left monitor, movecurrentworkspacetomonitor, d"
-        "$mod SHIFT ALT, J, Move workspace to left monitor, movecurrentworkspacetomonitor, d"
-        "$mod SHIFT ALT, UP, Move workspace to left monitor, movecurrentworkspacetomonitor, u"
-        "$mod SHIFT ALT, K, Move workspace to left monitor, movecurrentworkspacetomonitor, u"
+        "$mod SHIFT ALT, DOWN, Move workspace to bottom monitor, movecurrentworkspacetomonitor, d"
+        "$mod SHIFT ALT, J, Move workspace to bottom monitor, movecurrentworkspacetomonitor, d"
+        "$mod SHIFT ALT, UP, Move workspace to top monitor, movecurrentworkspacetomonitor, u"
+        "$mod SHIFT ALT, K, Move workspace to top monitor, movecurrentworkspacetomonitor, u"
         "$mod SHIFT ALT, RIGHT, Move workspace to right monitor, movecurrentworkspacetomonitor, r"
         "$mod SHIFT ALT, L, Move workspace to right monitor, movecurrentworkspacetomonitor, r"
 
@@ -120,6 +120,10 @@
               "$mod, code:1${key}, Switch to workspace ${ws}, workspace, ${ws}"
               # Move window to workspace
               "$mod SHIFT, code:1${key}, Move window to workspace ${ws}, movetoworkspace, ${ws}"
+              # Switch to monitor
+              #"$mod ALT, code:1${key}, Switch to monitor ${ws}, focusmonitor, ${key}"
+              # Move workspace to monitor
+              #"$mod SHIFT ALT, code:1${key}, Move workspace to monitor ${ws}, movecurrentworkspacetomonitor, ${key}"
             ]
           ) 10
         )
@@ -142,7 +146,7 @@
         "$mod, O, Toggle window orientation, togglesplit, "
 
         ### OTHER SYSTEM SHORTCUTS
-        "$mod SHIFT, F, Open file manager, exec, $files"
+        "$mod, F, Open file manager, exec, $files"
         "$mod, RETURN, Open terminal, exec, $terminal"
         "$mod, ESCAPE, Lock screen, exec, hyprlock"
         "$mod SHIFT, ESCAPE, Log out, exec, hyprshutdown --top-label 'Logging out...' --post-cmd 'hyprctl dispatch exit'"
