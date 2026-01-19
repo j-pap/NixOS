@@ -23,25 +23,7 @@ in
     version = config.home-manager.users.${flk.user}.programs.${ff.variant}.package.version;
   };
 
-  environment = {
-    etc =
-      let
-        nmhName =
-          if (gnome) then
-            "gnome"
-          else if (kde) then
-            "kde.plasma"
-          else
-            "";
-      in
-      lib.mkIf (gnome || kde) {
-        "chromium/native-messaging-hosts/org.${nmhName}.browser_connector.json".source =
-          "${nmhPkg}/etc/chromium/native-messaging-hosts/org.${nmhName}.browser_connector.json";
-        "opt/chrome/native-messaging-hosts/org.${nmhName}.browser_connector.json".source =
-          "${nmhPkg}/etc/opt/chrome/native-messaging-hosts/org.${nmhName}.browser_connector.json";
-      };
-    systemPackages = lib.optionals (gnome || kde) [ nmhPkg ];
-  };
+  environment.systemPackages = lib.optionals (gnome || kde) [ nmhPkg ];
 
   home-manager.users.${flk.user} =
     { config, osConfig, ... }:
