@@ -82,9 +82,10 @@ in
             archive = [ "org.gnome.FileRoller.desktop" ];
             audio = [ "com.system76.CosmicPlayer.desktop" ];
             browser = [ "${flk.browser}.desktop" ];
-            #calendar = [ "thunderbird.desktop" ];
+            calendar = [ "thunderbird.desktop" ];
             connect = [ "" ];
             email = [ "thunderbird.desktop" ];
+            files = [ "com.system76.CosmicFiles.desktop" ];
             image = [ "org.gnome.eog.desktop" ];
             pdf = [ "org.gnome.Evince.desktop" ];
             text = [ "com.system76.CosmicEdit.desktop" ];

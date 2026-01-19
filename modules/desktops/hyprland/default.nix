@@ -257,9 +257,12 @@ in
                 ];
                 audio = [ "" ];
                 browser = [ "${flk.browser}.desktop" ];
-                calendar = [ "" ];
+                calendar = [ "thunderbird.desktop" ];
                 connect = [ "" ];
                 email = [ "thunderbird.desktop" ];
+                files = [
+                  "${pkgs.yazi}/share/applications/yazi.desktop"
+                ];
                 image = [ "feh.desktop" ];
                 pdf = [
                   #"${flk.browser}.desktop"
