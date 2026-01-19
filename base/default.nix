@@ -356,11 +356,6 @@
           UseDns = true;
         };
       };
-      udisks2 = {
-        enable = true;
-        mountOnMedia = true;
-        #settings = { };
-      };
     };
 
     sops = {

@@ -24,7 +24,6 @@ in
 
     environment = {
       pathsToLink = [ "/share/icons" ];
-
       sessionVariables.NIXOS_OZONE_WL = 1;
 
       systemPackages =
@@ -310,6 +309,11 @@ in
     services = {
       dbus.enable = true;
       gnome.gnome-keyring.enable = true;
+      udisks2 = {
+        enable = true;
+        mountOnMedia = true;
+        #settings = { };
+      };
     };
 
     stylix = {
