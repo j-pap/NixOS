@@ -54,6 +54,7 @@ in
             brightnessctl        # Monitor brightness control
 
             # Hypr Ecosystem
+            hyprcursor           # Cursor format/library/utilities
             hyprpicker           # Utility for picking a color from your screen
             hyprshutdown         # GUI session manager (via Flake)
             hyprsysteminfo       # Display system information
@@ -317,6 +318,7 @@ in
     };
 
     stylix = {
+      #cursor.package = hyprcursor-cursor-pkg;
       fonts = {
         sizes = {
           #applications = 10;
