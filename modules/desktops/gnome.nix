@@ -10,6 +10,14 @@ let
   stylix = config.stylix;
   logoImg = ../../base/logo.png;
   profileImg = ../../base/profile.png;
+  favApps = [
+    "${flk.terminal}.desktop"
+    "org.gnome.Nautilus.desktop"
+    "${flk.browser}.desktop"
+    "thunderbird.desktop"
+    "discord.desktop"
+    "steam.desktop"
+  ];
 in
 {
   options.flake.de.gnome.enable = lib.mkEnableOption "GNOME Desktop Environment";
@@ -237,7 +245,7 @@ in
             #idle-dim = true;
             #power-saver-profile-on-low-battery = true;
             sleep-inactive-battery-timeout = 600; # 10 minutes
-            sleep-inactive-ac-timeout = 1800; # 30 minutes
+            sleep-inactive-ac-timeout = 900; # 15 minutes
           };
 
           # Settings->Multitasking
@@ -283,13 +291,13 @@ in
             ];
 
             # Settings->Keyboard->Keyboard Shortcuts->Launchers
-            home = [ "<Shift><Super>f" ];
+            home = [ "<Super>f" ];
             #calculator = [ ];
             #email = [ ];
             help = [
               #"<Super>F1"
             ];
-            www = [ "<Shift><Super>b" ];
+            www = [ "<Super>b" ];
             #search = [ ];
             #control-center = [ ];
 
@@ -309,9 +317,12 @@ in
             # Settings->Keyboard->Keyboard Shortcuts->System
             screensaver = [
               #"<Super>l"
-              "<Super><Shift>Escape"
+              "<Super>Escape"
             ];
-            #logout = [ "<Control><Alt>Delete" ];
+            logout = [
+              "<Control><Alt>Delete"
+              "<Shift><Super>Escape"
+            ];
             #power = [ ];
             #reboot = [ ];
           };
@@ -597,14 +608,7 @@ in
           "ca/desrt/dconf-editor".show-warning = false;
 
           "org/gnome/shell" = {
-            favorite-apps = [
-              "${flk.terminal}.desktop"
-              "org.gnome.Nautilus.desktop"
-              "${flk.browser}.desktop"
-              "thunderbird.desktop"
-              "discord.desktop"
-              "steam.desktop"
-            ];
+            favorite-apps = favApps;
 
             #disable-user-extensions = false;
             enabled-extensions = (map (extension: extension.extensionUuid) gnomeExts) ++ [
@@ -695,13 +699,13 @@ in
                   ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.light}.conf /home/${flk.user}/.config/kitty/current-theme.conf
                   kill -SIGUSR1 $(pidof kitty) 2>/dev/null
                   # Wallpaper
-                  gsettings set org.gnome.desktop.background picture-uri '${flk.host.wallpaper.light}'
+                  #gsettings set org.gnome.desktop.background picture-uri '${flk.host.wallpaper.light}'
                 elif [[ "$CURRENT_THEME" = "prefer-dark" ]]; then
                   # Kitty
                   ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.dark}.conf /home/${flk.user}/.config/kitty/current-theme.conf
                   kill -SIGUSR1 $(pidof kitty) 2>/dev/null
                   # Wallpaper
-                  gsettings set org.gnome.desktop.background picture-uri-dark '${flk.host.wallpaper.dark}'
+                  #gsettings set org.gnome.desktop.background picture-uri-dark '${flk.host.wallpaper.dark}'
                 fi;
               '';
             in
@@ -767,6 +771,32 @@ in
               file:/// /
               file:///etc/nixos nixos
               file:///mnt/nas nas
+            '';
+          };
+
+        # Host-specific dynamic wallpaper
+        dataFile =
+          let
+            host = config.networking.hostName;
+            wall = flk.host.wallpaper;
+          in
+          {
+            "backgrounds/${host}/${host}-d.png".source = wall.dark;
+            "backgrounds/${host}/${host}-l.png".source = wall.light;
+            "gnome-background-properties/${host}.xml".text = ''
+              <?xml version="1.0"?>
+              <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+              <wallpapers>
+                <wallpaper deleted="false">
+                  <name>${host}</name>
+                  <filename>/home/${flk.user}/.local/share/backgrounds/${host}/${host}-l.png</filename>
+                  <filename-dark>/home/${flk.user}/.local/share/backgrounds/${host}/${host}-d.png</filename-dark>
+                  <options>zoom</options>
+                  <shade_type>solid</shade_type>
+                  <pcolor>#ffffff</pcolor>
+                  <scolor>#000000</scolor>
+                </wallpaper>
+              </wallpapers>
             '';
           };
 
