@@ -101,11 +101,14 @@ in
       };
       displayManager.sddm = {
         enable = true;
-        extraPackages = [
-          # Additionally required packages for sddm theme(s)
-          stylix.cursor.package # Cursor
-          pkgs.kdePackages.qtmultimedia # sddm-astronaut-theme
-        ];
+        extraPackages = builtins.attrValues {
+          # Additional required packages via theme buildInputs
+          inherit (pkgs.kdePackages)
+            qtmultimedia
+            qtsvg
+            #qtvirtualkeyboard
+            ;
+        };
         settings.Theme = {
           CursorSize = stylix.cursor.size;
           CursorTheme = stylix.cursor.name;
