@@ -416,10 +416,6 @@ in
                     apply = "force";
                     value = 1; # default/centered
                   };
-                  above = {
-                    apply = "force";
-                    value = true;
-                  };
                 };
               }
             ];
