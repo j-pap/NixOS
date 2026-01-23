@@ -66,7 +66,13 @@
     {
       panelSpacer.expanding = true;
     }
-    "org.kde.plasma.weather"
+    {
+      name = "org.kde.plasma.weather";
+      config = {
+        Appearance.showTemperatureInCompactMode = true;
+        #WeatherStation.source = "bbcukmet|weather|";
+      };
+    }
     "org.kde.plasma.marginsseparator"
     {
       digitalClock = {
@@ -86,6 +92,7 @@
         };
         timeZone = {
           selected = [
+            "Local"
             "America/Chicago"
             "Asia/Tokyo"
             "Europe/Tallinn"
