@@ -6,6 +6,9 @@
   inputs,
   ...
 }:
+let
+  useNixPlugins = true;
+in
 {
   imports = (import ../modules ++ import ./system) ++ [ ../libs ];
 
@@ -27,8 +30,9 @@
   config = {
     _module.args = {
       nixSecrets =
+        assert lib.assertMsg (useNixPlugins) "nixSecrets cannot be accessed because nix-plugins is not enabled.";
         assert lib.assertMsg (builtins ? extraBuiltins.readSops)
-          "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.extra-builtins-file' is defined correctly.";
+          "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.plugin-files' & 'nix.settings.extra-builtins-file' are defined correctly.";
         builtins.extraBuiltins.readSops ../secrets/eval-secrets.nix;
     };
 
@@ -282,8 +286,8 @@
           "flakes"
           "nix-command"
         ];
-        extra-builtins-file = [ "${inputs.self}/libs/extra-builtins.nix" ];
-        plugin-files = [ "${pkgs.nix-plugins}/lib/nix/plugins" ];
+        extra-builtins-file = lib.mkIf (useNixPlugins) [ "${inputs.self}/libs/extra-builtins.nix" ];
+        plugin-files = lib.mkIf (useNixPlugins) [ "${pkgs.nix-plugins}/lib/nix/plugins" ];
         substituters = [
           "https://nix-community.cachix.org"
           "https://hyprland.cachix.org"
