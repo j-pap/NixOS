@@ -10,7 +10,7 @@ COSMIC may eventually replace GNOME once I've tested & configured it further.
 * T1 (gaming desktop) is currently running KDE, but may eventually switch to
 Hyprland once it's configured further.
 * T450s is a spare laptop that I'm currently utilizing to test & configure
-DEs.
+various desktop environments.
 
 ## Installation
 
@@ -103,12 +103,11 @@ configuration.
 
 * ./default.nix: Imports the directories and files below.
 * ./desktops: Contain individual desktop environments and their dependencies.
-  * COSMIC: Very bare at the moment, but I plan on customizing it using
-cosmic-manager.
-  * GNOME: Declared using home-manager's dconf settings.
+  * COSMIC: Declared using [cosmic-manager](https://github.com/HeitorAugustoLN/cosmic-manager).
+  * GNOME: Declared using home-manager's [dconf.settings](https://home-manager-options.extranix.com/?query=dconf.settings&release=master).
   * Hyprland: At a point where it's now usable, but I'll be updating/upgrading
   it more in the foreseeable future.
-  * KDE Plasma: Declared using plasma-manager.
+  * KDE Plasma: Declared using [plasma-manager](https://github.com/nix-community/plasma-manager).
 * ./hardware: Hardware configurations that are potentially used across multiple
 hosts (audio, bluetooth, GPUs, etc).
 * ./programs: Configured applications that can easily be enabled/disabled.
