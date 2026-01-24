@@ -17,6 +17,10 @@
       url = "github:wamserma/flake-programs-sqlite";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    framework-cpu = {
+      url = "github:FrameworkComputer/linux-docs";
+      flake = false;
+    };
     framework-plymouth.url = "github:j-pap/framework-plymouth";
     hardware.url = "github:nixos/nixos-hardware";
     home-manager = {

@@ -407,6 +407,22 @@
         "type": "github"
       }
     },
+    "framework-cpu": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767867550,
+        "narHash": "sha256-yGaf1QGzo6SyD3ghe/LJYLsxGqrMFYxYiACgYga9oM0=",
+        "owner": "FrameworkComputer",
+        "repo": "linux-docs",
+        "rev": "03f71ee760d9134d973d7f423ef648dd4950197c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "FrameworkComputer",
+        "repo": "linux-docs",
+        "type": "github"
+      }
+    },
     "framework-plymouth": {
       "locked": {
         "lastModified": 1752437979,
@@ -1442,6 +1458,7 @@
         "cosmic-manager": "cosmic-manager",
         "disko": "disko",
         "flake-programs-sqlite": "flake-programs-sqlite",
+        "framework-cpu": "framework-cpu",
         "framework-plymouth": "framework-plymouth",
         "hardware": "hardware",
         "home-manager": "home-manager",

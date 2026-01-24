@@ -3,6 +3,7 @@
   lib,
   pkgs,
   flk,
+  inputs,
   ...
 }:
 let
@@ -140,37 +141,28 @@ in
         preset = easyPreset;
       };
 
-      xdg.configFile =
-        let
-          fwRepo = pkgs.fetchFromGitHub {
-            owner = "FrameworkComputer";
-            repo = "linux-docs";
-            rev = "5f840849623f019b433e5c9d9e8a7d4c55add809";
-            sha256 = "sha256-cfP2Ykrcxylesl/cuKDSj6XcVPE51CDCT+0sC01iFBg=";
-          };
-        in
-        {
-          "autostart/ProtonMailBridge.desktop".text = lib.concatLines [
-            (lib.replaceStrings [ "Exec=protonmail-bridge-gui" ] [ "Exec=${lib.getExe protonMB} --no-window" ]
-              (lib.fileContents
-              "${protonMB}/share/applications/proton-bridge-gui.desktop")
-            )
-            "X-GNOME-Autostart-enabled=true"
-          ];
+      xdg.configFile = {
+        "autostart/ProtonMailBridge.desktop".text = lib.concatLines [
+          (lib.replaceStrings [ "Exec=protonmail-bridge-gui" ] [ "Exec=${lib.getExe protonMB} --no-window" ]
+            (lib.fileContents
+            "${protonMB}/share/applications/proton-bridge-gui.desktop")
+          )
+          "X-GNOME-Autostart-enabled=true"
+        ];
 
-          "autostart/ProtonVPN.desktop".text = lib.concatLines [
-            (lib.replaceStrings [ "Exec=protonvpn-app" ] [ "Exec=${lib.getExe protonVPN} --start-minimized" ]
-              (lib.fileContents
-              "${protonVPN}/share/applications/proton.vpn.app.gtk.desktop")
-            )
-            "X-GNOME-Autostart-enabled=true"
-          ];
+        "autostart/ProtonVPN.desktop".text = lib.concatLines [
+          (lib.replaceStrings [ "Exec=protonvpn-app" ] [ "Exec=${lib.getExe protonVPN} --start-minimized" ]
+            (lib.fileContents
+            "${protonVPN}/share/applications/proton.vpn.app.gtk.desktop")
+          )
+          "X-GNOME-Autostart-enabled=true"
+        ];
 
-          # https://github.com/FrameworkComputer/linux-docs/tree/main/easy-effects
-          "easyeffects/output/${easyPreset}.json".source = fwRepo + "/easy-effects/${easyPreset}.json";
-          "easyeffects/irs/IR_22ms_27dB_5t_15s_0c.irs".source =
-            fwRepo + "/easy-effects/irs/IR_22ms_27dB_5t_15s_0c.irs";
-        };
+        # https://github.com/FrameworkComputer/linux-docs/tree/main/easy-effects
+        "easyeffects/output/${easyPreset}.json".source = inputs.framework-cpu + "/easy-effects/${easyPreset}.json";
+        "easyeffects/irs/IR_22ms_27dB_5t_15s_0c.irs".source =
+          inputs.framework-cpu + "/easy-effects/irs/IR_22ms_27dB_5t_15s_0c.irs";
+      };
 
       home.stateVersion = "24.11";
     };
@@ -193,7 +185,7 @@ in
   };
 
   services = {
-    fprintd.enable = if (useFP) then lib.mkForce true else lib.mkForce false; # 'sudo fprintd-enroll'
+    fprintd.enable = lib.mkForce useFP; # 'sudo fprintd-enroll'
 
     fwupd = {
       enable = true;
