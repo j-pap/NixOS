@@ -5,6 +5,13 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stable.url = "github:nixos/nixpkgs/nixos-25.11";
     ###
+    cosmic-manager = {
+      url = "github:HeitorAugustoLN/cosmic-manager";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
     disko.url = "github:nix-community/disko";
     flake-programs-sqlite = {
       url = "github:wamserma/flake-programs-sqlite";
@@ -138,6 +145,7 @@
             useUserPackages = true;
             extraSpecialArgs = specialArgs;
             sharedModules = [
+              inputs.cosmic-manager.homeManagerModules.cosmic-manager
               inputs.plasma-manager.homeModules.plasma-manager
             ];
           };

@@ -1,5 +1,5 @@
 [
-  ./cosmic.nix
+  ./cosmic
   ./gnome.nix
   ./hyprland
   ./kde
