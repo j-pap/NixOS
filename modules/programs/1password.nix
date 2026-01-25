@@ -17,23 +17,23 @@ in
       text = flk.browser;
     };
 
-    home-manager.users.${flk.user} =
-      let
-        opPkg = config.programs._1password-gui.package;
-      in
-      {
-        # Autostart via Hyprland
-        wayland.windowManager.hyprland.settings.exec-once = lib.mkIf (flk.de.hyprland.enable) [
-          "${lib.getExe opPkg} --silent %U"
+    home-manager.users.${flk.user} = lib.mkMerge [
+      # Autostart via Hyprland
+      (lib.mkIf (flk.de.hyprland.enable) {
+        wayland.windowManager.hyprland.settings.exec-once = [
+          "1password --silent %U"
         ];
+      })
 
-        # Autostart via DE
-        xdg.configFile."autostart/1password.desktop" = lib.mkIf (!flk.de.hyprland.enable) {
-          text = lib.replaceStrings [ "Exec=1password %U" ] [ "Exec=${lib.getExe opPkg} --silent %U" ] (
-            lib.fileContents "${opPkg}/share/applications/1password.desktop"
+      # Autostart via DE
+      (lib.mkIf (!flk.de.hyprland.enable) {
+        xdg.configFile."autostart/1password.desktop" = {
+          text = lib.replaceStrings [ "Exec=1password %U" ] [ "Exec=1password --silent %U" ] (
+            lib.fileContents "${config.programs._1password-gui.package}/share/applications/1password.desktop"
           );
         };
-      };
+      })
+    ];
 
     programs = {
       _1password.enable = false; # CLI
