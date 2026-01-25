@@ -1,5 +1,5 @@
 {
-  ".local/share/kf6/searchproviders/hm.desktop".text = ''
+  "kf6/searchproviders/hm.desktop".text = ''
     [Desktop Entry]
     Charset=
     Hidden=false
@@ -9,7 +9,7 @@
     Type=Service
   '';
 
-  ".local/share/kf6/searchproviders/no.desktop".text = ''
+  "kf6/searchproviders/no.desktop".text = ''
     [Desktop Entry]
     Charset=
     Hidden=false
@@ -19,7 +19,7 @@
     Type=Service
   '';
 
-  ".local/share/kf6/searchproviders/np.desktop".text = ''
+  "kf6/searchproviders/np.desktop".text = ''
     [Desktop Entry]
     Charset=
     Hidden=false
@@ -29,7 +29,7 @@
     Type=Service
   '';
 
-  ".local/share/kf6/searchproviders/nw.desktop".text = ''
+  "kf6/searchproviders/nw.desktop".text = ''
     [Desktop Entry]
     Charset=
     Hidden=false
@@ -39,7 +39,7 @@
     Type=Service
   '';
 
-  ".local/share/kf6/searchproviders/sp.desktop".text = ''
+  "kf6/searchproviders/sp.desktop".text = ''
     [Desktop Entry]
     Charset=
     Hidden=false

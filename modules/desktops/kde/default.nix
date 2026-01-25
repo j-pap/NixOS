@@ -141,8 +141,7 @@ in
     home-manager.users.${flk.user} = {
       home.file = {
         ".face".source = profileImg; # Sets profile image
-      }
-      // import ./krunner.nix; # KRunner web search providers
+      };
 
       programs = {
         plasma = {
@@ -660,7 +659,8 @@ in
                   }
               }
             '';
-          };
+          }
+          // import ./krunner-web.nix; # KRunner web search providers
 
         # Set default application file associations
         mimeApps =
