@@ -13,10 +13,6 @@ let
   fw-usbpd-charger = pkgs.callPackage ./usbpd {
     kernel = config.boot.kernelPackages.kernel;
   };
-
-  # pkgs or pkgs.stable
-  protonMB = pkgs.protonmail-bridge-gui;
-  protonVPN = pkgs.protonvpn-gui;
 in
 {
   imports = [
@@ -32,6 +28,8 @@ in
     "1password".enable = true;
     containers.enable = true;
     gaming.enable = true;
+    protonmail.enable = true;
+    protonvpn.enable = true;
     stylix.enable = false;
     syncthing.enable = true;
     vm.enable = true;
@@ -79,9 +77,7 @@ in
         s2idle = pkgs.callPackage ./s2idle.nix { };
       in
       [
-        protonMB  # GUI bridge for Thunderbird
-        protonVPN # VPN client
-        s2idle    # Environment for suspend testing | 's2idle ./amd_s2idle.py'
+        s2idle # Environment for suspend testing | 's2idle ./amd_s2idle.py'
       ]
       ++ builtins.attrValues {
         inherit (pkgs)
@@ -142,22 +138,6 @@ in
       };
 
       xdg.configFile = {
-        "autostart/ProtonMailBridge.desktop".text = lib.concatLines [
-          (lib.replaceStrings [ "Exec=protonmail-bridge-gui" ] [ "Exec=${lib.getExe protonMB} --no-window" ]
-            (lib.fileContents
-            "${protonMB}/share/applications/proton-bridge-gui.desktop")
-          )
-          "X-GNOME-Autostart-enabled=true"
-        ];
-
-        "autostart/ProtonVPN.desktop".text = lib.concatLines [
-          (lib.replaceStrings [ "Exec=protonvpn-app" ] [ "Exec=${lib.getExe protonVPN} --start-minimized" ]
-            (lib.fileContents
-            "${protonVPN}/share/applications/proton.vpn.app.gtk.desktop")
-          )
-          "X-GNOME-Autostart-enabled=true"
-        ];
-
         # https://github.com/FrameworkComputer/linux-docs/tree/main/easy-effects
         "easyeffects/output/${easyPreset}.json".source = inputs.framework-cpu + "/easy-effects/${easyPreset}.json";
         "easyeffects/irs/IR_22ms_27dB_5t_15s_0c.irs".source =
@@ -264,7 +244,6 @@ in
       fw-usbpd-charger # Taints kernel when debugging w/ amd_s2idle
     ];
     kernelModules = [
-      "dummy" # Wireguard fix - https://github.com/ProtonVPN/proton-vpn-gtk-app/issues/57#issuecomment-2994148066
       "nfs"
     ];
     kernelPackages = pkgs.linuxPackages_latest;

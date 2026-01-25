@@ -5,9 +5,6 @@
   flk,
   ...
 }:
-let
-  protonMB = pkgs.protonmail-bridge-gui; # pkgs or pkgs.stable
-in
 {
   imports = [
     ./filesystems.nix
@@ -21,6 +18,7 @@ in
     # "1password", gaming, openrgb, syncthing, vm, yubikey
     "1password".enable = true;
     gaming.enable = true;
+    protonmail.enable = true;
     syncthing.enable = true;
     vm.enable = true;
     yubikey.enable = true;
@@ -64,10 +62,7 @@ in
   # System Packages / Variables
   ##########################################################
   environment = {
-    systemPackages = [
-      protonMB # GUI bridge for Thunderbird
-    ]
-    ++ builtins.attrValues {
+    systemPackages = builtins.attrValues {
       inherit (pkgs)
         # Browser
         brave                 # Alt
@@ -138,12 +133,6 @@ in
       pci_dev = "0:01:00.0"; # `lspci -D | grep -i vga`
       table_columns = lib.mkForce 6;
     };
-
-    xdg.configFile."autostart/ProtonMailBridge.desktop".text = (
-      lib.replaceStrings [ "Exec=protonmail-bridge-gui" ] [ "Exec=${lib.getExe protonMB} --no-window" ] (
-        lib.fileContents "${protonMB}/share/applications/proton-bridge-gui.desktop"
-      )
-    );
 
     home.stateVersion = "24.11";
   };

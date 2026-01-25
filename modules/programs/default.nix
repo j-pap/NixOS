@@ -4,6 +4,8 @@
   ./gaming.nix
   ./git.nix
   ./openrgb.nix
+  ./proton-mail.nix
+  ./proton-vpn.nix
   ./stylix
   ./syncthing.nix
   ./vm.nix
