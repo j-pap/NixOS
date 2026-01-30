@@ -12,8 +12,7 @@
     #"Meta+Esc"
   ];
 
-  # System Services
-  # Keyboard Layout Switcher
+  # System Services -> Keyboard Layout Switcher
   "KDE Keyboard Layout Switcher" = {
     "Switch to Last-Used Keyboard Layout" = [
       #"Meta+Alt+L"
@@ -23,7 +22,7 @@
     ];
   };
 
-  # Window Management
+  # System Services -> Window Management
   kwin = {
     "Window Close" = [
       "Alt+F4"
@@ -252,7 +251,7 @@
     ];
   };
 
-  # Plasma Workspace
+  # System Services -> Plasma Workspace
   plasmashell = {
     "activate task manager entry 1" = [ ];
     "activate task manager entry 2" = [ ];
@@ -270,13 +269,13 @@
     "previous activity" = [ ];
   };
 
-  # Power Management
+  # System Services -> Power Management
   org_kde_powerdevil.powerProfile = [
     "Battery"
     #"Meta+B"
   ];
 
-  # Session Management
+  # System Services -> Session Management
   ksmserver = {
     "Lock Session" = [
       #"Meta+L"
