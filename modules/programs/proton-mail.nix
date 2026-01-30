@@ -13,6 +13,8 @@ in
   options.flake.protonmail.enable = lib.mkEnableOption "Proton Mail Bridge";
 
   config = lib.mkIf (cfg.enable) {
+    environment.systemPackages = [ protonMB ];
+
     home-manager.users.${flk.user} = lib.mkMerge [
       # Autostart via Hyprland
       (lib.mkIf (flk.de.hyprland.enable) {

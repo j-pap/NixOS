@@ -19,6 +19,8 @@ in
       "dummy"
     ];
 
+    environment.systemPackages = [ protonVPN ];
+
     home-manager.users.${flk.user} = lib.mkMerge [
       # Autostart via Hyprland
       (lib.mkIf (flk.de.hyprland.enable) {
