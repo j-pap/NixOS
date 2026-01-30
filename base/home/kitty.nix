@@ -6,7 +6,6 @@
 }:
 let
   flk = osConfig.flake;
-  user = osConfig.flake.user;
 in
 {
   home.packages = [ pkgs.kitty-themes ];
@@ -18,13 +17,13 @@ in
     kitty = {
       enable = true;
       extraConfig = lib.mkIf (!osConfig.stylix.enable) ''
-        include /home/${user}/.config/kitty/current-theme.conf
+        include /home/${flk.user}/.config/kitty/current-theme.conf
       '';
       font.name = lib.mkDefault "Iosvmata";
       font.size = lib.mkDefault 14;
       keybindings = {
         "ctrl+shift+enter" = "launch --cwd=current";
-        "f2" = "new_os_window_with_cwd";
+        "super+shift+enter" = "new_os_window_with_cwd";
       };
       settings = {
         #background_blur = lib.mkIf (flk.de.kde.enable) 1; # Only KDE supported, but even minimum (1) is too aggressive
