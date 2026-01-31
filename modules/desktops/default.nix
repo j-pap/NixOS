@@ -1,6 +1,6 @@
 [
   ./cosmic
-  ./gnome.nix
+  ./gnome
   ./hyprland
   ./kde
 ]
