@@ -56,14 +56,15 @@ in
             extensions.packages =
               let
                 inherit (pkgs.nur.repos.rycee) firefox-addons;
-                bypass-paywalls = import ./addons/bypass-paywalls-clean.nix {
+                customExts = [ "bypass-paywalls-clean" ];
+              in
+              (map (
+                ext:
+                import ./addons/${ext}.nix {
                   inherit lib;
                   inherit (firefox-addons) buildFirefoxXpiAddon;
-                };
-              in
-              [
-                bypass-paywalls
-              ]
+                }
+              ) customExts)
               ++ builtins.attrValues {
                 # Search extensions at: https://nur.nix-community.org/repos/rycee/
                 inherit (firefox-addons)
