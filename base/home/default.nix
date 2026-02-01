@@ -3,6 +3,7 @@
   ./bat.nix
   ./btop.nix
   ./fastfetch.nix
+  ./firefoxpwa
   ./kitty.nix
   ./nixvim
   ./starship.nix
