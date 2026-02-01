@@ -37,6 +37,7 @@ in
     };
   };
 
+  # Plasma v6.5.4
   config = lib.mkIf (cfg.enable) {
     flake.terminal = lib.mkDefault "konsole";
 
