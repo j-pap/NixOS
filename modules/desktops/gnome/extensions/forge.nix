@@ -1,4 +1,7 @@
 {
+  flk,
+}:
+{
   # Forge
   dconf.settings = {
     # Settings
@@ -69,90 +72,104 @@
   };
 
   # Window overrides
-  xdg.configFile."forge/config/windows.json".text = builtins.toJSON {
-    overrides = [
-      {
-        wmClass = "org.gnome.Shell.Extensions";
-        wmTitle = "Forge Settings";
-        mode = "float";
-      }
-      {
-        wmClass = "Gnome-initial-setup";
-        mode = "float";
-      }
-      {
-        wmClass = "org.gnome.Calculator";
-        mode = "float";
-      }
-      {
-        wmClass = "gnome-terminal-server";
-        wmTitle = "Preferences – General";
-        mode = "float";
-      }
-      {
-        wmClass = "gnome-terminal-preferences";
-        mode = "float";
-      }
-      {
-        wmClass = "Guake";
-        mode = "float";
-      }
-      {
-        wmClass = "zoom";
-        mode = "float";
-      }
-      {
-        wmClass = "firefox";
-        wmTitle = "About Mozilla Firefox";
-        mode = "float";
-      }
-      {
-        wmClass = "firefox";
-        wmTitle = "!Mozilla Firefox";
-        mode = "float";
-      }
-      {
-        wmClass = "org.mozilla.firefox.desktop";
-        wmTitle = "About Mozilla Firefox";
-        mode = "float";
-      }
-      {
-        wmClass = "org.mozilla.firefox.desktop";
-        wmTitle = "!Mozilla Firefox";
-        mode = "float";
-      }
-      {
-        wmClass = "thunderbird";
-        wmTitle = "About Mozilla Thunderbird";
-        mode = "float";
-      }
-      {
-        wmClass = "thunderbird";
-        wmTitle = "!Mozilla Thunderbird";
-        mode = "float";
-      }
-      {
-        wmClass = "org.mozilla.Thunderbird.desktop";
-        wmTitle = "About Mozilla Thunderbird";
-        mode = "float";
-      }
-      {
-        wmClass = "org.mozilla.Thunderbird.desktop";
-        wmTitle = "!Mozilla Thunderbird";
-        mode = "float";
-      }
-      {
-        wmClass = "evolution-alarm-notify";
-        mode = "float";
-      }
-      {
-        wmClass = "variety";
-        mode = "float";
-      }
-      {
-        wmClass = "update-manager";
-        mode = "float";
-      }
-    ];
+  xdg.configFile."forge/config/windows.json" = {
+    enable = true;
+    force = true;
+    target = "forge/config/windows.json.hm";
+    onChange =
+      let
+        path = "/home/${flk.user}/.config/forge/config";
+      in
+      ''
+        rm -f ${path}/windows.json
+        cp ${path}/windows.json.hm ${path}/windows.json
+        chmod u-w ${path}/windows.json
+      '';
+    text = builtins.toJSON {
+      overrides = [
+        {
+          wmClass = "org.gnome.Shell.Extensions";
+          wmTitle = "Forge Settings";
+          mode = "float";
+        }
+        {
+          wmClass = "Gnome-initial-setup";
+          mode = "float";
+        }
+        {
+          wmClass = "org.gnome.Calculator";
+          mode = "float";
+        }
+        {
+          wmClass = "gnome-terminal-server";
+          wmTitle = "Preferences – General";
+          mode = "float";
+        }
+        {
+          wmClass = "gnome-terminal-preferences";
+          mode = "float";
+        }
+        {
+          wmClass = "Guake";
+          mode = "float";
+        }
+        {
+          wmClass = "zoom";
+          mode = "float";
+        }
+        {
+          wmClass = "firefox";
+          wmTitle = "About Mozilla Firefox";
+          mode = "float";
+        }
+        {
+          wmClass = "firefox";
+          wmTitle = "!Mozilla Firefox";
+          mode = "float";
+        }
+        {
+          wmClass = "org.mozilla.firefox.desktop";
+          wmTitle = "About Mozilla Firefox";
+          mode = "float";
+        }
+        {
+          wmClass = "org.mozilla.firefox.desktop";
+          wmTitle = "!Mozilla Firefox";
+          mode = "float";
+        }
+        {
+          wmClass = "thunderbird";
+          wmTitle = "About Mozilla Thunderbird";
+          mode = "float";
+        }
+        {
+          wmClass = "thunderbird";
+          wmTitle = "!Mozilla Thunderbird";
+          mode = "float";
+        }
+        {
+          wmClass = "org.mozilla.Thunderbird.desktop";
+          wmTitle = "About Mozilla Thunderbird";
+          mode = "float";
+        }
+        {
+          wmClass = "org.mozilla.Thunderbird.desktop";
+          wmTitle = "!Mozilla Thunderbird";
+          mode = "float";
+        }
+        {
+          wmClass = "evolution-alarm-notify";
+          mode = "float";
+        }
+        {
+          wmClass = "variety";
+          mode = "float";
+        }
+        {
+          wmClass = "update-manager";
+          mode = "float";
+        }
+      ];
+    };
   };
 }

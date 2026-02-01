@@ -34,7 +34,7 @@ let
     ];
 in
 {
-  imports = [ ./forge.nix ];
+  imports = [ (import ./forge.nix { inherit flk; }) ];
 
   home.packages = gnomeExts;
 
