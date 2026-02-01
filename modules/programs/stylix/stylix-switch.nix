@@ -22,6 +22,6 @@ let
       done
     '';
 in
-pkgs.writeShellScriptBin "switch-mode" ''
+pkgs.writeShellScriptBin "stylix-switch" ''
   $(${find-generation})/$@/activate
 ''

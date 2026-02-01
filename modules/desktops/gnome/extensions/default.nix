@@ -140,7 +140,6 @@ in
     # Night Theme Switcher
     "org/gnome/shell/extensions/nightthemeswitcher/commands" =
       let
-        switch-mode = pkgs.callPackage ../programs/stylix/switch-mode.nix { };
         themeSwitch = pkgs.writeShellScriptBin "gnome-theme-switch" ''
           CURRENT_THEME=$(gsettings get org.gnome.desktop.interface color-scheme | cut -d "'" -f 2)
           if [[ "$CURRENT_THEME" = "default" ]]; then
@@ -160,8 +159,8 @@ in
       in
       {
         enabled = true;
-        sunrise = if (stylix.enable) then "${lib.getExe switch-mode} light" else "${lib.getExe themeSwitch}";
-        sunset = if (stylix.enable) then "${lib.getExe switch-mode} dark" else "${lib.getExe themeSwitch}";
+        sunrise = if (stylix.enable) then "${lib.getExe pkgs.stylix-switch} light" else "${lib.getExe themeSwitch}";
+        sunset = if (stylix.enable) then "${lib.getExe pkgs.stylix-switch} dark" else "${lib.getExe themeSwitch}";
       };
     "org/gnome/shell/extensions/nightthemeswitcher/time" = {
       manual-schedule = false;

@@ -8,9 +8,7 @@
 }:
 let
   cfg = config.flake.stylix;
-
   base16 = "${pkgs.base16-schemes}/share/themes";
-  switch-mode = pkgs.callPackage ./switch-mode.nix { };
 in
 {
   options.flake.stylix.enable = lib.mkEnableOption "Stylix";
@@ -63,12 +61,16 @@ in
         builtins.attrValues {
           inherit (pkgs)
             base16-schemes # Theme presets
-            home-manager   # Required for switch-mode | 'programs.home-manager.enable' doesn't install
+            home-manager   # Required for stylix-switch | 'programs.home-manager.enable' doesn't install
+            stylix-switch  # HM theme switching script
             ;
-        }
-        ++ [
-          switch-mode # HM theme switcher script
-        ];
+        };
+
+      nixpkgs.overlays = [
+        (final: prev: {
+          stylix-switch = prev.callPackage ./stylix-switch.nix { };
+        })
+      ];
 
       stylix = {
         enable = true;
