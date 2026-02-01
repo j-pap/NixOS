@@ -16,13 +16,15 @@ let
       "com.system76.CosmicFiles"
       "${flk.browser}"
       "thunderbird"
-      "discord"
+    ]
+    ++ lib.optionals (flk.gaming.enable) [
       "steam"
     ];
 in
 {
   options.flake.de.cosmic.enable = lib.mkEnableOption "COSMIC Desktop Environment";
 
+  # COSMIC v1.0.3
   config = lib.mkIf (cfg.enable) {
     flake.terminal = lib.mkDefault "cosmic-term";
 
