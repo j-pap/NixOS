@@ -1,19 +1,28 @@
 {
   lib,
   pkgs,
+  osConfig,
   ...
 }:
+let
+  flk = osConfig.flake;
+  stylix = osConfig.stylix;
+in
 {
   imports = [ ./plugins ];
 
   programs.yazi = {
     enable = true;
+    package = pkgs.yazi.override {
+      optionalDeps = [ pkgs.mediainfo ];
+    };
     enableBashIntegration = true;
-    enableFishIntegration = false;
-    enableNushellIntegration = false;
-    enableZshIntegration = false;
-    package = pkgs.yazi.override { optionalDeps = [ pkgs.mediainfo ]; };
     shellWrapperName = "y";
+    flavors = lib.mkIf (!stylix.enable) pkgs.yaziFlavors;
+    theme.flavor = lib.optionalAttrs (!stylix.enable) {
+      dark = lib.toLower flk.host.theme.dark;
+      light = lib.toLower flk.host.theme.light;
+    };
 
     initLua = ''
       --- Show username and hostname in header
