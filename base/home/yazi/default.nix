@@ -13,8 +13,12 @@ in
 
   programs.yazi = {
     enable = true;
-    package = pkgs.yazi.override {
-      optionalDeps = [ pkgs.mediainfo ];
+    extraPackages = builtins.attrValues {
+      inherit (pkgs)
+        blobdrop
+        #dragon-drop
+        wl-clipboard
+        ;
     };
     enableBashIntegration = true;
     shellWrapperName = "y";
@@ -23,41 +27,6 @@ in
       dark = lib.toLower flk.host.theme.dark;
       light = lib.toLower flk.host.theme.light;
     };
-
-    initLua = ''
-      --- Show username and hostname in header
-      Header:children_add(function()
-        if ya.target_family() ~= "unix" then
-          return ""
-        end
-        return ui.Span(ya.user_name() .. "@" .. ya.host_name() .. ":"):fg("blue")
-      end, 500, Header.LEFT)
-
-      --- Show symlink in status bar
-      Status:children_add(function(self)
-        local h = self._current.hovered
-        if h and h.link_to then
-          return " -> " .. tostring(h.link_to)
-        else
-          return ""
-        end
-      end, 3300, Status.LEFT)
-
-      --- Show user/group of files in status bar
-      Status:children_add(function()
-        local h = cx.active.current.hovered
-        if h == nil or ya.target_family() ~= "unix" then
-          return ""
-        end
-
-        return ui.Line {
-          ui.Span(ya.user_name(h.cha.uid) or tostring(h.cha.uid)):fg("magenta"),
-          ":",
-          ui.Span(ya.group_name(h.cha.gid) or tostring(h.cha.gid)):fg("magenta"),
-          " ",
-        }
-      end, 500, Status.RIGHT)
-    '';
 
     keymap = {
       input.prepend_keymap = [
@@ -70,18 +39,20 @@ in
       ];
 
       mgr.prepend_keymap = [
-        # Open a shell in pwd
+        # Open a shell in $PWD
         {
-          desc = "Open shell here";
+          desc = "Open $SHELL here";
+          for = "unix";
           on = "!";
           run = "shell \"$SHELL\" --block";
         }
 
         # Copy selected files to the system clipboard while yanking
         {
+          desc = "Copy selected files to system clipboard";
           on = "y";
           run = [
-            "shell -- for path in \"$@\"; do echo \"file://$path\"; done | ${lib.getExe' pkgs.wl-clipboard "wl-copy"} -t text/uri-list"
+            "shell -- for path in %s; do echo \"file://$path\"; done | wl-copy -t text/uri-list"
             "yank"
           ];
         }
@@ -106,16 +77,23 @@ in
           run = "shell -- ya emit cd \"$(git rev-parse --show-toplevel)\"";
         }
 
-        # Reverse q/Q actions
+        # Drag & drop files
         {
-          desc = "Quit the process w/o outputting cwd-file";
-          on = "q";
-          run = "quit --no-cwd-file";
+          desc = "Drag/drop files";
+          on = "<C-n>";
+          #run = "shell -- dragon-drop -x -i -T %s";
+          run = "shell -- blobdrop -x -t %s";
         }
+
+        # Email files
         {
-          desc = "Quit the process";
-          on = "Q";
-          run = "quit";
+          desc = "Send selected files using Thunderbird";
+          on = "<C-m>";
+          run = ''
+            shell --
+            paths=$(for p in %s; do echo "$p"; done | paste -s -d,)
+            thunderbird -compose "attachment='$paths'"
+          '';
         }
       ];
     };
@@ -129,42 +107,67 @@ in
         sort_dir_first = true;
       };
 
-      # Mimetypes are ignored and 'Choose application' pops up if 'config.xdg.portal.xdgOpenUsePortal = true;'
+      open = {
+        prepend_rules = [
+          {
+            mime = "image/*";
+            use = [
+              "open"
+              "set-wallpaper"
+            ];
+          }
+        ];
+      };
+
+      # Mimetypes are ignored/'Choose application' pops up when 'config.xdg.portal.xdgOpenUsePortal = true;'
       opener =
         let
-          runCmd = "${lib.getExe' pkgs.xdg-utils "xdg-open"} \"$@\"";
+          xdgCmd = "xdg-open %s";
         in
         {
-          open = [
-            {
-              desc = "Open";
-              orphan = true;
-              run = runCmd;
-            }
-          ];
-          play = [
-            {
-              desc = "Play";
-              orphan = true;
-              run = runCmd;
-            }
-          ];
+          edit = lib.singleton {
+            desc = "Edit";
+            block = true;
+            run = "$EDITOR %s";
+          };
+          open = lib.singleton {
+            desc = "Open";
+            orphan = true;
+            run = xdgCmd;
+          };
+          play = lib.singleton {
+            desc = "Play";
+            orphan = true;
+            run = xdgCmd;
+          };
+          set-wallpaper = lib.singleton {
+            desc = "Set as wallpaper";
+            for = "linux";
+            run =
+              if (flk.de.cosmic.enable) then
+                ""
+              else if (flk.de.gnome.enable) then
+                "gsettings set org.gnome.desktop.background picture-uri %s1"
+                #"gsettings set org.gnome.desktop.background picture-uri-dark %s1"
+              else if (flk.de.kde.enable) then
+                "plasma-apply-wallpaperimage %s1"
+              else if (flk.de.hyprland.enable) then
+                "swww img %s1"
+              else
+                "";
+          };
         };
 
       plugin = {
         # Disable network pre-load/view
-        prepend_preloaders = [
-          {
-            name = "/mnt/nas/**";
-            run = "noop";
-          }
-        ];
-        prepend_previewers = [
-          {
-            name = "/mnt/nas/**";
-            run = "noop";
-          }
-        ];
+        prepend_preloaders = lib.singleton {
+          name = "/mnt/nas/**";
+          run = "noop";
+        };
+        prepend_previewers = lib.singleton {
+          name = "/mnt/nas/**";
+          run = "noop";
+        };
       };
 
       preview = {

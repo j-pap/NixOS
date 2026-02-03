@@ -1,13 +1,31 @@
 {
   imports = [
+    ./bypass.nix
     ./chmod.nix
-    #./confirm-quit.nix
+    ./confirm-quit.nix
     ./diff.nix
     ./full-border.nix
     ./git.nix
+    #./gitui.nix
     ./jump-to-char.nix
+    ./mediainfo.nix
+    ./mount.nix
+    #./nav-parent-panel.nix
+    ./ouch.nix
+    ./piper.nix
+    ./recycle-bin.nix
+    ./restore.nix
+    #./rich-preview.nix
+    #./show-host.nix # Using starship
+    ./show-symlink.nix
+    ./show-ug.nix
+    ./smart-filter.nix
     ./smart-paste.nix
+    ./smart-switch.nix
     ./smart-tab.nix
+    ./starship.nix
     ./toggle-pane.nix
+    ./vcs-files.nix
+    ./zoom.nix
   ];
 }

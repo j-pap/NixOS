@@ -26,9 +26,9 @@ in
       end
 
       local yes = ya.confirm {
-        pos = { "center", w = 60, h = 10 },
+        pos = { "center", w = 62, h = 10 },
         title = "Quit?",
-        content = ui.Text("Multiple tabs are open. Are you sure you want to quit?"):wrap(ui.Wrap.YES),
+        body = ui.Text("There are multiple tabs open. Are you sure you want to quit?"):wrap(ui.Wrap.YES),
       }
       if yes then
         ya.emit("quit", {})

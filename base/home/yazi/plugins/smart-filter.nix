@@ -4,17 +4,14 @@
   ...
 }:
 let
-  pluginName = "chmod";
+  pluginName = "smart-filter";
 in
 {
-  # Execute chmod on the selected files to change their mode
+  # Yazi plugin that makes filters smarter
   programs.yazi = {
     keymap.mgr.prepend_keymap = lib.singleton {
-      desc = "Chmod on selected files";
-      on = [
-        "c"
-        "m"
-      ];
+      desc = "Smart filter";
+      on = "F";
       run = "plugin ${pluginName}";
     };
 

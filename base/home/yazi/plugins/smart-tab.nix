@@ -1,14 +1,17 @@
+{
+  lib,
+  ...
+}:
 let
   pluginName = "smart-tab";
 in
 {
-  programs.yazi.keymap.mgr.prepend_keymap = [
-    {
-      desc = "Create a tab and enter the hovered directory";
-      on = "t";
-      run = "plugin ${pluginName}";
-    }
-  ];
+  # Create a tab and enter the hovered directory
+  programs.yazi.keymap.mgr.prepend_keymap = lib.singleton {
+    desc = "Enter the hovered directory in a new tab";
+    on = "t";
+    run = "plugin ${pluginName}";
+  };
 
   xdg.configFile."yazi/plugins/${pluginName}.yazi/main.lua".text = ''
     --- @sync entry

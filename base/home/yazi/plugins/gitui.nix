@@ -4,16 +4,16 @@
   ...
 }:
 let
-  pluginName = "chmod";
+  pluginName = "gitui";
 in
 {
-  # Execute chmod on the selected files to change their mode
+  # Plugin for Yazi to manage git repos with gitui
   programs.yazi = {
     keymap.mgr.prepend_keymap = lib.singleton {
-      desc = "Chmod on selected files";
+      desc = "run gitui";
       on = [
-        "c"
-        "m"
+        "g"
+        "i"
       ];
       run = "plugin ${pluginName}";
     };

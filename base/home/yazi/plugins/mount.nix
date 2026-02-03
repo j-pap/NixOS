@@ -4,17 +4,16 @@
   ...
 }:
 let
-  pluginName = "chmod";
+  pluginName = "mount";
 in
 {
-  # Execute chmod on the selected files to change their mode
+  # Mount manager for Yazi
   programs.yazi = {
+    extraPackages = [ pkgs.udisks ];
+
     keymap.mgr.prepend_keymap = lib.singleton {
-      desc = "Chmod on selected files";
-      on = [
-        "c"
-        "m"
-      ];
+      desc = "Mount manager";
+      on = "M";
       run = "plugin ${pluginName}";
     };
 

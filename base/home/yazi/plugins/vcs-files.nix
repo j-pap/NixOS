@@ -4,16 +4,16 @@
   ...
 }:
 let
-  pluginName = "chmod";
+  pluginName = "vcs-files";
 in
 {
-  # Execute chmod on the selected files to change their mode
+  # Show Git file changes in Yazi
   programs.yazi = {
     keymap.mgr.prepend_keymap = lib.singleton {
-      desc = "Chmod on selected files";
+      desc = "Show Git file changes";
       on = [
+        "g"
         "c"
-        "m"
       ];
       run = "plugin ${pluginName}";
     };
