@@ -1,10 +1,10 @@
 {
-  lib,
   stdenv,
   fetchFromGitHub,
 }:
 let
-  pname = "catppuccin-mocha";
+  flavor = "catppuccin-mocha";
+  pname = "yaziflavor-${flavor}";
   version = "unstable-2026-01-18";
   src = fetchFromGitHub {
     owner = "yazi-rs";
@@ -20,7 +20,7 @@ stdenv.mkDerivation {
     runHook preInstall
 
     mkdir -p $out
-    cp $src/${pname}.yazi/* $out/
+    cp $src/${flavor}.yazi/* $out/
 
     runHook postInstall
   '';
