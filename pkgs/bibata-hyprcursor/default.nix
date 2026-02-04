@@ -32,7 +32,7 @@ stdenvNoCC.mkDerivation {
     runHook preBuild
 
     # --hypr supports Hyprland; --x11 supports XCursor
-    # --theme builds a specific theme rather than the default Moderns: Classic, Ice, & Amber
+    # --theme builds a specific theme rather than the default Moderns: Classic/Ice/Amber
     ./src/cursor_utils.py --hypr --theme ${variant} --out-dir ./out
 
     runHook postBuild
