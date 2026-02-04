@@ -1,10 +1,10 @@
 {
-  stdenv,
+  lib,
+  stdenvNoCC,
   fetchFromGitHub,
 }:
 let
-  flavor = "catppuccin-mocha";
-  pname = "yaziflavor-${flavor}";
+  pname = "catppuccin-mocha.yazi";
   version = "unstable-2026-01-18";
   src = fetchFromGitHub {
     owner = "yazi-rs";
@@ -13,20 +13,20 @@ let
     hash = "sha256-xGnebGuSOZpQl/QhuZkwgrjfAlfbEtruA9UVe030mZM=";
   };
 in
-stdenv.mkDerivation {
+stdenvNoCC.mkDerivation {
   inherit pname version src;
 
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out
-    cp $src/${flavor}.yazi/* $out/
+    cp -r ${pname}/ $out/
 
     runHook postInstall
   '';
 
   meta = {
-    description = "Some Yazi flavors maintained by community";
+    description = "Catppuccin Mocha Flavor for Yazi";
     homepage = "https://github.com/yazi-rs/flavors";
+    license = lib.licenses.mit;
   };
 }
