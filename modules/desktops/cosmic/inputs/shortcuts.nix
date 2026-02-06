@@ -74,4 +74,12 @@ in
     };
     key = "Super+Shift+slash";
   }
+  {
+    description = mkRON "optional" "Open Color Picker";
+    action = mkRON "enum" {
+      variant = "Spawn";
+      value = [ "cosmic-ext-color-picker" ];
+    };
+    key = "Super+Print";
+  }
 ]

@@ -43,6 +43,7 @@ in
           cosmic-ext-applet-sysinfo
           cosmic-ext-applet-weather
           cosmic-ext-calculator
+          cosmic-ext-color-picker
           cosmic-ext-ctl
           cosmic-ext-tweaks
           ;
