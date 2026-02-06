@@ -7,6 +7,11 @@
     key = "Meta+?";
     command = "1password --toggle";
   };
+  "color-chooser" = {
+    name = "Launch Color Chooser";
+    key = "Meta+Print";
+    command = "kcolorchooser";
+  };
   "darkman" = {
     name = "Toggle Darkman";
     key = "Meta+Shift+T";

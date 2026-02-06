@@ -56,9 +56,9 @@ in
           sddm-astronaut # Theme
           ;
         inherit (pkgs.kdePackages)
-          # KDE
-          krohnkite # Tiling extension for KWin
-          sddm-kcm # SDDM settings module
+          kcolorchooser # Color picker
+          krohnkite     # Tiling extension for KWin
+          sddm-kcm      # SDDM settings module
           ;
       };
     };
