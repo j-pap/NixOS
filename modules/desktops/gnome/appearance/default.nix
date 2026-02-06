@@ -12,6 +12,12 @@
       # Accent Color
       accent-color = "purple"; # blue teal green yellow orange red pink purple slate
     };
+    "org/gnome/desktop/background" = {
+      # Background
+      #picture-options = "zoom";
+      #picture-uri = "file://${flk.host.wallpaper.light}";
+      #picture-uri-dark = "file://${flk.host.wallpaper.dark}";
+    };
   };
 
   # Host-specific dynamic wallpaper

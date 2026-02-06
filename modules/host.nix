@@ -74,7 +74,7 @@
         type = lib.types.path;
       };
       login = lib.mkOption {
-        default = pkgs.nixos-artwork.wallpapers.simple-dark-gray-bottom.gnomeFilePath;
+        default = pkgs.nixos-artwork.wallpapers.nineish-catppuccin-macchiato-alt.gnomeFilePath;
         description = "File path to choosen wallpaper.";
         example = "/path/to/file.ext";
         type = lib.types.path;

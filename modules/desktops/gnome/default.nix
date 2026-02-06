@@ -103,6 +103,27 @@ in
                 ;
             };
         });
+
+        # GDM dconf database doesn't change the background, so overriding the package
+        gnome-shell = prev.gnome-shell.overrideAttrs (super: {
+          patches = (super.patches or [ ]) ++ [
+            (pkgs.writeText "bg.patch" ''
+              --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+              +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+              @@ -232,6 +232,10 @@ $_gdm_dialog_width: 25em;
+
+               #lockDialogGroup {
+                 background-color: $_gdm_bg;
+              +  background-image: url('file://${flk.host.wallpaper.login}');
+              +  background-position: center;
+              +  background-repeat: no-repeat;
+              +  background-size: cover;
+               }
+
+               // Clock
+            '')
+          ];
+        });
       })
     ];
 
