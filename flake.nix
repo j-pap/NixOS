@@ -132,7 +132,7 @@
                 };
               };
               overlays = (map import (import ./overlays)) ++ [
-                inputs.nix-cachyos-kernel.overlays.default
+                inputs.nix-cachyos-kernel.overlays.pinned
                 inputs.nur.overlays.default
               ];
             };
