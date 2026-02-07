@@ -56,10 +56,33 @@
       register = "unnamedplus";
     };
 
-    colorschemes = lib.mkIf (!osConfig.stylix.enable) {
+    colorschemes = lib.optionalAttrs (!osConfig.stylix.enable) {
       catppuccin = {
         enable = true;
-        settings.flavour = "auto";
+        settings = {
+          background = {
+            dark = "mocha";
+            light = "frappe";
+          };
+          # Increase line numbers visibility
+          custom_highlights = ''
+            function(colors)
+              return {
+                LineNrAbove = { fg = colors.overlay0 },
+                LineNr = { fg = colors.text, style = { "bold" } },
+                LineNrBelow = { fg = colors.overlay0 },
+                EndOfBuffer = { fg = colors.blue },
+              }
+            end
+          '';
+          dim_inactive = {
+            enabled = true;
+            percentage = 0.15;
+            shade = "dark";
+          };
+          flavour = "auto";
+          transparent_background = true;
+        };
       };
     };
 
