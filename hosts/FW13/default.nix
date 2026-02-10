@@ -98,7 +98,7 @@ in
 
           # Monitoring
           powertop            # Power stats
-          #zenmonitor          # CPU stats
+          zenmonitor          # CPU stats
 
           # Multimedia
           flacon              # CUE converter
