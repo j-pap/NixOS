@@ -69,7 +69,6 @@
         brave                 # Alt
 
         # Communication
-        discord               # Discord
         signal-desktop        # Signal
         thunderbird-latest    # Email client
 
