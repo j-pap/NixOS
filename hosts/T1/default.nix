@@ -18,6 +18,7 @@
     # "1password", gaming, openrgb, syncthing, vm, yubikey
     "1password".enable = true;
     gaming.enable = true;
+    openrgb.enable = true;
     protonmail.enable = true;
     syncthing.enable = true;
     vm.enable = true;
