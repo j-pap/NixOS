@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stable.url = "github:nixos/nixpkgs/nixos-25.11";
-    ###
     cosmic-manager = {
       url = "github:HeitorAugustoLN/cosmic-manager";
       inputs = {
@@ -29,7 +28,6 @@
     };
     hyprland.url = "github:hyprwm/Hyprland";
     hyprshutdown.url = "github:hyprwm/hyprshutdown";
-    jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -59,14 +57,7 @@
       ...
     }@inputs:
     let
-      # 'nixos-rebuild switch --flake .#hostname'
       hosts = {
-        /*
-          Dekki.modules = [
-            inputs.jovian.nixosModules.jovian
-          ];
-        */
-
         FW13.modules = [
           {
             nixpkgs.overlays = [
@@ -79,17 +70,11 @@
 
         # 'nix build .#nixosConfigurations.iso.config.system.build.isoImage'
         iso = {
-          hostIsBare = true;
+          isBare = true;
           modules = [
             ./hosts/iso
           ];
         };
-
-        /*
-          Ridge.modules = [
-            inputs.jovian.nixosModules.jovian
-          ];
-        */
 
         T1.modules = [ ];
 
@@ -103,12 +88,12 @@
       mkSystem =
         hostName: hostArgs:
         let
-          hostIsBare = hostArgs.hostIsBare or false;
+          hostIsBare = hostArgs.isBare or false;
           hostModules = hostArgs.modules;
           specialArgs = { inherit inputs; };
         in
         nixpkgs.lib.nixosSystem {
-          modules = (if (hostIsBare) then ([ ]) else (stdModules hostName specialArgs)) ++ hostModules;
+          modules = hostModules ++ (if (hostIsBare) then ([ ]) else (stdModules hostName specialArgs));
           specialArgs = specialArgs;
         };
 
@@ -116,8 +101,15 @@
         (
           { config, ... }:
           {
-            _module.args = {
-              flk = config.flake;
+            _module.args.flk = config.flake;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = specialArgs;
+              sharedModules = [
+                inputs.cosmic-manager.homeManagerModules.cosmic-manager
+                inputs.plasma-manager.homeModules.plasma-manager
+              ];
             };
             networking.hostName = hostName;
             nixpkgs = {
@@ -143,23 +135,13 @@
         inputs.disko.nixosModules.disko
         inputs.flake-programs-sqlite.nixosModules.programs-sqlite
         inputs.home-manager.nixosModules.home-manager
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            extraSpecialArgs = specialArgs;
-            sharedModules = [
-              inputs.cosmic-manager.homeManagerModules.cosmic-manager
-              inputs.plasma-manager.homeModules.plasma-manager
-            ];
-          };
-        }
         inputs.nur.modules.nixos.default
         inputs.sops-nix.nixosModules.sops
         inputs.stylix.nixosModules.stylix
       ];
     in
     {
+      # 'nixos-rebuild switch --flake .#hostname'
       nixosConfigurations = builtins.mapAttrs mkSystem hosts;
     };
 }
