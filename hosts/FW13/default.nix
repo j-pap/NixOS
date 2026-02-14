@@ -24,13 +24,12 @@ in
   # Custom Options
   ##########################################################
   flake = {
-    # "1password", containers, gaming, stylix, syncthing, vm, yubikey
     "1password".enable = true;
     containers.enable = true;
     gaming.enable = true;
     protonmail.enable = true;
     protonvpn.enable = true;
-    stylix.enable = false;
+    #stylix.enable = true;
     syncthing.enable = true;
     vm.enable = true;
     yubikey.enable = true;
@@ -38,7 +37,7 @@ in
     terminal = "kitty";
 
     de = {
-      cosmic.enable = false;
+      #cosmic.enable = true;
       gnome.enable = true;
     };
 
@@ -82,34 +81,34 @@ in
       ++ builtins.attrValues {
         inherit (pkgs)
           # Browser
-          brave               # Alt
+          brave # Alt
 
           # Communication
-          signal-desktop      # Signal
-          thunderbird-latest  # Email client
+          signal-desktop # Signal
+          thunderbird-latest # Email client
 
           # Framework Hardware
-          framework-tool      # Swiss army knife for FWs
-          sbctl               # Secure boot key manager
+          framework-tool # Swiss army knife for FWs
+          sbctl # Secure boot key manager
 
           # Misc
-          android-tools       # Android flashing
+          android-tools # Android flashing
 
           # Monitoring
-          powertop            # Power stats
-          zenmonitor          # CPU stats
+          powertop # Power stats
+          zenmonitor # CPU stats
 
           # Multimedia
-          flacon              # CUE converter
-          picard              # Music tagger
-          #pocket-casts        # Podcast player
-          tauon               # Music player
-          tidal-dl            # Tidal downloader
-          tidal-hifi          # Tidal client
+          flacon # CUE converter
+          picard # Music tagger
+          #pocket-casts # Podcast player
+          tauon # Music player
+          tidal-dl # Tidal downloader
+          tidal-hifi # Tidal client
 
           # Productivity
-          libreoffice-fresh   # Office suite
-          obsidian            # Markdown notes
+          libreoffice-fresh # Office suite
+          obsidian # Markdown notes
           ;
       };
     variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # Set Firefox to use GPU for video codecs
@@ -138,7 +137,8 @@ in
 
       xdg.configFile = {
         # https://github.com/FrameworkComputer/linux-docs/tree/main/easy-effects
-        "easyeffects/output/${easyPreset}.json".source = inputs.framework-cpu + "/easy-effects/${easyPreset}.json";
+        "easyeffects/output/${easyPreset}.json".source =
+          inputs.framework-cpu + "/easy-effects/${easyPreset}.json";
         "easyeffects/irs/IR_22ms_27dB_5t_15s_0c.irs".source =
           inputs.framework-cpu + "/easy-effects/irs/IR_22ms_27dB_5t_15s_0c.irs";
       };
