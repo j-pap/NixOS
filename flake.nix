@@ -11,7 +11,10 @@
         home-manager.follows = "home-manager";
       };
     };
-    disko.url = "github:nix-community/disko";
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-programs-sqlite = {
       url = "github:wamserma/flake-programs-sqlite";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,6 +35,7 @@
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    m4b-tool.url = "github:sandreas/m4b-tool";
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     nixvim.url = "github:nix-community/nixvim";
     nur.url = "github:nix-community/NUR";
