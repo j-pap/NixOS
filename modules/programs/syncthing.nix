@@ -39,9 +39,24 @@ in
             versioning = {
               type = "simple";
               params = {
-                cleanoutDays = "0";
+                cleanoutDays = "90";
                 cleanInterval = "3600";
-                keep = "10";
+                keep = "3";
+              };
+            };
+          };
+
+          "training" = {
+            enable = true;
+            devices = [ "NAS" ];
+            label = "Training";
+            path = "/home/${flk.user}/training";
+            versioning = {
+              type = "simple";
+              params = {
+                cleanoutDays = "30";
+                cleanInterval = "3600";
+                keep = "1";
               };
             };
           };
