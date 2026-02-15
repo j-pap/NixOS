@@ -3,6 +3,7 @@
   lib,
   pkgs,
   flk,
+  inputs,
   ...
 }:
 {
@@ -81,6 +82,7 @@
         # Multimedia
         calibre # Book organization
         flacon # CUE converter
+        #m4b-tool # Audiobook manipulation
         mp4v2 # Audiobook chapters | `mp4chaps -l`
         picard # Music tagger
         #pocket-casts # Podcast player
@@ -96,7 +98,10 @@
       inherit (pkgs.openraPackages_2019.engines)
         bleed # Command & Conquer | openra
         ;
-    };
+    }
+    ++ [
+      (inputs.m4b-tool.packages.${pkgs.stdenv.hostPlatform.system}.m4b-tool)
+    ];
     variables = {
       MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render"; # Nvidia
       #MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0d:00.0-render"; # AMD
@@ -144,7 +149,7 @@
   hardware = {
     fancontrol = {
       enable = true;
-      config = import ./fancontrol.nix;
+      config = import ./fancontrol.nix { inherit flk; };
     };
 
     nvidia.prime = {
@@ -166,7 +171,8 @@
     initrd.systemd.enable = true;
 
     blacklistedKernelModules = [
-      "amdgpu" # Disable iGPU
+      "amdgpu" # iGPU
+      "mt7921e" # Wifi
     ];
     extraModulePackages = [ config.boot.kernelPackages.nct6687d ];
     kernelModules = [
