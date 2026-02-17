@@ -26,7 +26,7 @@ in
           rev = "880dc1450d0bcd27eec2bc9526590ffb40e87e78";
           sha256 = "sha256-TsMOujVI178r887IIh7fTPJRKxT3VIi965mipZcimzI=";
         };
-        patches = [ (builtins.elemAt super.patches 0) ]; # Source's fetchpatch doesn't build with pipeline
+        patches = [ (builtins.elemAt super.patches 0) ]; # Source's fetchpatch is already merged w/ pipeline
       });
       #server.port = 6742;
       startupProfile = config.networking.hostName;
