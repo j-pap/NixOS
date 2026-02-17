@@ -166,10 +166,7 @@ in
   services = {
     fprintd.enable = lib.mkForce useFP; # 'sudo fprintd-enroll'
 
-    fwupd = {
-      enable = true;
-      #extraRemotes = ["lvfs-testing"];
-    };
+    #fwupd.extraRemotes = ["lvfs-testing"];
 
     logind.settings.Login = {
       HandleLidSwitch = "suspend";

@@ -334,6 +334,7 @@ in
         ];
       };
       fstrim.enable = lib.mkDefault true; # SSD trim
+      fwupd.enable = true;
       libinput = {
         enable = true;
         touchpad = {
