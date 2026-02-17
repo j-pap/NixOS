@@ -6,6 +6,9 @@
   inputs,
   ...
 }:
+let
+  m4b-tool = inputs.m4b-tool.packages.${pkgs.stdenv.hostPlatform.system}.m4b-tool;
+in
 {
   imports = [
     ./filesystems.nix
@@ -64,7 +67,10 @@
   # System Packages / Variables
   ##########################################################
   environment = {
-    systemPackages = builtins.attrValues {
+    systemPackages = [
+      m4b-tool # Audiobook manipulation
+    ]
+    ++ builtins.attrValues {
       inherit (pkgs)
         # Browser
         brave # Alt
@@ -73,16 +79,12 @@
         signal-desktop # Signal
         thunderbird-latest # Email client
 
-        # Hardware
-        polychromatic # Razer lighting GUI
-
         # Misc
         android-tools # Android flashing
 
         # Multimedia
         calibre # Book organization
         flacon # CUE converter
-        #m4b-tool # Audiobook manipulation
         mp4v2 # Audiobook chapters | `mp4chaps -l`
         picard # Music tagger
         #pocket-casts # Podcast player
@@ -94,14 +96,14 @@
         libreoffice-qt6-fresh # Office suite
         obsidian # Markdown notes
         ;
-
       inherit (pkgs.openraPackages_2019.engines)
-        bleed # Command & Conquer | openra
+        #bleed # Command & Conquer | openra
         ;
     }
-    ++ [
-      (inputs.m4b-tool.packages.${pkgs.stdenv.hostPlatform.system}.m4b-tool)
+    ++ lib.optionals (config.hardware.openrazer.enable) [
+      pkgs.polychromatic # Razer lighting GUI
     ];
+
     variables = {
       MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:01:00.0-render"; # Nvidia
       #MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:0d:00.0-render"; # AMD
