@@ -1,9 +1,9 @@
 {
-  flk,
+  config,
 }:
 let
   # Hardware
-  cpuMon = if (flk.openrgb.enable) then "hwmon2" else "hwmon1";
+  cpuMon = if (config.services.hardware.openrgb.enable) then "hwmon2" else "hwmon1";
   cpuName = "k10temp";
   cpuPath = "devices/pci0000:00/0000:00:18.3";
   fanMon = "hwmon4";

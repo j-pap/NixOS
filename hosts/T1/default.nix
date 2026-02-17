@@ -125,8 +125,6 @@
 
   services.fwupd.enable = true;
 
-  users.users.${flk.user}.extraGroups = [ "fancontrol" ];
-
   system.stateVersion = "24.11";
 
   ##########################################################
@@ -149,7 +147,7 @@
   hardware = {
     fancontrol = {
       enable = true;
-      config = import ./fancontrol.nix { inherit flk; };
+      config = import ./fancontrol.nix { inherit config; };
     };
 
     nvidia.prime = {

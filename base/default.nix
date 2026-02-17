@@ -386,6 +386,9 @@ in
             "networkmanager"
             "video"
             "wheel"
+          ]
+          ++ lib.optionals (config.hardware.fancontrol.enable) [
+            "fancontrol"
           ];
           hashedPasswordFile = config.sops.secrets."user/password".path;
           isNormalUser = true;
