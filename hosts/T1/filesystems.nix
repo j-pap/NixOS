@@ -75,7 +75,6 @@
       "_netdev"
       "noauto"
       "x-systemd.automount"
-      "x-systemd.device-timeout=5s"
       "x-systemd.idle-timeout=10m"
       "x-systemd.mount-timeout=5s"
     ];
