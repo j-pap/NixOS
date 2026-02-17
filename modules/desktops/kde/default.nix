@@ -49,16 +49,13 @@ in
       ]
       ++ builtins.attrValues {
         inherit (pkgs)
-          # Multimedia
           haruna # MPV frontend
-
-          # SDDM
-          sddm-astronaut # Theme
+          sddm-astronaut # SDDM Theme
           ;
         inherit (pkgs.kdePackages)
           kcolorchooser # Color picker
-          krohnkite     # Tiling extension for KWin
-          sddm-kcm      # SDDM settings module
+          krohnkite # Tiling extension for KWin
+          sddm-kcm # SDDM settings module
           ;
       };
     };
@@ -70,8 +67,29 @@ in
 
     nixpkgs.overlays = [
       (final: prev: {
-        # https://github.com/Keyitdev/sddm-astronaut-theme/blob/master/README.md
+        # Add pipewire path for kdePackages using qtmultimedia
+        kdePackages = prev.kdePackages.overrideScope (
+          kfinal: kprev: {
+            kdeconnect-kde = (
+              kprev.kdeconnect-kde.overrideAttrs (super: {
+                qtWrapperArgs = (super.qtWrapperArgs or [ ]) ++ [
+                  "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ final.pipewire ]}"
+                ];
+              })
+            );
+
+            sddm = (
+              kprev.sddm.overrideAttrs (super: {
+                qtWrapperArgs = (super.qtWrapperArgs or [ ]) ++ [
+                  "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ final.pipewire ]}"
+                ];
+              })
+            );
+          }
+        );
+
         sddm-astronaut = prev.sddm-astronaut.override {
+          # https://github.com/Keyitdev/sddm-astronaut-theme/blob/master/README.md
           embeddedTheme = "astronaut";
           themeConfig = {
             ### General ###
@@ -80,9 +98,9 @@ in
             ### Background ###
             Background = "${flk.host.wallpaper.login}";
             ### Form ###
-            #PartialBlur = false; # Form is blurred
-            FullBlur = true; # Everything is blurred
-            BlurMax = 64; # Default 48 | 2 - 64
+            #PartialBlur = false; # Form only
+            FullBlur = true; # Entire screen
+            BlurMax = 48; # Default 48 | 2 - 64
             Blur = 1.0; # Default 2.0 | 0.0 - 3.0
             FormPosition = "left"; # left, center, right
             ### Interface Behavior ###
@@ -99,20 +117,16 @@ in
       };
       displayManager.sddm = {
         enable = true;
-        wayland.enable = true;
+        wayland = {
+          enable = true;
+          compositor = "kwin";
+        };
         settings.Theme = {
           CursorSize = stylix.cursor.size;
           CursorTheme = stylix.cursor.name;
         };
         theme = "sddm-astronaut-theme";
-        extraPackages = builtins.attrValues {
-          # Additional packages required by theme's buildInputs
-          inherit (pkgs.kdePackages)
-            qtmultimedia
-            qtsvg
-            #qtvirtualkeyboard
-            ;
-        };
+        extraPackages = [ pkgs.sddm-astronaut ]; # Load dependencies from theme
       };
     };
 
