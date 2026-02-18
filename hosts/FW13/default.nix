@@ -7,12 +7,14 @@
   ...
 }:
 let
-  useFP = true; # Whether or not to enable the fingerprint reader
+  debug = false; # Disable modules that taint the kernel when debugging w/ amd_s2idle
+  useFP = true; # Whether to use the fingerprint reader
 
   # Patch kernel to log usbpd instead of warn
   fw-usbpd-charger = pkgs.callPackage ./usbpd {
     kernel = config.boot.kernelPackages.kernel;
   };
+  s2idle = pkgs.callPackage ./s2idle.nix { };
 in
 {
   imports = [
@@ -71,50 +73,48 @@ in
   # System Packages / Variables
   ##########################################################
   environment = {
-    systemPackages =
-      let
-        s2idle = pkgs.callPackage ./s2idle.nix { };
-      in
-      [
-        s2idle # Environment for suspend testing | 's2idle ./amd_s2idle.py'
-      ]
-      ++ builtins.attrValues {
-        inherit (pkgs)
-          # Browser
-          brave # Alt
+    systemPackages = [
+      s2idle # Environment for suspend testing | `s2idle ./amd_s2idle.py`
+    ]
+    ++ builtins.attrValues {
+      inherit (pkgs)
+        # Browser
+        brave # Alt
 
-          # Communication
-          signal-desktop # Signal
-          thunderbird-latest # Email client
+        # Communication
+        signal-desktop # Signal
+        thunderbird-latest # Email client
 
-          # Framework Hardware
-          framework-tool # Swiss army knife for FWs
-          sbctl # Secure boot key manager
+        # Framework Hardware
+        framework-tool # Swiss army knife for FWs
+        sbctl # Secure boot key manager
 
-          # Misc
-          android-tools # Android flashing
+        # Misc
+        android-tools # Android flashing
 
-          # Monitoring
-          powertop # Power stats
-          zenmonitor # CPU stats
+        # Monitoring
+        powertop # Power stats
+        zenmonitor # CPU stats
 
-          # Multimedia
-          flacon # CUE converter
-          picard # Music tagger
-          #pocket-casts # Podcast player
-          tauon # Music player
-          tidal-dl # Tidal downloader
-          tidal-hifi # Tidal client
+        # Multimedia
+        flacon # CUE converter
+        picard # Music tagger
+        #pocket-casts # Podcast player
+        tauon # Music player
+        tidal-dl # Tidal downloader
+        tidal-hifi # Tidal client
 
-          # Productivity
-          libreoffice-fresh # Office suite
-          obsidian # Markdown notes
-          ;
-      };
-    variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # Set Firefox to use GPU for video codecs
+        # Productivity
+        libreoffice-fresh # Office suite
+        obsidian # Markdown notes
+        ;
+    };
+    variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # GPU for Firefox
   };
 
-  programs.gamescope.args = [ "--prefer-vk-device \"1002:15bf\"" ]; # `lspci -nn | grep -i vga`
+  programs.gamescope.args = [
+    "--prefer-vk-device \"1002:15bf\"" # `lspci -nn | grep -i vga`
+  ];
 
   system.stateVersion = "24.11";
 
@@ -153,20 +153,20 @@ in
     bluetooth.powerOnBoot = lib.mkForce false;
     enableAllFirmware = true;
     firmware = [ pkgs.linux-firmware ];
-    sensor.iio.enable = true; # Ambient light sensor | 'monitor-sensor'
+    sensor.iio.enable = true; # Ambient light sensor | `monitor-sensor`
     wirelessRegulatoryDatabase = true; # Allow 5GHz wifi
   };
 
   powerManagement = {
     enable = true;
     cpuFreqGovernor = "powersave";
-    powertop.enable = true; # Auto-tuning - to use powertop bin, pkg must be declared in systemPackages
+    powertop.enable = true; # Auto-tuning only - powertop bin is separate
   };
 
   services = {
-    fprintd.enable = lib.mkForce useFP; # 'sudo fprintd-enroll'
+    fprintd.enable = lib.mkForce useFP; # `sudo fprintd-enroll`
 
-    #fwupd.extraRemotes = ["lvfs-testing"];
+    #fwupd.extraRemotes = [ "lvfs-testing" ];
 
     logind.settings.Login = {
       HandleLidSwitch = "suspend";
@@ -180,6 +180,7 @@ in
         # GPU performance adjusts based upon power input
         gpuPowerMode = pkgs.writeShellScriptBin "gpu-power" ''
           GPU=$(readlink -f /sys/class/drm/card?/device)
+          echo "### Setting GPU power mode to: $1"
           echo "$1" > "$GPU"/power_dpm_force_performance_level
         '';
       in
@@ -210,7 +211,6 @@ in
   ##########################################################
   networking = {
     enableIPv6 = false;
-    firewall.checkReversePath = "loose";
     networkmanager.wifi = {
       backend = "iwd"; # iwd performs better on AMD FW models
       macAddress = "stable-ssid";
@@ -227,8 +227,8 @@ in
       systemd.enable = true;
     };
 
-    blacklistedKernelModules = [
-      #"framework_laptop" # Taints kernel when debugging w/ amd_s2idle
+    blacklistedKernelModules = lib.optionals (debug) [
+      "framework_laptop"
     ];
     extraModprobeConfig = ''
       # Enable 5GHz
@@ -236,8 +236,8 @@ in
       # Fix wifi high latency
       options mt7921e disable_aspm=1
     '';
-    extraModulePackages = [
-      fw-usbpd-charger # Taints kernel when debugging w/ amd_s2idle
+    extraModulePackages = lib.optionals (!debug) [
+      fw-usbpd-charger
     ];
     kernelModules = [
       "nfs"
