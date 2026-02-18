@@ -8,7 +8,7 @@
 }:
 let
   cfg = config.flake.hw.nvidia;
-  nvidiaPkg = "latest"; # stable, latest, or beta
+  nvidiaPkg = "stable"; # stable, production, latest, or beta
 in
 {
   options.flake.hw.nvidia.enable = lib.mkEnableOption "Nvidia GPU";
@@ -35,21 +35,21 @@ in
           NVD_BACKEND = "direct"; # Library backend - 'direct' or 'egl'
           MOZ_DISABLE_RDD_SANDBOX = 1; # Disables Firefox's sandbox for the RDD process that the decoder runs in
           LIBVA_DRIVER_NAME = "nvidia"; # VA-API - 'nvidia' or 'vdpau'
-          #CUDA_DISABLE_PERF_BOOST = 1;  # Disable high power draw when using HW acceleration - 580.105.08+ required
+          CUDA_DISABLE_PERF_BOOST = 1; # Disable high power draw w/ HW acceleration - v580.105.08+ required
         };
       };
 
       hardware = {
         graphics.enable = true;
         nvidia = {
-          modesetting.enable = true; # "nvidia-drm.modeset=1" / "nvidia-drm.fbdev=1" - enables dedicated framebuffer
+          modesetting.enable = true; # "nvidia-drm.modeset=1"/"nvidia-drm.fbdev=1" - enables dedicated framebuffer
           nvidiaSettings = true;
-          open = false; # Used by default with v560+
-          package = config.boot.kernelPackages.nvidiaPackages.${nvidiaPkg}.overrideAttrs (old: {
-            buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.bash ]; # Patches nvidia-sleep.sh via patchShebangs
+          open = true; # Required for 50XX+; Recommended for 16XX+ - v560+ defaults to true
+          package = config.boot.kernelPackages.nvidiaPackages.${nvidiaPkg}.overrideAttrs (super: {
+            buildInputs = (super.buildInputs or [ ]) ++ [ pkgs.bash ]; # patchShebangs nvidia-sleep.sh
           });
           powerManagement = {
-            enable = true; # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" - enables nvidia-hibernate/resume/suspend.services
+            enable = true; # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" - enables nvidia-suspend/hibernate/resume.service(s)
             finegrained = false; # Experimental: Turns off GPU when not in use - cannot be used w/ nvidia.prime.sync
           };
           videoAcceleration = true; # nvidia-vaapi-driver
@@ -67,11 +67,10 @@ in
 
     #(lib.mkIf (cfg.enable && flk.de.hyprland.enable) { })
 
-    (lib.mkIf (cfg.enable && flk.de.kde.enable) {
-      # Disable GSP - Smoother Plasma Wayland experience
-      boot.kernelParams = [
-        "nvidia.NVreg_EnableGpuFirmware=0"
-      ];
+    (lib.mkIf (cfg.enable && flk.de.kde.enable && !config.hardware.nvidia.open) {
+      # Disable GSP - Smoother Wayland experience
+      # Unsure if this is still necessary with newer versions of Plasma 6
+      boot.kernelParams = [ "nvidia.NVreg_EnableGpuFirmware=0" ];
       hardware.nvidia.gsp.enable = false;
     })
   ];
