@@ -26,7 +26,7 @@ in
 
     environment = {
       systemPackages = [
-        gsRenicePkg # Builds `gsr` command to add to game launch options
+        gsRenicePkg # `gsr` binary to replace `gamescope` in launch options
       ]
       ++ builtins.attrValues {
         inherit (pkgs)
@@ -114,7 +114,7 @@ in
 
     programs = {
       gamemode = {
-        # Steam: Right-click game -> Properties -> Launch options: `gamemoderun gsr -- %command%`
+        # Steam: Right-click game -> Properties -> Launch options: `gamemoderun gamescope -- %command%`
         # Lutris: Preferences -> Global options -> CPU -> Enable Feral GameMode
         enable = true;
         enableRenice = true;
@@ -133,6 +133,8 @@ in
       gamescope = {
         enable = true;
         package = pkgs.gamescope.override { enableWsi = false; };
+        # capSysNice currently prevents games from launching - "failed to inherit capabilities: Operation not permitted"
+        #capSysNice = true; # Use `gsr` to replace `gamescope` in launch options mentioned above
         args = [
           "--output-width ${monitor.width}"
           "--output-height ${monitor.height}"
@@ -149,9 +151,6 @@ in
           "--fullscreen"
           "--force-grab-cursor"
         ];
-        # capSysNice currently stops games from launching - "failed to inherit capabilities: Operation not permitted"
-        # Current workaround is using `gsr` to replace gamescope in launch options mentioned above
-        #capSysNice = true;
       };
 
       steam = {
