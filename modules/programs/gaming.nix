@@ -9,6 +9,11 @@ let
   cfg = config.flake.gaming;
   stylix = config.stylix.enable;
   monitor = config.flake.host.monitor;
+
+  gsRenicePkg = pkgs.writeShellScriptBin "gsr" ''
+    (sleep 1; pgrep gamescope | xargs renice -n -20 -p)&
+    exec gamescope "$@"
+  '';
 in
 {
   options.flake.gaming.enable = lib.mkEnableOption "Gaming";
@@ -20,51 +25,19 @@ in
     };
 
     environment = {
-      systemPackages =
-        let
-          gs-renice-pkg = pkgs.writeShellScriptBin "gs-renice" ''
-            (sleep 1; pgrep gamescope | xargs renice -n -20 -p)&
-            exec gamescope "$@"
-          '';
-
-          lutris-pkg = pkgs.lutris.override {
-            extraLibraries =
-              pkgs:
-              if (pkgs.stdenv.hostPlatform.is64bit) then
-                config.hardware.graphics.extraPackages
-              else
-                config.hardware.graphics.extraPackages32;
-            extraPkgs =
-              pkgs:
-              builtins.attrValues {
-                inherit (pkgs)
-                  dxvk
-                  vkd3d
-                  winetricks
-                  ;
-              }
-              ++ [
-                # wineWow has both x86/64 - stable, staging, or wayland
-                pkgs.wineWowPackages.wayland
-              ];
-          };
-        in
-        [
-          gs-renice-pkg # Builds 'gs-renice' command to add to game launch options
-          lutris-pkg    # Game launcher - Epic, GOG, Humble Bundle, Steam
-        ]
-        ++ builtins.attrValues {
-          inherit (pkgs)
-            gamescope-wsi # Gamescope w/ WSI (breaks if declared in gamescope.package)
-            heroic        # Game launcher - Epic, GOG, Prime
-            jdk           # Java games
-            protonplus    # Proton-GE updater
-            ;
-        };
-
+      systemPackages = [
+        gsRenicePkg # Builds `gsr` command to add to game launch options
+      ]
+      ++ builtins.attrValues {
+        inherit (pkgs)
+          jdk # Java games
+          lutris # Game launcher - Epic, GOG, Humble Bundle, Steam
+          protonplus # Proton-GE updater
+          ;
+      };
       variables = {
         STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${flk.user}/.steam/steam/compatibilitytools.d";
-        #STEAM_FORCE_DESKTOPUI_SCALING = lib.substring 0 4 monitor.scale;
+        #STEAM_FORCE_DESKTOPUI_SCALING = lib.substring 0 4 monitor.scale; # Force "1.XX"
       };
     };
 
@@ -72,6 +45,7 @@ in
 
     home-manager.users.${flk.user} = {
       home.file = {
+        # 'Legend of Dragoon' launcher
         "Games/Severed_Chains_Linux/launch" = {
           executable = true;
           text = ''
@@ -139,13 +113,12 @@ in
     };
 
     programs = {
-      # Steam: Right-click game -> Properties -> Launch options: 'gs-renice -- mangohud gamemoderun %command%'
-      # Lutris: Preferences -> Global options -> CPU -> Enable Feral GameMode
       gamemode = {
+        # Steam: Right-click game -> Properties -> Launch options: `gamemoderun gsr -- %command%`
+        # Lutris: Preferences -> Global options -> CPU -> Enable Feral GameMode
         enable = true;
         enableRenice = true;
         settings = {
-          # Currently hiding Gamemode notifications
           #custom.start = "${lib.getExe pkgs.libnotify} -a 'GameMode' -i 'input-gaming' 'GameMode Activated'";
           #custom.end = "${lib.getExe pkgs.libnotify} -a 'GameMode' -i 'input-gaming' 'GameMode Deactivated'";
           general = {
@@ -159,40 +132,35 @@ in
 
       gamescope = {
         enable = true;
+        package = pkgs.gamescope.override { enableWsi = false; };
         args = [
-          "-W ${monitor.width}"                  # Output width
-          "-H ${monitor.height}"                 # Output height
-          #"-w ${monitor.width}"                 # Game width
-          #"-h ${monitor.height}"                # Game height
-          "-r ${monitor.refresh}"                # Refresh rate
-          "-o 30"                                # Unfocused refresh rate
-          "-b"                                   # Borderless window
-          #"-f"                                  # Fullscreen window
-          #"--adaptive-sync"                     # VRR (if available)
-          "--framerate-limit ${monitor.refresh}" # Sync framerate to refresh rate
-          "--rt"                                 # Real-time scheduling
+          "--output-width ${monitor.width}"
+          "--output-height ${monitor.height}"
+          #"--expose-wayland" # --mangoapp does not currently support Wayland
+          "--rt" # Realtime scheduling
+          "--framerate-limit ${monitor.refresh}"
+          "--mangoapp"
+          "--adaptive-sync" # VRR (if available)
+          "--nested-width ${monitor.width}"
+          "--nested-height ${monitor.height}"
+          "--nested-refresh ${monitor.refresh}"
+          "--nested-unfocused-refresh 30"
+          #"--borderless"
+          "--fullscreen"
+          "--force-grab-cursor"
         ];
         # capSysNice currently stops games from launching - "failed to inherit capabilities: Operation not permitted"
-        # Current workaround is using 'gs-renice' to replace gamescope in launch options mentioned above
+        # Current workaround is using `gsr` to replace gamescope in launch options mentioned above
         #capSysNice = true;
       };
 
       steam = {
         enable = true;
-        extest.enable = true;
-        #extraCompatPackages = [ pkgs.proton-ge-bin ];
-        gamescopeSession.enable = false;
-
-        # Firewall options
-        dedicatedServer.openFirewall = false;
-        localNetworkGameTransfers.openFirewall = true;
-        remotePlay.openFirewall = true;
-
         package = pkgs.steam.override {
           extraEnv.LD_PRELOAD = "${pkgs.gamemode.lib}/lib/libgamemode.so";
-          # Gamescope fixes for undefined symbols in X11 session
           extraPkgs =
             pkgs:
+            # Gamescope fixes for undefined symbols in X11 session
             builtins.attrValues {
               inherit (pkgs)
                 keyutils
@@ -207,23 +175,46 @@ in
                 libXinerama
                 libXScrnSaver
                 ;
-            }
-            ++ [
-              pkgs.stdenv.cc.cc.lib
-            ];
+              inherit (pkgs.stdenv.cc.cc) lib;
+            };
         };
+        extraCompatPackages = [
+          #pkgs.proton-ge-bin
+        ];
+        extest.enable = true;
+
+        # Firewall options
+        localNetworkGameTransfers.openFirewall = true;
+        remotePlay.openFirewall = true;
       };
     };
 
-    # Gamemode process priority renice fix
-    security.pam.loginLimits = [
-      {
-        domain = "@gamemode";
-        type = "-";
-        item = "nice";
-        value = -20; # Range from -20 to 19
-      }
+    nixpkgs.overlays = [
+      (final: prev: {
+        lutris = prev.lutris.override {
+          extraPkgs =
+            pkgs:
+            builtins.attrValues {
+              inherit (pkgs)
+                dxvk
+                vkd3d
+                winetricks
+                ;
+              inherit (pkgs.wineWow64Packages)
+                wayland
+                ;
+            };
+        };
+      })
     ];
+
+    # Gamemode process priority renice fix
+    security.pam.loginLimits = lib.singleton {
+      domain = "@gamemode";
+      type = "-";
+      item = "nice";
+      value = -20; # Range from -20 to 19
+    };
 
     users.users.${flk.user}.extraGroups = [ "gamemode" ];
   };

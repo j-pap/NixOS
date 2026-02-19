@@ -61,7 +61,7 @@ in
         "media.rdd-ffmpeg.enabled" = lib.mkIf (lib.versionOlder ff.version "97.0.0") true; # FF97+ defaults to true
       };
 
-      programs.gamescope.args = [ "-F nis" ];
+      programs.gamescope.args = [ "--filter nis" ];
       services.xserver.videoDrivers = [ "nvidia" ];
     })
 

@@ -50,7 +50,7 @@ in
       };
     };
 
-    programs.gamescope.args = [ "-F fsr" ];
+    programs.gamescope.args = [ "--filter fsr" ];
 
     services = {
       lact = {
