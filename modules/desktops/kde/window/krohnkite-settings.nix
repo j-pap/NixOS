@@ -28,7 +28,7 @@
   soleWindowNoBorders = true;
   soleWindowNoGaps = true;
   layoutPerActivity = false;
-  layoutPerDesktop = false;
+  layoutPerDesktop = true;
   noTileBorder = true;
   preventMinimize = true;
 }
