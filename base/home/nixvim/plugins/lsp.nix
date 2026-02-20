@@ -12,7 +12,7 @@ in
     autoGroups.kickstart-lsp-attach.clear = true;
     extraPackages = builtins.attrValues {
       inherit (pkgs)
-        #nixfmt
+        nixfmt
         ;
     };
 
@@ -27,9 +27,18 @@ in
         servers = {
           bashls = {
             enable = true;
+            autostart = true;
             filetypes = [
               "bash"
               "sh"
+            ];
+          };
+
+          gopls = {
+            enable = true;
+            autostart = true;
+            filetypes = [
+              "go"
             ];
           };
 
@@ -67,7 +76,7 @@ in
             ];
             settings = {
               formatting.command = [
-                #"nixfmt"
+                "nixfmt"
               ];
               nix = {
                 binary = "nix";
@@ -82,6 +91,14 @@ in
           };
 
           nixd.enable = lib.mkIf (!cfg.nil_ls.enable) true;
+
+          ruff = {
+            enable = false;
+            autostart = true;
+            filetypes = [
+              "py"
+            ];
+          };
 
           terraformls = {
             enable = false;

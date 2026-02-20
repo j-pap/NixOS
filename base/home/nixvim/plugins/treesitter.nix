@@ -10,15 +10,26 @@
     grammarPackages = builtins.attrValues {
       inherit (pkgs.vimPlugins.nvim-treesitter.builtGrammars)
         bash
-        c
+        css
+        dockerfile
+        go
         html
+        json
         lua
         markdown
         markdown_inline
         nix
+        php
+        printf
+        python
+        regex
+        sql
         terraform
+        toml
         vim
         vimdoc
+        xml
+        yaml
         ;
     };
     # Whether to install grammars defined in grammarPackages
