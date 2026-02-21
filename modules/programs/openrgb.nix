@@ -16,6 +16,8 @@ in
 
     hardware.i2c.enable = true;
 
+    powerManagement.resumeCommands = "systemctl restart openrgb.service";
+
     services.hardware.openrgb = {
       enable = true;
       package = pkgs.openrgb.overrideAttrs (super: {
