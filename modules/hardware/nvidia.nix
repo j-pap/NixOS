@@ -8,7 +8,13 @@
 }:
 let
   cfg = config.flake.hw.nvidia;
-  nvidiaPkg = "stable"; # stable, production, latest, or beta
+
+  nvPkg = config.boot.kernelPackages.nvidiaPackages.latest; # stable, production, latest, or beta
+  nvDrvr = if (config.hardware.nvidia.open) then "open" else "bin";
+  cachyos-patch = pkgs.fetchpatch {
+    url = "https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/master/nvidia/nvidia-utils/kernel-6.19.patch";
+    sha256 = "sha256-YuJjSUXE6jYSuZySYGnWSNG5sfVei7vvxDcHx3K+IN4=";
+  };
 in
 {
   options.flake.hw.nvidia.enable = lib.mkEnableOption "Nvidia GPU";
@@ -45,9 +51,11 @@ in
           modesetting.enable = true; # "nvidia-drm.modeset=1"/"nvidia-drm.fbdev=1" - enables dedicated framebuffer
           nvidiaSettings = true;
           open = true; # Required for 50XX+; Recommended for 16XX+ - v560+ defaults to true
-          package = config.boot.kernelPackages.nvidiaPackages.${nvidiaPkg}.overrideAttrs (super: {
-            buildInputs = (super.buildInputs or [ ]) ++ [ pkgs.bash ]; # patchShebangs nvidia-sleep.sh
-          });
+          package = nvPkg // {
+            ${nvDrvr} = nvPkg.${nvDrvr}.overrideAttrs (super: {
+              patches = (super.patches or [ ]) ++ [ cachyos-patch ]; # Apply 6.19 patch
+            });
+          };
           powerManagement = {
             enable = true; # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" - enables nvidia-suspend/hibernate/resume.service(s)
             finegrained = false; # Experimental: Turns off GPU when not in use - cannot be used w/ nvidia.prime.sync
