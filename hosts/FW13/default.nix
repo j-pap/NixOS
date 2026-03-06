@@ -62,8 +62,8 @@ in
         #light = "";
       };
       wallpaper = {
-        #dark = ./wallpaper/dark.png;
-        #light = ./wallpaper/light.png;
+        dark = ./wallpaper/dark.png;
+        light = ./wallpaper/light.png;
         #login = ./wallpaper/login.png;
       };
     };
