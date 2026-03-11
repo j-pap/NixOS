@@ -28,13 +28,30 @@
         '';
         formatters_by_ft = {
           bash = [ "shellcheck" ];
+          go = [
+            "gofmt"
+            #"gofumpt"
+            "goimports"
+            "golangci-lint"
+            "golines"
+          ];
           lua = [ "stylua" ];
+          python = [
+            "ruff_fix" # lint errors
+            "ruff_format"
+            "ruff_organize_imports"
+          ];
         };
       };
     };
 
     extraPackages = builtins.attrValues {
       inherit (pkgs)
+        #gofumpt
+        golangci-lint
+        golines
+        gotools
+        ruff
         shellcheck
         stylua
         ;

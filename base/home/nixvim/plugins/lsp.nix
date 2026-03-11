@@ -93,10 +93,11 @@ in
           nixd.enable = lib.mkIf (!cfg.nil_ls.enable) true;
 
           ruff = {
-            enable = false;
+            enable = true;
             autostart = true;
             filetypes = [
               "py"
+              "pyc"
             ];
           };
 

@@ -30,19 +30,23 @@
     extraPackages = builtins.attrValues {
       inherit (pkgs)
         go-tools
-        #golangci-lint
+        golangci-lint
         markdownlint-cli
         ruff
         shellcheck
+        #vale
         ;
     };
 
     plugins.lint = {
       enable = true;
       lintersByFt = {
-        bash = [ "shellcheck" ];
+        bash = [
+          "bash"
+          "shellcheck"
+        ];
         go = [
-          #"golangci-lint"
+          "golangci-lint"
           "staticcheck"
         ];
         markdown = [
