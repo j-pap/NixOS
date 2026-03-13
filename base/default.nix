@@ -335,6 +335,8 @@ in
       };
       fstrim.enable = lib.mkDefault true; # SSD trim
       fwupd.enable = true;
+      geoclue2.enableDemoAgent = lib.mkForce true;
+      localtimed.enable = true;
       openssh = {
         enable = true;
         extraConfig = "AllowAgentForwarding yes";
@@ -366,7 +368,8 @@ in
     };
 
     systemd.services.NetworkManager-wait-online.enable = lib.mkDefault false;
-    time.timeZone = "America/Chicago";
+
+    time.timeZone = lib.mkDefault "America/Chicago";
 
     users = {
       mutableUsers = false; # All users/passwords setup via declaration

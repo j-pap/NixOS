@@ -13,7 +13,7 @@
     };
 
     # Location -> Automatic Device Location
-    #"org/gnome/system/location".enabled = false;
+    "org/gnome/system/location".enabled = true;
 
     "org/gnome/desktop/privacy" = {
       # File History
