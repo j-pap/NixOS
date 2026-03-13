@@ -335,14 +335,6 @@ in
       };
       fstrim.enable = lib.mkDefault true; # SSD trim
       fwupd.enable = true;
-      libinput = {
-        enable = true;
-        touchpad = {
-          disableWhileTyping = true;
-          tapping = true;
-          tappingDragLock = true;
-        };
-      };
       openssh = {
         enable = true;
         extraConfig = "AllowAgentForwarding yes";
