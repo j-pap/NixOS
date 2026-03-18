@@ -20,6 +20,7 @@ in
   ##########################################################
   flake = {
     "1password".enable = true;
+    containers.enable = true;
     gaming.enable = true;
     openrgb.enable = true;
     protonmail.enable = true;
