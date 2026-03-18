@@ -185,15 +185,19 @@ in
       };
     };
 
-    fonts.packages = builtins.attrValues {
-      inherit (pkgs)
-        iosvmata       # Term
-        jetbrains-mono # Term
-        pragmasevka    # Term
-        ;
-      inherit (pkgs.nerd-fonts)
-        symbols-only # Icons
-        ;
+    fonts = {
+      fontconfig.useEmbeddedBitmaps = true;
+      packages = builtins.attrValues {
+        inherit (pkgs)
+          iosvmata       # Term
+          jetbrains-mono # Term
+          pragmasevka    # Term
+          noto-fonts-color-emoji # Emojis
+          ;
+        inherit (pkgs.nerd-fonts)
+          symbols-only # Icons
+          ;
+      };
     };
 
     home-manager.users.${flk.user} =
