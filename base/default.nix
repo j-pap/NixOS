@@ -75,7 +75,7 @@ in
         "nix/nixpkgs".source = "${pkgs.path}"; # Symlink for nix.nixPath
       };
 
-      pathsToLink = [ "/share/backgrounds" ];
+      shellAliases.l = null;
 
       # List packages installed in system profile. To search, run:
       # $ nix search wget

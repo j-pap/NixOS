@@ -7,9 +7,10 @@
       "..." = "cd ../..";
       "...." = "cd ../../..";
       ".df" = "cd /etc/nixos";
-      "ls" = "eza --long --header --group-directories-first --links --group --modified --git --icons";
-      "lsa" =
-        "eza --all --long --header --group-directories-first --links --group --modified --git --icons";
+      "ls" = "eza";
+      "lsa" = "eza --all";
+      "ll" = "eza --long --header --group-directories-first --links --group --modified --git --icons";
+      "lla" = "eza --all --long --header --group-directories-first --links --group --modified --git --icons";
       "lt" = "eza --tree";
       "lta" = "eza --tree --all";
 
