@@ -153,6 +153,7 @@ in
           chafa             # Terminal images
           coreutils         # GNU utilities
           cryptsetup        # Encryption
+          #devenv           # Declarative development environments
           dust              # Disk usage
           eza               # ls/tree replacement | 'eza' or 'exa'
           fastfetch         # Faster system info
@@ -206,14 +207,15 @@ in
         imports = (import ./home);
 
         programs = {
-          # `echo "use nix" >> .envrc && direnv allow`
           direnv = {
-            enable = true;
-            config = { }; # ~/direnv/direnv.toml
+            enable = true; # `echo "use nix" >> .envrc && direnv allow`
+            config = /* ~/.config/direnv/direnv.toml */ {
+              global.hide_env_diff = true;
+            };
             enableBashIntegration = true;
             nix-direnv.enable = true;
             silent = false;
-            stdlib = ""; # ~/direnv/direnvrc
+            stdlib = /* ~/.config/direnv/direnvrc */ '''';
           };
           ssh = {
             enableDefaultConfig = false;
