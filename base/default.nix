@@ -330,6 +330,7 @@ in
     };
 
     services = {
+      automatic-timezoned.enable = true;
       btrfs.autoScrub = {
         enable = true;
         interval = "weekly";
@@ -341,8 +342,7 @@ in
       };
       fstrim.enable = lib.mkDefault true; # SSD trim
       fwupd.enable = true;
-      geoclue2.enableDemoAgent = lib.mkForce true;
-      localtimed.enable = true;
+      geoclue2.enableDemoAgent = lib.mkForce true; # Required for timezones
       openssh = {
         enable = true;
         extraConfig = "AllowAgentForwarding yes";
