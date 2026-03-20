@@ -56,7 +56,7 @@ in
             # Hypr Ecosystem
             hyprcursor           # Cursor format/library/utilities
             hyprpicker           # Utility for picking a color from your screen
-            hyprshutdown         # GUI session manager (via Flake)
+            hyprshutdown         # GUI session manager
             hyprsysteminfo       # Display system information
 
             # Status bar
@@ -279,10 +279,6 @@ in
             };
         };
       };
-
-    nixpkgs.overlays = [
-      inputs.hyprshutdown.overlays.default
-    ];
 
     programs = {
       hyprland =
