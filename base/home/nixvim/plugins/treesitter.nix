@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   ...
 }:
@@ -6,16 +7,15 @@
   # Highlight, edit, and navigate code
   programs.nixvim = {
     extraPackages = builtins.attrValues {
-      inherit (pkgs)
-        tree-sitter
-        ;
+      inherit (pkgs) tree-sitter;
     };
 
     plugins.treesitter = {
       enable = true;
+      package = pkgs.vimPlugins.nvim-treesitter;
 
       grammarPackages = builtins.attrValues {
-        inherit (pkgs.vimPlugins.nvim-treesitter.builtGrammars)
+        inherit (config.programs.nixvim.plugins.treesitter.package.builtGrammars)
           bash
           css
           dockerfile
