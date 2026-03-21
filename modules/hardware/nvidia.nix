@@ -8,13 +8,8 @@
 }:
 let
   cfg = config.flake.hw.nvidia;
-
   nvPkg = config.boot.kernelPackages.nvidiaPackages.latest; # stable, production, latest, or beta
   nvDrvr = if (config.hardware.nvidia.open) then "open" else "bin";
-  cachyos-patch = pkgs.fetchpatch {
-    url = "https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/master/nvidia/nvidia-utils/kernel-6.19.patch";
-    sha256 = "sha256-YuJjSUXE6jYSuZySYGnWSNG5sfVei7vvxDcHx3K+IN4=";
-  };
 in
 {
   options.flake.hw.nvidia.enable = lib.mkEnableOption "Nvidia GPU";
@@ -52,9 +47,7 @@ in
           nvidiaSettings = true;
           open = true; # Required for 50XX+; Recommended for 16XX+ - v560+ defaults to true
           package = nvPkg // {
-            ${nvDrvr} = nvPkg.${nvDrvr}.overrideAttrs (super: {
-              patches = (super.patches or [ ]) ++ [ cachyos-patch ]; # Apply 6.19 patch
-            });
+            ${nvDrvr} = nvPkg.${nvDrvr};
           };
           powerManagement = {
             enable = true; # "nvidia.NVreg_PreserveVideoMemoryAllocations=1" - enables nvidia-suspend/hibernate/resume.service(s)
