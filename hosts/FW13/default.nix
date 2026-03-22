@@ -199,12 +199,12 @@ in
   };
 
   # Sleep for 30m then hibernate
-  systemd.sleep.extraConfig = ''
-    AllowHibernation=yes
-    HibernateDelaySec=30m
-    HibernateMode=shutdown
-    SuspendState=mem
-  '';
+  systemd.sleep.settings.Sleep = {
+    AllowHibernation = "yes";
+    HibernateDelaySec = "30m";
+    HibernateMode = "shutdown";
+    SuspendState = "mem";
+  };
 
   ##########################################################
   # Network
