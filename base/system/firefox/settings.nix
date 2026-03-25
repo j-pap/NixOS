@@ -11,58 +11,58 @@ in lib.mkMerge [
     /****************************************************************************
      * Betterfox                                                                *
      * "Ad meliora"                                                             *
-     * version: 144                                                             *
+     * version: 148                                                             *
      * url: https://github.com/yokoffing/Betterfox                              *
     ****************************************************************************/
 
     /****************************************************************************
      * SECTION: FASTFOX                                                         *
     ****************************************************************************/
-    ### GENERAL ###
-      "gfx.content.skia-font-cache-size" = 32;
-
     ### GFX ###
-      "gfx.canvas.accelerated.cache-items" = 32768;
-      "gfx.canvas.accelerated.cache-size" = 4096;
+      "gfx.canvas.accelerated.cache-size" = 256;
+      "gfx.webrender.layer-compositor" = true;
+
+
+    /****************************************************************************
+     * SECTION: FASTFOX OVERRIDES                                                      *
+    ****************************************************************************/
+    ### GFX ADV ###
+    # Webrender (GPU)
+      "gfx.webrender.all" = true;
+      "gfx.webrender.precache-shaders" = true;
+      "gfx.webrender.compositor" = true;
+      #"gfx.webrender.compositor.force-enabled" = true; # causes FF to crash when playing videos
+    # Webrender (CPU - forces software rendering)
+      #"gfx.webrender.software" = true;
+      #"gfx.webrender.software.opengl" = true;
+    # WebGL
       "webgl.max-size" = 16384;
+      #"webgl.force-enabled" = true;
+    # prefer GPU > CPU
+      "layers.gpu-process.enabled" = true;
+      #"layers.gpu-process.force-enabled" = true; # 'Wayland does not work in the GPU process'
+      "layers.mlgpu.enabled" = true;
+      "media.hardware-video-decoding.enabled" = true;
+      "media.hardware-video-decoding.force-enabled" = lib.mkIf (lib.versionAtLeast ff.version "137.0.0") true;
+      "media.gpu-process-decoder" = true;
+      "media.ffmpeg.vaapi.enabled" = lib.mkIf (lib.versionOlder ff.version "137.0.0") true;
 
-    ### DISK CACHE ###
-      "browser.cache.disk.enable" = false;
-
-    ### MEMORY CACHE ###
+    ### MEMORY CACHE ADV ###
       "browser.cache.memory.capacity" = 131072;
       "browser.cache.memory.max_entry_size" = 20480;
       "browser.sessionhistory.max_total_viewers" = 4;
       "browser.sessionstore.max_tabs_undo" = 10;
 
-    ### MEDIA CACHE ###
-      "media.memory_cache_max_size" = 262144;
-      "media.memory_caches_combined_limit_kb" = 1048576;
-      "media.cache_readahead_limit" = 600;
-      "media.cache_resume_threshold" = 300;
-
-    ### IMAGE CACHE ###
-      "image.cache.size" = 10485760;
-      "image.mem.decode_bytes_at_a_time" = 65536;
-
-    ### NETWORK ###
+    ### NETWORK ADV ###
       "network.http.max-connections" = 1800;
       "network.http.max-persistent-connections-per-server" = 10;
       "network.http.max-urgent-start-excessive-connections-per-host" = 5;
+      "network.http.max-persistent-connections-per-proxy" = 48;
       "network.http.request.max-start-delay" = 5;
       "network.http.pacing.requests.enabled" = false;
       "network.dnsCacheEntries" = 10000;
       "network.dnsCacheExpiration" = 3600;
       "network.ssl_tokens_cache_capacity" = 10240;
-
-    ### SPECULATIVE LOADING ###
-      "network.http.speculative-parallel-limit" = 0;
-      "network.dns.disablePrefetch" = true;
-      "network.dns.disablePrefetchFromHTTPS" = true;
-      "browser.urlbar.speculativeConnect.enabled" = false;
-      "browser.places.speculativeConnect.enabled" = false;
-      "network.prefetch-next" = false;
-      "network.predictor.enabled" = false;
 
 
     /****************************************************************************
@@ -70,15 +70,14 @@ in lib.mkMerge [
     ****************************************************************************/
     ### TRACKING PROTECTION ###
       "browser.contentblocking.category" = "strict";
-      "privacy.trackingprotection.allow_list.baseline.enabled" = true;
       "browser.download.start_downloads_in_tmp_dir" = true;
-      "browser.helperApps.deleteTempFileOnExit" = true;
       "browser.uitour.enabled" = false;
     # Settings→P&S→Website Privacy Preferences→'Tell websites not to sell or share my data'
       "privacy.globalprivacycontrol.enabled" = true;
 
     ### OCSP & CERTS / HPKP ###
       "security.OCSP.enabled" = 0; # 0=disabled, 1=enabled (default), 2=enabled for EV certificates only
+      "privacy.antitracking.isolateContentScriptResources" = true;
       "security.csp.reporting.enabled" = false;
 
     ### SSL / TLS ###
@@ -87,13 +86,23 @@ in lib.mkMerge [
       "security.tls.enable_0rtt_data" = false;
 
     ### DISK AVOIDANCE ###
+      "browser.cache.disk.enable" = false;
       "browser.privatebrowsing.forceMediaMemoryCache" = true;
+      "media.memory_cache_max_size" = 65536;
       "browser.sessionstore.interval" = 60000;
 
     ### SHUTDOWN & SANITIZING ###
-      "browser.privatebrowsing.resetPBM.enabled" = true;
     # Settings→P&S→History→'Firefox will: Use custom settings for history'
       "privacy.history.custom" = true;
+      "browser.privatebrowsing.resetPBM.enabled" = true;
+
+    ### SPECULATIVE LOADING ###
+      "network.http.speculative-parallel-limit" = 0;
+      "network.dns.disablePrefetch" = true;
+      "network.dns.disablePrefetchFromHTTPS" = true;
+      "browser.urlbar.speculativeConnect.enabled" = false;
+      "browser.places.speculativeConnect.enabled" = false;
+      "network.prefetch-next" = false;
 
     ### SEARCH / URL BAR ###
       "browser.urlbar.trimHttps" = true;
@@ -110,15 +119,15 @@ in lib.mkMerge [
     # display phishing characters
       "network.IDN_show_punycode" = true;
 
+    ### HTTPS-ONLY MODE ###
+      "dom.security.https_only_mode" = true;
+      "dom.security.https_only_mode_error_page_user_suggestions" = true;
+
     ### PASSWORDS ###
       "signon.formlessCapture.enabled" = false;
       "signon.privateBrowsingCapture.enabled" = false;
       "network.auth.subresource-http-auth-allow" = 1; # 0=don't allow, 1=no cross-origin, 2=allow
       "editor.truncate_user_pastes" = false;
-
-    ### MIXED CONTENT + CROSS-SITE ###
-      "security.mixed_content.block_display_content" = true;
-      "pdfjs.enableScripting" = false;
 
     ### EXTENSIONS ###
       "extensions.enabledScopes" = 7; # 1=profile, 2=user, 4=application, 8=system, 16=temporary, 31=all
@@ -129,6 +138,9 @@ in lib.mkMerge [
     ### CONTAINERS ###
     # Settings→General→Tabs→'Enable Container Tabs' checkbox
       "privacy.userContext.ui.enabled" = true;
+
+    ### VARIOUS ###
+      "pdfjs.enableScripting" = false;
 
     ### SAFE BROWSING ###
       "browser.safebrowsing.downloads.remote.enabled" = false;
@@ -179,102 +191,9 @@ in lib.mkMerge [
 
 
     /****************************************************************************
-     * SECTION: PESKYFOX                                                        *
+     * SECTION: SECUREFOX OVERRIDES                                                      *
     ****************************************************************************/
-    ### MOZILLA UI ###
-    # about:addons Recommendations
-      "extensions.getAddons.showPane" = false;
-    # about:addons Extensions→'Recommended Extensions'
-      "extensions.htmlaboutaddons.recommendations.enabled" = false;
-    # Settings→P&S→'Firefox Data Collection and Use'→'Allow personalized extension recommendations'
-      "browser.discovery.enabled" = false;
-    # Settings→General→Startup→'Always check if Firefox is your default browser'
-      "browser.shell.checkDefaultBrowser" = false;
-    # Settings→General→Browsing→'Recommend extensions as you browse'
-      "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false;
-    # Settings→General→Browsing→'Recommend features as you browse'
-      "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
-    # Settings→'More from Mozilla'
-      "browser.preferences.moreFromMozilla" = false;
-    # disable about:config warning
-      "browser.aboutConfig.showWarning" = false;
-    # disable intro screens
-      "browser.aboutwelcome.enabled" = false;
-    # enable profiles
-      "browser.profiles.enabled" = true;
-
-    ### THEME ADJUSTMENTS ###
-      "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # userChrome.css/userContent.css
-      "browser.compactmode.show" = true; # toolbar density option
-      "browser.privateWindowSeparation.enabled" = false;
-
-    ### AI ###
-      "browser.ml.enable" = false;
-      "browser.ml.chat.enabled" = false;
-      "browser.ml.chat.menu" = false;
-      "browser.tabs.groups.smart.enabled" = false;
-      "browser.ml.linkPreview.enabled" = false;
-
-    ### FULLSCREEN NOTICE ###
-      "full-screen-api.transition-duration.enter" = "0 0"; # default=200 200
-      "full-screen-api.transition-duration.leave" = "0 0"; # default=200 200
-      "full-screen-api.warning.delay" = -1; # default=500
-      "full-screen-api.warning.timeout" = 0; # default=3000
-
-    ### URL BAR ###
-      "browser.urlbar.trending.featureGate" = false;
-
-    ### NEW TAB PAGE ###
-    # clears default sites in shortcuts
-      "browser.newtabpage.activity-stream.default.sites" = "";
-    # Settings→Home→'Firefox Home Content'→'Support Firefox'
-      "browser.newtabpage.activity-stream.showSponsoredCheckboxes" = false;
-    # Settings→Home→'Firefox Home Content'→'Support Firefox'→'Sponsored shortcuts'
-      "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-    # Settings→Home→'Firefox Home Content'→'Recommended stories'
-      "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
-    # Settings→Home→'Firefox Home Content'→'Recommended stories'→'Sponsored stories'
-      "browser.newtabpage.activity-stream.showSponsored" = false;
-
-    ### DOWNLOADS ###
-      "browser.download.manager.addToRecentDocs" = false;
-
-    ### PDF ###
-      "browser.download.open_pdf_attachments_inline" = true;
-
-    ### TAB BEHAVIOR ###
-      "browser.bookmarks.openInTabClosesMenu" = false;
-      "browser.menu.showViewImageInfo" = true;
-      "findbar.highlightAll" = true;
-      "layout.word_select.eat_space_to_next_word" = false;
-
-
-    /****************************************************************************
-     * START: MY OVERRIDES                                                      *
-    ****************************************************************************/
-    ### GFX ADV ###
-    # Webrender (GPU)
-      "gfx.webrender.all" = true;
-      "gfx.webrender.precache-shaders" = true;
-      "gfx.webrender.compositor" = true;
-      #"gfx.webrender.compositor.force-enabled" = true;  # causes FF to crash when playing videos
-    # Webrender (CPU - forces software rendering)
-      #"gfx.webrender.software" = true;
-      #"gfx.webrender.software.opengl" = true;
-    # WebGL
-      #"webgl.force-enabled" = true;
-    # prefer GPU > CPU
-      "layers.gpu-process.enabled" = true;
-      #"layers.gpu-process.force-enabled" = true;  # 'Wayland does not work in the GPU process'
-      "layers.mlgpu.enabled" = true;
-      "media.gpu-process-decoder" = true;
-      "media.hardware-video-decoding.enabled" = true;
-      "media.hardware-video-decoding.force-enabled" = lib.mkIf (lib.versionAtLeast ff.version "137.0.0") true;
-      "media.ffmpeg.vaapi.enabled" = lib.mkIf (lib.versionOlder ff.version "137.0.0") true;
-
     ### TRACKING PROTECTION ADV ###
-    # ETP
-      #"privacy.trackingprotection.allow_list.convenience.enabled" = true;
     # Beacon
       "beacon.enabled" = false;
     # UITour
@@ -325,31 +244,29 @@ in lib.mkMerge [
       "privacy.clearOnShutdown.offlineApps" = true;
 
     ### SEARCH / URL BAR ADV ###
-      "browser.urlbar.autoFill" = false;
     # Settings→Search→'Default Search Engine'
       "browser.urlbar.placeholderName" = "Startpage";
     # Settings→Search→'Default Search Engine'→'Use this search engine in Private Windows'→'Choose a different default search engine for Private Windows only'
       "browser.urlbar.placeholderName.private" = "Google (No AI)";
-    # Settings→Search→'Search Suggestions'→'Show search suggestions'→'Show search suggestions ahead of browsing history in address bar results'
+    # Settings→Search→'Search Suggestions'→'Show search suggestions'→'Show search suggestions before browsing history in address bar results'
       "browser.urlbar.showSearchSuggestionsFirst" = false;
-    # Settings→Search→'Search Suggestions'→'Show search suggestions'→'Show search suggestions in Private Windows'
+    # Settings→Search→'Search Suggestions'→'Show search suggestions'→'Search suggestions in Private Windows'
       "browser.search.suggest.enabled.private" = false;
-    # Settings→Search→'Search Suggestions'→'Show search suggestions'→'Show trending search suggestions'
-      "browser.urlbar.suggest.trending" = false;
     # Settings→Search→'Search Suggestions'→'Show recent searches'
       "browser.urlbar.suggest.recentsearches" = false;
+    # disable Firefox Suggest
+      "browser.urlbar.suggest.quicksuggest.sponsored" = false;
+      "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
+    # disable adaptive history autofill
+      "browser.urlbar.autoFill" = false;
+      "browser.urlbar.autoFill.adaptiveHistory.enabled" = false;
 
-    ### HTTPS-ONLY MODE ###
-    # private windows only
-      #"dom.security.https_only_mode_pbm" = true;
-    # normal & private windows
-      "dom.security.https_only_mode" = true;
-    # offer suggestions
-      "dom.security.https_only_mode_error_page_user_suggestions" = true;
+    ### HTTPS-FIRST POLICY ###
+      "security.mixed_content.block_display_content" = true;
 
     ### DNS-over-HTTPS ###
     # Settings→P&S→'DNS over HTTPS'→'Enable DNS over HTTPS using:'
-      "network.trr.mode" = 0; # 0=default, 2=DoH first, 3=DoH only, 5=off
+      #"network.trr.mode" = 0; # 0=default, 2=DoH first, 3=DoH only, 5=off
       "network.trr.max-fails" = 5; # default=15
       #"network.trr.uri" = dohProvider;
       #"network.trr.custom_uri" = dohProvider;
@@ -368,7 +285,7 @@ in lib.mkMerge [
     # Settings→P&S→Passwords→'Ask to save passwords'→'Suggest strong passwords'
       "signon.generation.enabled" = false;
     # Settings→P&S→Passwords→'Ask to save passwords'→'Suggest Firefox Relay email masks to protect your email address'
-      "signon.firefoxRelay.feature" = "disabled";
+      "signon.firefoxRelay.feature" = "";
     # Settings→P&S→Passwords→'Ask to save passwords'→'Show alerts about passwords for breached websites'
       "signon.management.page.breach-alerts.enabled" = false;
       "signon.management.page.breachAlertUrl" = "";
@@ -382,9 +299,6 @@ in lib.mkMerge [
       "extensions.formautofill.addresses.enabled" = false;
     # Settings→P&S→Autofill→'Save and fill payment methods'
       "extensions.formautofill.creditCards.enabled" = false;
-
-    ### MIXED CONTENT + CROSS-SITE ADV ###
-      "browser.tabs.searchclipboardfor.middleclick" = false;
 
     ### EXTENSIONS ADV ###
       "extensions.postDownloadThirdPartyPrompt" = false;
@@ -405,7 +319,7 @@ in lib.mkMerge [
     ### WEBRTC ###
       "media.peerconnection.ice.proxy_only_if_behind_proxy" = true;
       "media.peerconnection.ice.default_address_only" = true;
-      "media.peerconnection.ice.no_host" = true;
+      #"media.peerconnection.ice.no_host" = true;
 
     ### PLUGINS / DRM ###
     # Gecko Media Plugins
@@ -420,19 +334,25 @@ in lib.mkMerge [
       "javascript.options.ion" = false;
       "javascript.options.jit_trustedprincipals" = false;
     # WebAssembly
+      "javascript.options.wasm_trustedprincipals" = false;
       "javascript.options.wasm_baselinejit" = false;
       #"javascript.options.wasm_optimizingjit" = false; # breaks 1P extension
-      "javascript.options.wasm_trustedprincipals" = false;
     # Asm.js
       "javascript.options.asmjs" = false;
     # Blinterp
       "javascript.options.blinterp" = false;
 
+    ### VARIOUS ###
+      "browser.tabs.searchclipboardfor.middleclick" = false;
+
     ### MOZILLA ADV ###
     # disabling accessibility can improve performance
       "accessibility.force_disabled" = 1;
       "devtools.accessibility.enabled" = false;
-    # disable the Firefox View tour from popping up
+    # disable Firefox Sync
+      #"identity.fxaccounts.enabled" = false;
+      #"identity.fxaccounts.autoconfig.uri" = "";
+    # disable Firefox View tour
       "browser.firefox-view.feature-tour" = "{\"screen\":\"\",\"complete\":true}";
     # disable the OS' geolocation service
       "geo.provider.use_geoclue" = false;
@@ -446,8 +366,9 @@ in lib.mkMerge [
 
     ### DETECTION ###
     # PPA
-      "toolkit.telemetry.dap.helper.url" = "";
-      "toolkit.telemetry.dap.leader.url" = "";
+      "dom.private-attribution.submission.enabled" = false;
+      "toolkit.telemetry.dap_helper" = "";
+      "toolkit.telemetry.dap_leader" = "";
     # SERP
       "browser.search.serpEventTelemetryCategorization.enabled" = false;
     # Assorted
@@ -461,16 +382,95 @@ in lib.mkMerge [
       "security.protectionspopup.recordEventTelemetry" = false;
       "signon.recipes.remoteRecipes.enabled" = false;
       "privacy.trackingprotection.emailtracking.data_collection.enabled" = false;
-      "messaging-system.askForFeedback" = true;
+
+
+    /****************************************************************************
+     * SECTION: PESKYFOX                                                        *
+    ****************************************************************************/
+    ### MOZILLA UI ###
+    # about:addons Recommendations
+      "extensions.getAddons.showPane" = false;
+    # about:addons Extensions→'Recommended Extensions'
+      "extensions.htmlaboutaddons.recommendations.enabled" = false;
+    # Settings→P&S→'Firefox Data Collection and Use'→'Allow personalized extension recommendations'
+      "browser.discovery.enabled" = false;
+    # Settings→General→Startup→'Always check if Firefox is your default browser'
+      "browser.shell.checkDefaultBrowser" = false;
+    # Settings→General→Browsing→'Recommend extensions as you browse'
+      "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false;
+    # Settings→General→Browsing→'Recommend features as you browse'
+      "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
+    # Settings→'More from Mozilla'
+      "browser.preferences.moreFromMozilla" = false;
+    # disable about:config warning
+      "browser.aboutConfig.showWarning" = false;
+    # disable intro screens
+      "browser.startup.homepage_override.mstone" = "ignore";
+      "browser.aboutwelcome.enabled" = false;
+    # enable profiles
+      "browser.profiles.enabled" = true;
+
+    ### THEME ADJUSTMENTS ###
+      "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # userChrome.css/userContent.css
+      "browser.compactmode.show" = true; # toolbar density option
+      "browser.privateWindowSeparation.enabled" = false;
+
+    ### AI ###
+      "browser.ai.control.default" = "blocked";
+      "browser.ml.enable" = false;
+      "browser.ml.chat.enabled" = false;
+      "browser.ml.chat.menu" = false;
+      "browser.tabs.groups.smart.enabled" = false;
+      "browser.ml.linkPreview.enabled" = false;
+
+    ### FULLSCREEN NOTICE ###
+      "full-screen-api.transition-duration.enter" = "0 0"; # default=200 200
+      "full-screen-api.transition-duration.leave" = "0 0"; # default=200 200
+      "full-screen-api.warning.timeout" = 0; # default=3000
+
+    ### URL BAR ###
+      "browser.urlbar.trending.featureGate" = false;
+
+    ### NEW TAB PAGE ###
+    # clears default sites in shortcuts
+      "browser.newtabpage.activity-stream.default.sites" = "";
+    # Settings→Home→'Firefox Home Content'→'Support Firefox'
+      "browser.newtabpage.activity-stream.showSponsoredCheckboxes" = false;
+    # Settings→Home→'Firefox Home Content'→'Support Firefox'→'Sponsored shortcuts'
+      "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+    # Settings→Home→'Firefox Home Content'→'Recommended stories'
+      "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+    # Settings→Home→'Firefox Home Content'→'Recommended stories'→'Sponsored stories'
+      "browser.newtabpage.activity-stream.showSponsored" = false;
+
+    ### DOWNLOADS ###
+      "browser.download.manager.addToRecentDocs" = false;
+
+    ### PDF ###
+      "browser.download.open_pdf_attachments_inline" = true;
+
+    ### TAB BEHAVIOR ###
+      "browser.bookmarks.openInTabClosesMenu" = false;
+      "browser.menu.showViewImageInfo" = true;
+      "findbar.highlightAll" = true;
+      "layout.word_select.eat_space_to_next_word" = false;
+
+
+    /****************************************************************************
+     * SECTION: PESKYFOX OVERRIDES                                                      *
+    ****************************************************************************/
 
     ### MOZILLA UI ADV ###
+    # Settings→General→Tabs→'Ask before closing multiple tabs'
+      "browser.tabs.warnOnClose" = true;
+    # use native title bar buttons - Linux
+      "widget.gtk.non-native-titlebar-buttons.enabled" = true;
     # Mozilla VPN
       "browser.vpn_promo.enabled" = false;
       "browser.contentblocking.report.hide_vpn_banner" = true;
-    # Settings→General→Tabs→'Ask before closing multiple tabs'
-      "browser.tabs.warnOnClose" = true;
-    # use native Linux title bar buttons
-      "widget.gtk.non-native-titlebar-buttons.enabled" = true;
+
+    ### FULLSCREEN NOTICE ADV ###
+      "full-screen-api.warning.delay" = -1; # default=500
 
     ### FONT APPEARANCE ###
     # Smoother font
@@ -483,21 +483,29 @@ in lib.mkMerge [
       "browser.urlbar.suggest.openpage" = false; # Open tabs
       "browser.urlbar.suggest.topsites" = false; # Shortcuts
       "browser.urlbar.suggest.engines" = false; # Search engines
-      "browser.urlbar.suggest.quickactions" = false; # Quick actions
-      "browser.urlbar.suggest.addons" = false;
-      "browser.urlbar.suggest.amp" = false;
+      #"browser.urlbar.suggest.quickactions" = false; # Quick actions
+      "browser.urlbar.quickactions.enabled" = false; # Quick actions
+    # misc dropdown suggestions
+      #"browser.urlbar.suggest.calculator" = true;
       "browser.urlbar.suggest.clipboard" = false;
-      "browser.urlbar.suggest.mdn" = false;
-      "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
-      "browser.urlbar.suggest.quicksuggest.sponsored" = false;
-      "browser.urlbar.suggest.realtimeOptIn" = false;
-      "browser.urlbar.suggest.searched" = false;
-      "browser.urlbar.suggest.yelp" = false;
-      "browser.urlbar.suggest.yelpRealtime" = false;
-    # suggestions
+      "browser.urlbar.suggest.searches" = false;
+    # Settings→Search→'Search Suggestions'→'Show search suggestions'→'Show trending search suggestions'
+      "browser.urlbar.suggest.trending" = false;
+    # misc suggestions
+      #"browser.urlbar.suggest.addons" = false;
+      "browser.urlbar.addons.featureGate" = false;
+      #"browser.urlbar.suggest.amp" = false;
+      "browser.urlbar.amp.featureGate" = false;
+      "browser.urlbar.clipboard.featureGate" = false;
+      #"browser.urlbar.suggest.mdn" = false;
+      "browser.urlbar.mdn.featureGate" = false;
+      #"browser.urlbar.suggest.realtimeOptIn" = false;
+      "browser.urlbar.wikipedia.featureGate" = false;
+      #"browser.urlbar.suggest.yelp" = false;
+      #"browser.urlbar.suggest.yelpRealtime" = false;
+      "browser.urlbar.yelp.featureGate" = false;
+    # disable recent searches
       "browser.urlbar.recentsearches.featureGate" = false;
-      "browser.urlbar.richSuggestions.featureGate" = false;
-      "browser.urlbar.showSearchTerms.featureGate" = false;
 
     ### AUTOPLAY ###
     # Settings→P&S→Permissions→Autoplay→Settings→'Default for all websites'
@@ -527,14 +535,16 @@ in lib.mkMerge [
       "extensions.pocket.site" = " ";
       "extensions.pocket.showHome" = false;
 
+    ### DOM ###
+    # prevent scripts from moving/resizing windows
+      "dom.disable_window_move_resize" = true;
+    # disable beforeunload event
+      "dom.disable_beforeunload" = true;
+
     ### TAB BEHAVIOR ADV ###
-    # behavior of pages opened by JavaScript
-      "browser.link.open_newwindow.restriction" = 0; # 0=force into tabs, 1=let open in new windows, 2(default)=catch new windows
     # open bookmarks in new tabs
       "browser.tabs.loadBookmarksInTabs" = true;
       "browser.tabs.loadBookmarksInBackground" = true;
-    # prevent scripts from moving/resizing windows
-      "dom.disable_window_move_resize" = true;
     # leave the browser window open even after closing the last tab
       #"browser.tabs.closeWindowWithLastTab" = false;
     # limit what can cause a pop-up
@@ -546,7 +556,7 @@ in lib.mkMerge [
 
     ### ACCESSIBILITY AND USABILITY ###
     # spell-check
-      "layout.spellcheckDefault" = 0; # 0=none, 1=multi-line, 2=multi & single-line
+      "layout.spellcheckDefault" = 1; # 0=none, 1=multi-line (default), 2=multi & single-line
 
     ### BOOKMARK MANAGEMENT ###
     # limit bookmark backups
@@ -560,6 +570,25 @@ in lib.mkMerge [
     # wrap long lines when viewing source
       "view_source.wrap_long_lines" = true;
       "devtools.debugger.ui.editor-wrapping" = true;
+
+
+    /****************************************************************************
+     * SECTION: SMOOTHFOX                                                       *
+    ****************************************************************************/
+    # visit https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
+
+    ### OPTION: SHARPEN SCROLLING ###
+      "general.smoothScroll" = true; # DEFAULT
+      #"mousewheel.min_line_scroll_amount" 10; # adjust this number to your liking; default=5
+      "general.smoothScroll.mouseWheel.durationMinMS" = 80; # default=50
+      "general.smoothScroll.currentVelocityWeighting" = "0.15"; # default=.25
+      "general.smoothScroll.stopDecelerationWeighting" = "0.6"; # default=.4
+
+    ### SLOW TOUCHPAD SCROLLING ###
+      "mousewheel.default.delta_multiplier_x" = 30; # default=100
+      "mousewheel.default.delta_multiplier_y" = 30; # default=300
+    ## match touchpad's scrolling via mousewheel
+      "mousewheel.min_line_scroll_amount" = 120;
 
 
     /****************************************************************************
@@ -622,30 +651,10 @@ in lib.mkMerge [
 
 
     /****************************************************************************
-     * SECTION: SMOOTHFOX                                                       *
-    ****************************************************************************/
-    # visit https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
-
-    ### OPTION: SHARPEN SCROLLING ###
-      "general.smoothScroll" = true; # DEFAULT
-      #"mousewheel.min_line_scroll_amount" 10; # adjust this number to your liking; default=5
-      "general.smoothScroll.mouseWheel.durationMinMS" = 80; # default=50
-      "general.smoothScroll.currentVelocityWeighting" = "0.15"; # default=.25
-      "general.smoothScroll.stopDecelerationWeighting" = "0.6"; # default=.4
-
-    ### SLOW TOUCHPAD SCROLLING ###
-      "mousewheel.default.delta_multiplier_x" = 30; # default=100
-      "mousewheel.default.delta_multiplier_y" = 30; # default=300
-    ## match touchpad's scrolling via mousewheel
-      "mousewheel.min_line_scroll_amount" = 120;
-
-
-    /****************************************************************************
      * END: BETTERFOX                                                           *
     ****************************************************************************/
   }
 
-  #(lib.mkIf (host == "T1") {
   (lib.mkIf (!isLaptop) {
     ### CAPTIVE PORTAL DETECTION - NO MOBILE DEVICES ###
     "captivedetect.canonicalURL" = "";
