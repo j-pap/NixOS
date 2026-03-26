@@ -150,6 +150,7 @@ in
           ssh-to-age        # Convert SSH keys to Age
 
           # Terminal
+          bootdev-cli       # CLI tool
           chafa             # Terminal images
           coreutils         # GNU utilities
           cryptsetup        # Encryption
