@@ -221,16 +221,21 @@ in
           ssh = {
             enableDefaultConfig = false;
             matchBlocks."*" = {
-              forwardAgent = false;
               addKeysToAgent = "no";
               compression = false;
-              serverAliveInterval = 0;
-              serverAliveCountMax = 3;
-              hashKnownHosts = false;
-              userKnownHostsFile = "~/.ssh/known_hosts";
               controlMaster = "no";
               controlPath = "~/.ssh/master-%r@%n:%p";
               controlPersist = "no";
+              forwardAgent = false;
+              hashKnownHosts = false;
+              identityAgent =
+                if (flk."1password".enable) then
+                  "/home/${flk.user}/.1password/agent.sock"
+                else
+                  (lib.getExe' pkgs.openssh "ssh-agent");
+              serverAliveInterval = 0;
+              serverAliveCountMax = 3;
+              userKnownHostsFile = "~/.ssh/known_hosts";
             };
           };
         };
