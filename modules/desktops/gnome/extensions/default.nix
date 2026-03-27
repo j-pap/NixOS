@@ -146,12 +146,16 @@ in
             # Kitty
             ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.light}.conf /home/${flk.user}/.config/kitty/current-theme.conf
             kill -SIGUSR1 $(pidof kitty) 2>/dev/null
+            # Theme
+            gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
             # Wallpaper
             #gsettings set org.gnome.desktop.background picture-uri '${flk.host.wallpaper.light}'
           elif [[ "$CURRENT_THEME" = "prefer-dark" ]]; then
             # Kitty
             ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.dark}.conf /home/${flk.user}/.config/kitty/current-theme.conf
             kill -SIGUSR1 $(pidof kitty) 2>/dev/null
+            # Theme
+            gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
             # Wallpaper
             #gsettings set org.gnome.desktop.background picture-uri-dark '${flk.host.wallpaper.dark}'
           fi;

@@ -73,6 +73,7 @@ in
           dconf-editor            # GUI dconf editor
           file-roller             # Archive manager
           gnome-extension-manager # Extensions
+          gnome-themes-extra      # Adwaita-dark
           gnome-tweaks            # Tweaks
 
           # GNOME Circle
@@ -296,6 +297,9 @@ in
             file:///etc/nixos nixos
             file:///mnt/nas nas
           '';
+          # Force from GTK module above so HM rebuilds
+          "gtk-3.0/settings.ini".force = true;
+          "gtk-4.0/settings.ini".force = true;
         };
 
         mimeApps =
