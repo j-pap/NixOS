@@ -167,12 +167,10 @@ in
                 libpng
                 libpulseaudio
                 libvorbis
-                ;
-              inherit (pkgs.xorg)
-                libXcursor
-                libXi
-                libXinerama
-                libXScrnSaver
+                libxcursor
+                libxi
+                libxinerama
+                libxscrnsaver
                 ;
               inherit (pkgs.stdenv.cc.cc) lib;
             };
