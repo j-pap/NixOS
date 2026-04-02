@@ -4,20 +4,19 @@
   buildGoModule,
   fetchFromGitHub,
   installShellFiles,
-  nix-update-script,
   versionCheckHook,
   writableTmpDirAsHomeHook,
 }:
 
 buildGoModule (finalAttrs: {
   pname = "bootdev-cli";
-  version = "1.27.4";
+  version = "1.28.0";
 
   src = fetchFromGitHub {
     owner = "bootdotdev";
     repo = "bootdev";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-9avSkYxXqwaLCJeNTJJG8biEVUwZVYRauZclw8wbd50=";
+    hash = "sha256-sBPId1wEsIG1E+sf+pbqfz0xW0+PHVAoRYTkFLXpWOU=";
   };
 
   vendorHash = "sha256-ZDioEU5uPCkd+kC83cLlpgzyOsnpj2S7N+lQgsQb8uY=";
@@ -43,14 +42,11 @@ buildGoModule (finalAttrs: {
   versionCheckProgram = "${placeholder "out"}/bin/bootdev";
   doInstallCheck = true;
 
-  passthru.updateScript = nix-update-script { };
-
   meta = {
     description = "CLI used to complete coding challenges and lessons on Boot.dev";
     homepage = "https://github.com/bootdotdev/bootdev";
     changelog = "https://github.com/bootdotdev/bootdev/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [ vinnymeller ];
     mainProgram = "bootdev";
   };
 })
