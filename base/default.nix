@@ -321,6 +321,7 @@ in
     };
 
     security = {
+      pam.services.login.fprintAuth = false; # Disabled since fingerprints can't be used for login
       polkit.enable = true;
       sudo = {
         extraConfig = ''Defaults lecture = never'';

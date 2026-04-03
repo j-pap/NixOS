@@ -164,7 +164,7 @@ in
   };
 
   services = {
-    fprintd.enable = lib.mkForce useFP; # `sudo fprintd-enroll`
+    fprintd.enable = lib.mkForce useFP; # `fprintd-enroll`
 
     #fwupd.extraRemotes = [ "lvfs-testing" ];
 
