@@ -9,12 +9,6 @@
 let
   debug = false; # Disable modules that taint the kernel when debugging w/ amd_s2idle
   useFP = true; # Whether to use the fingerprint reader
-
-  # Patch kernel to log usbpd instead of warn
-  fw-usbpd-charger = pkgs.callPackage ./usbpd {
-    kernel = config.boot.kernelPackages.kernel;
-  };
-  s2idle = pkgs.callPackage ./s2idle.nix { };
 in
 {
   imports = [
@@ -74,7 +68,10 @@ in
   ##########################################################
   environment = {
     systemPackages = [
-      s2idle # Environment for suspend testing | `s2idle ./amd_s2idle.py`
+      (pkgs.callPackage ./s2idle.nix { }) # Environment for suspend testing | `s2idle ./amd_s2idle.py`
+    ]
+    ++ lib.optionals (config.services.fprintd.enable) [
+      (pkgs.callPackage ./fprint-clear-storage.nix { }) # Clear fingerprint sensor history
     ]
     ++ builtins.attrValues {
       inherit (pkgs)
@@ -237,7 +234,9 @@ in
       options mt7921e disable_aspm=1
     '';
     extraModulePackages = lib.optionals (!debug) [
-      fw-usbpd-charger
+      (pkgs.callPackage ./usbpd {
+        kernel = config.boot.kernelPackages.kernel; # Patch kernel to log usbpd instead of warn
+      })
     ];
     kernelModules = [
       "nfs"

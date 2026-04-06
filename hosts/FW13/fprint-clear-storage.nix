@@ -12,37 +12,43 @@
   python3Packages,
 }:
 let
-  pythonBin = writers.writePython3Bin "fprint-clear-storage" {
-    flakeIgnore = [ "E402" "E703" ];
-    libraries = [ python3Packages.pygobject3 ];
-  } ''
-    import gi
-    gi.require_version('FPrint', '2.0')
-    from gi.repository import FPrint
+  pythonBin =
+    writers.writePython3Bin "fprint-clear-storage"
+      {
+        flakeIgnore = [
+          "E402"
+          "E703"
+        ];
+        libraries = [ python3Packages.pygobject3 ];
+      }
+      ''
+        import gi
+        gi.require_version('FPrint', '2.0')
+        from gi.repository import FPrint
 
-    ctx = FPrint.Context()
+        ctx = FPrint.Context()
 
-    print("Looking for fingerprint devices.")
+        print("Looking for fingerprint devices.")
 
-    devices = ctx.get_devices()
+        devices = ctx.get_devices()
 
-    for dev in devices:
-        print(dev)
-        print(dev.get_driver())
-        print(dev.props.device_id);
+        for dev in devices:
+            print(dev)
+            print(dev.get_driver())
+            print(dev.props.device_id);
 
-        dev.open_sync()
+            dev.open_sync()
 
-        dev.clear_storage_sync()
-        print("All prints deleted.")
+            dev.clear_storage_sync()
+            print("All prints deleted.")
 
-        dev.close_sync()
+            dev.close_sync()
 
-    if devices:
-        print("All prints on all devices deleted.")
-    else:
-        print("No devices found.")
-  '';
+        if devices:
+            print("All prints on all devices deleted.")
+        else:
+            print("No devices found.")
+      '';
 in
 stdenv.mkDerivation {
   pname = "fprint-clear-storage";
