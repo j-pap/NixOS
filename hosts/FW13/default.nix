@@ -67,13 +67,7 @@ in
   # System Packages / Variables
   ##########################################################
   environment = {
-    systemPackages = [
-      (pkgs.callPackage ./s2idle.nix { }) # Environment for suspend testing | `s2idle ./amd_s2idle.py`
-    ]
-    ++ lib.optionals (config.services.fprintd.enable) [
-      (pkgs.callPackage ./fprint-clear-storage.nix { }) # Clear fingerprint sensor history
-    ]
-    ++ builtins.attrValues {
+    systemPackages = builtins.attrValues {
       inherit (pkgs)
         # Browser
         brave # Alt
@@ -83,6 +77,7 @@ in
         thunderbird-latest # Email client
 
         # Framework Hardware
+        amd-debug-tools # s2idle | `amd-`
         framework-tool # Swiss army knife for FWs
         sbctl # Secure boot key manager
 
@@ -105,7 +100,10 @@ in
         libreoffice-fresh # Office suite
         obsidian # Markdown notes
         ;
-    };
+    }
+    ++ lib.optionals (config.services.fprintd.enable) [
+      (pkgs.callPackage ./fprint-clear-storage.nix { }) # Clear fingerprint sensor history
+    ];
     variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # GPU for Firefox
   };
 
@@ -167,14 +165,16 @@ in
 
     logind.settings.Login = {
       HandleLidSwitch = "suspend";
+      HandleLidSwitchDocked = "ignore";
+      HandleLidSwitchExternalPower = "suspend";
       HandlePowerKey = "suspend-then-hibernate";
       IdleAction = "suspend";
       IdleActionSec = "10m";
+      SleepOperation = "suspend";
     };
 
     udev.extraRules =
       let
-        # GPU performance adjusts based upon power input
         gpuPowerMode = pkgs.writeShellScriptBin "gpu-power" ''
           GPU=$(readlink -f /sys/class/drm/card?/device)
           echo "### Setting GPU power mode to: $1"
@@ -182,8 +182,14 @@ in
         '';
       in
       ''
+        # GPU performance adjusts based upon power input
         ACTION=="change", SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="${lib.getExe gpuPowerMode} low"
         ACTION=="change", SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="${lib.getExe gpuPowerMode} high"
+
+        # Disable USB wakeup
+        ACTION=="add", SUBSYSTEM=="acpi", DRIVERS=="button", ATTRS{hid}=="PNP0C0D", ATTR{power/wakeup}="disabled"
+        ACTION=="add", SUBSYSTEM=="serio", DRIVERS=="atkbd", ATTR{power/wakeup}="disabled"
+        ACTION=="add", SUBSYSTEM=="i2c", DRIVERS=="i2c_hid_acpi", ATTRS{name}=="PIXA3854:00", ATTR{power/wakeup}="disabled"
       '';
 
     upower = {
