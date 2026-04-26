@@ -132,8 +132,10 @@ in
       dconf.profiles.gdm.databases = lib.singleton {
         settings = {
           "org/gnome/desktop/interface" = {
+            accent-color = "purple";
             cursor-size = lib.gvariant.mkInt32 stylix.cursor.size;
             cursor-theme = stylix.cursor.name;
+            show-battery-percentage = true;
           };
           "org/gnome/desktop/peripherals/touchpad".tap-to-click = true;
           "org/gnome/login-screen".logo = toString logoImg;
