@@ -7,30 +7,31 @@
       "..." = "cd ../..";
       "...." = "cd ../../..";
       ".df" = "cd /etc/nixos";
-      "ls" = "eza";
-      "lsa" = "eza --all";
-      "ll" = "eza --long --header --group-directories-first --links --group --modified --git --icons";
-      "lla" = "eza --all --long --header --group-directories-first --links --group --modified --git --icons";
-      "lt" = "eza --tree";
-      "lta" = "eza --tree --all";
+      ls = "eza";
+      lsa = "eza --all";
+      ll = "eza --long --header --group-directories-first --links --group --modified --git --icons";
+      lla = "eza --all --long --header --group-directories-first --links --group --modified --git --icons";
+      lt = "eza --tree";
+      lta = "eza --tree --all";
 
       # Misc
-      "bonsai" = "cbonsai --screensaver";
-      "ff" = "fastfetch";
-      "n" = "nvim";
-      "swim" = "asciiquarium";
+      bonsai = "cbonsai --screensaver";
+      ff = "fastfetch";
+      n = "nvim";
+      swim = "asciiquarium";
+      wttr = "curl wttr.in?0q";
 
       # Network
-      "showdns" = "nmcli device show \"$@\" | grep DNS";
+      showdns = "nmcli device show \"$@\" | grep DNS";
 
       # Nix
-      "nix-diff" = "nix store diff-closures /run/current-system \"$@\"";
-      "nix-eval" = "cd /etc/nix/nixpkgs && nix repl .";
-      "nix-host" = "nixos-rebuild build --build-host \"$@\"";
+      nix-diff = "nix store diff-closures /run/current-system \"$@\"";
+      nix-eval = "cd /etc/nix/nixpkgs && nix repl .";
+      nix-host = "nixos-rebuild build --build-host \"$@\"";
 
       # Pictures
-      "exifinfo" = "exiftool -a -g -s \"$@\"";
-      "exifstrip" = "exiftool -All= \"$@\"";
+      exifinfo = "exiftool -a -g -s \"$@\"";
+      exifstrip = "exiftool -All= \"$@\"";
     };
   };
 }
