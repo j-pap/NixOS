@@ -4,6 +4,7 @@
   ff,
   ...
 }: let
+  amdgpu = osConfig.flake.hw.amdgpu.enable;
   host = osConfig.networking.hostName;
   isLaptop = osConfig.flake.host.isLaptop;
 in lib.mkMerge [
@@ -11,20 +12,17 @@ in lib.mkMerge [
     /****************************************************************************
      * Betterfox                                                                *
      * "Ad meliora"                                                             *
-     * version: 148                                                             *
+     * version: 150                                                             *
      * url: https://github.com/yokoffing/Betterfox                              *
     ****************************************************************************/
 
     /****************************************************************************
      * SECTION: FASTFOX                                                         *
     ****************************************************************************/
-    ### GFX ###
-      "gfx.canvas.accelerated.cache-size" = 256;
-      "gfx.webrender.layer-compositor" = true;
 
 
     /****************************************************************************
-     * SECTION: FASTFOX OVERRIDES                                                      *
+     * SECTION: FASTFOX OVERRIDES                                               *
     ****************************************************************************/
     ### GFX ADV ###
     # Webrender (GPU)
@@ -32,12 +30,23 @@ in lib.mkMerge [
       "gfx.webrender.precache-shaders" = true;
       "gfx.webrender.compositor" = true;
       #"gfx.webrender.compositor.force-enabled" = true; # causes FF to crash when playing videos
+
+    # Webrender layer compositor
+      "gfx.webrender.layer-compositor" = true;
+      "media.wmf.zero-copy-nv12-textures-force-enabled" = lib.mkIf (amdgpu) true;
+
     # Webrender (CPU - forces software rendering)
       #"gfx.webrender.software" = true;
       #"gfx.webrender.software.opengl" = true;
+
+    # GPU-accelerated Canvas2D
+      "gfx.canvas.accelerated.cache-items" = 4096;
+      "gfx.canvas.accelerated.cache-size" = 512;
+
     # WebGL
       "webgl.max-size" = 16384;
       #"webgl.force-enabled" = true;
+
     # prefer GPU > CPU
       "layers.gpu-process.enabled" = true;
       #"layers.gpu-process.force-enabled" = true; # 'Wayland does not work in the GPU process'
@@ -191,7 +200,7 @@ in lib.mkMerge [
 
 
     /****************************************************************************
-     * SECTION: SECUREFOX OVERRIDES                                                      *
+     * SECTION: SECUREFOX OVERRIDES                                             *
     ****************************************************************************/
     ### TRACKING PROTECTION ADV ###
     # Beacon
@@ -328,19 +337,19 @@ in lib.mkMerge [
       "media.eme.enabled" = false;
       "browser.eme.ui.enabled" = false; # checkbox
 
-    ### JIT ###
-    # JavaScript
+    ### JIT & WASM ###
+    # Ion and Baseline
       "javascript.options.baselinejit" = false;
       "javascript.options.ion" = false;
-      "javascript.options.jit_trustedprincipals" = false;
+      "javascript.options.jit_trustedprincipals" = true;
+    # Blinterp
+      "javascript.options.blinterp" = false;
     # WebAssembly
       "javascript.options.wasm_trustedprincipals" = false;
-      "javascript.options.wasm_baselinejit" = false;
+      "javascript.options.wasm_baselinejit" = true;
       #"javascript.options.wasm_optimizingjit" = false; # breaks 1P extension
     # Asm.js
       "javascript.options.asmjs" = false;
-    # Blinterp
-      "javascript.options.blinterp" = false;
 
     ### VARIOUS ###
       "browser.tabs.searchclipboardfor.middleclick" = false;
@@ -372,7 +381,6 @@ in lib.mkMerge [
     # SERP
       "browser.search.serpEventTelemetryCategorization.enabled" = false;
     # Assorted
-      "doh-rollout.disable-heuristics" = true;
       "dom.security.unexpected_system_load_telemetry_enabled" = false;
       "messaging-system.rsexperimentloader.enabled" = false;
       "network.trr.confirmation_telemetry_enabled" = false;
@@ -457,7 +465,7 @@ in lib.mkMerge [
 
 
     /****************************************************************************
-     * SECTION: PESKYFOX OVERRIDES                                                      *
+     * SECTION: PESKYFOX OVERRIDES                                              *
     ****************************************************************************/
 
     ### MOZILLA UI ADV ###

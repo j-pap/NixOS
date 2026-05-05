@@ -1,14 +1,15 @@
 {
   AutofillAddressEnabled = false;
   AutofillCreditCardEnabled = false;
+  DisableFeedbackCommands = true;
   DisableFirefoxStudies = true;
   DisableFormHistory = true;
-  DisablePocket = true;
   DisableTelemetry = true;
   DisplayBookmarksToolbar = "newtab";
   DNSOverHTTPS = {
     Enabled = false;
     Fallback = false;
+    Locked = false;
     #ProviderURL = dohProvider;
   };
   EnableTrackingProtection = {
@@ -27,7 +28,9 @@
     Search = false;
     Snippets = false;
     SponsoredPocket = false;
+    SponsoredStories = false;
     SponsoredTopSites = false;
+    Stories = false;
     TopSites = false;
   };
   FirefoxSuggest = {
@@ -35,6 +38,9 @@
     ImproveSuggest = false;
     SponsoredSuggestions = false;
     WebSuggestions = false;
+  };
+  GenerativeAI = {
+    Enabled = false;
   };
   HardwareAcceleration = true;
   HttpsOnlyMode = "force_enabled";
@@ -62,6 +68,15 @@
     SiteSettings = false;
   };
   SearchBar = "unified";
+  SearchEngines = {
+    #Add = [ ];
+    #Default = "";
+    Remove = [
+      "Amazon.com"
+      "eBay"
+      "Perplexity"
+    ];
+  };
   SearchSuggestEnabled = false;
   ShowHomeButton = false;
   StartDownloadsInTempDirectory = true;

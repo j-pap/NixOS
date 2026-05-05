@@ -30,27 +30,22 @@ in
     {
       programs.${ff.variant} = {
         enable = true;
+        configPath = "${config.xdg.configHome}/mozilla/firefox";
         nativeMessagingHosts =
           lib.optionals (gnome || kde) [ nmhPkg ]
           ++ lib.optionals (config.programs.firefoxpwa.enable) [
             config.programs.firefoxpwa.package
           ];
         policies = import ./policies.nix;
-
         profiles.${flk.user} = {
           id = 0;
-          isDefault = true;
           name = osConfig.users.users.${flk.user}.description;
-
+          isDefault = true;
           containers = import ./containers.nix;
           containersForce = true;
           search = import ./search.nix { inherit lib pkgs; };
           settings = import ./settings.nix {
-            inherit
-              lib
-              osConfig
-              ff
-              ;
+            inherit lib osConfig ff;
           };
           extensions.packages =
             let
