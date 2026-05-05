@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   inputs,
   osConfig,
@@ -12,6 +13,13 @@
 
   programs.nixvim = {
     enable = true;
+    nixpkgs.config.allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) (
+        map lib.getName [
+          config.programs.nixvim.plugins.vim-be-good.package
+        ]
+      );
 
     # See `:help lua-guide-autocommands`
     autoCmd = [
