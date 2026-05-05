@@ -87,44 +87,45 @@ in
           asciiquarium      # Fishies swimming
           cbonsai           # Bonsai growing
 
+          # Disks
+          caligula          # Imaging
+          cryptsetup        # Encryption
+          tparted           # TUI parted
+
           # Files
-          caligula          # Disk imaging
           cryptomator       # Encrypt cloud files
-          exiftool          # File metadata
-          file              # File information
-          libarchive        # ISO extraction | 'bsdtar -xf IsoFile.iso OutputFile'
-          p7zip             # Zip encryption
-          unzip             # Zip files
-          unrar             # Rar files
-          zip               # Zip files
+          exiftool          # Metadata remover
+          file              # Information
+          libarchive        # ISO extraction | `bsdtar -xf IsoFile.iso OutputFile`
+          pandoc            # Document converter | `pandoc input -o output`
+          p7zip             # Encryption
+          unrar             # Rar
+          unzip             # Zip
+          zip               # Zip
 
           # Hardware
-          dmidecode         # Firmware | 'dmidecode -s bios-version'
-          ffmpeg-full       # Hardware video acceleration
+          dmidecode         # Firmware | `dmidecode -s bios-version`
+          ffmpeg-full       # Video acceleration
           mesa-demos        # OpenGL info
-          libva-utils       # VAAPI | 'vainfo'
-          lm_sensors        # Hardware sensors | 'sensors-detect'
-          lshw              # Hardware config
+          libva-utils       # VAAPI | `vainfo`
+          lm_sensors        # Sensors | `sensors-detect`
+          lshw              # Summary
           nvme-cli          # Manage NVMe
-          pciutils          # Manage PCI | 'lspci'
-          usbutils          # Manage USB | 'lsusb'
+          pciutils          # Manage PCI | `lspci`
+          usbutils          # Manage USB | `lsusb`
           vdpauinfo         # VDPAU
-          vulkan-tools      # 'vulkaninfo'
+          vulkan-tools      # Vulkan utilities | `vulkaninfo`
 
           # Images
-          feh               # Image viewer
-          imagemagick       # Image tools
-
-          # Monitoring
-          htop              # Resource manager
-          iptraf-ng         # Network
-          pstree            # Process tree
+          chafa             # Terminal viewer
+          feh               # Viewer
+          imagemagick       # Tools
 
           # Network
-          #cifs-utils       # SMB support
           dig               # DNS tools
           ethtool           # Diagnostic / control
           ipcalc            # Network calculator
+          iptraf-ng         # Traffic monitor
           mtr               # ping/traceroute
           nfs-utils         # NFS support
           nmap              # Discovery
@@ -152,17 +153,26 @@ in
           # Terminal
           awscli2           # AWS CLI v2
           bootdev-cli       # CLI tool
-          chafa             # Terminal images
+          cht-sh            # Cheat sheet
           coreutils         # GNU utilities
-          cryptsetup        # Encryption
           #devenv           # Declarative development environments
           dust              # Disk usage
-          eza               # ls/tree replacement | 'eza' or 'exa'
+          eza               # ls/tree replacement | `eza` or `exa`
           fastfetch         # Faster system info
-          fd                # Find alternative | 'fd'
+          fd                # Find alternative | `fd`
+          findutils         # Find utilities
+          glow              # Markdown reader
+          htop              # Process viewer
           killall           # Process killer
-          ripgrep           # Search file contents | 'rg'
+          lazyjournal       # Log viewer
+          openssl           # SSL toolkit
+          procs             # Modern ps
+          progress          # Monitor progress | `cmd & progress -mp $!`
+          ps                # Processes
+          pstree            # Process tree
+          ripgrep           # Search file contents | `rg`
           shellcheck        # Script formating checker
+          sqlite            # SQLite
           sysstat           # 'iostat' & various tools
           tldr              # Abbreviated manual
           tmux              # Multiplexor
@@ -192,9 +202,9 @@ in
       fontconfig.useEmbeddedBitmaps = true;
       packages = builtins.attrValues {
         inherit (pkgs)
-          iosvmata       # Term
-          jetbrains-mono # Term
-          pragmasevka    # Term
+          iosvmata
+          jetbrains-mono
+          pragmasevka
           noto-fonts-color-emoji # Emojis
           ;
         inherit (pkgs.nerd-fonts)

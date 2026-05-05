@@ -90,8 +90,11 @@ in
 
         # Multimedia
         flacon # CUE converter
+        harmonoid # Music player
+        jellyfin-desktop # JF client
         picard # Music tagger
         #pocket-casts # Podcast player
+        sone # Tidal client
         tauon # Music player
         tidal-dl # Tidal downloader
         tidal-hifi # Tidal client
