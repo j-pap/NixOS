@@ -318,7 +318,10 @@ in
     };
 
     programs = {
-      command-not-found.enable = true;
+      command-not-found = {
+        enable = true;
+        dbPath = lib.mkForce inputs.flake-programs-sqlite.packages.${pkgs.stdenv.hostPlatform.system}.programs-sqlite;
+      };
     };
 
     security = {

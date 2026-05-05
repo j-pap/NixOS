@@ -133,9 +133,9 @@ in
       xdg.configFile = {
         # https://github.com/FrameworkComputer/linux-docs/tree/main/easy-effects
         "easyeffects/output/${easyPreset}.json".source =
-          inputs.framework-cpu + "/easy-effects/${easyPreset}.json";
+          inputs.framework + "/easy-effects/${easyPreset}.json";
         "easyeffects/irs/IR_22ms_27dB_5t_15s_0c.irs".source =
-          inputs.framework-cpu + "/easy-effects/irs/IR_22ms_27dB_5t_15s_0c.irs";
+          inputs.framework + "/easy-effects/irs/IR_22ms_27dB_5t_15s_0c.irs";
       };
 
       home.stateVersion = "24.11";

@@ -19,7 +19,7 @@
       url = "github:wamserma/flake-programs-sqlite";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    framework-cpu = {
+    framework = {
       url = "github:FrameworkComputer/linux-docs";
       flake = false;
     };
