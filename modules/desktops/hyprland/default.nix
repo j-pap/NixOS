@@ -69,8 +69,7 @@ in
             #wpgtk               # Pywal GUI
 
             # Wallpaper
-            #swww                # Wallpaper manager capable of GIFs (via HM)
-            #awww                # New repo for swww
+            #awww                # Wallpaper manager capable of GIFs (via HM)
 
             # Wayland
             wayland-utils        # Wayland utilities | 'wayland-info'
@@ -181,7 +180,7 @@ in
           hyprpolkitagent.enable = true;
           playerctld.enable = true;
           #polkit-gnome.enable = true;
-          swww = {
+          awww = {
             enable = true;
             extraArgs = [ ];
           };

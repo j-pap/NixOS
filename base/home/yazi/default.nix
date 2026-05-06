@@ -152,7 +152,7 @@ in
               else if (flk.de.kde.enable) then
                 "plasma-apply-wallpaperimage %s1"
               else if (flk.de.hyprland.enable) then
-                "swww img %s1"
+                "awww img %s1"
               else
                 "";
           };

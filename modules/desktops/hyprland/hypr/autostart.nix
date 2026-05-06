@@ -14,7 +14,7 @@ in
     # Autostart necessary processes (like notifications daemons, status bars, etc.)
 
     exec-once = [
-      "swww img ${wallpaper.light}"
+      "awww img ${wallpaper.light}"
       #"nm-applet --indicator"
 
       #exec-once = wl-paste --type text --watch cliphist store  # Stores only text data
