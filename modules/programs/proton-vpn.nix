@@ -7,7 +7,7 @@
 }:
 let
   cfg = config.flake.protonvpn;
-  protonVpnPkg = pkgs.protonvpn-gui; # pkgs or pkgs.stable
+  protonVpnPkg = pkgs.proton-vpn; # pkgs or pkgs.stable
 in
 {
   options.flake.protonvpn.enable = lib.mkEnableOption "Proton VPN";
