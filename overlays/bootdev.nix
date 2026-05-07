@@ -1,19 +1,10 @@
 final: prev: {
   bootdev-cli = prev.bootdev-cli.overrideAttrs (
     finalAttrs: oldAttrs: {
-      version = "1.29.0";
-      src = final.fetchFromGitHub {
-        owner = "bootdotdev";
-        repo = "bootdev";
-        rev = "v${finalAttrs.version}";
-        hash = "sha256-i1U1AsFB/z3h/Aj+YSrfi/U1GWUyawfuL2zJiCWWPgI=";
+      version = "1.29.3";
+      src = oldAttrs.src.overrideAttrs {
+        hash = "sha256-6fdzSwCtJG8SFqInVsOc5EO4g9esMU/z9MYtou1ylFI=";
       };
-      /*
-        src = oldAttrs.src // {
-          rev = "v${finalAttrs.version}";
-          hash = "";
-        };
-      */
     }
   );
 }
