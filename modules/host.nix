@@ -5,11 +5,8 @@
 }:
 {
   options.flake.host = {
-    isLaptop = lib.mkOption {
-      default = false;
+    isLaptop = lib.mkEnableOption "a laptop" // {
       description = "Whether the host is a laptop.";
-      example = true;
-      type = lib.types.bool;
     };
 
     monitor = {

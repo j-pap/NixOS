@@ -11,7 +11,9 @@ in
 {
   options.flake.containers = {
     enable = lib.mkEnableOption "Containers";
-    docker = lib.mkEnableOption "Docker";
+    docker = lib.mkEnableOption "Docker" // {
+      default = true;
+    };
     podman = lib.mkEnableOption "Podman";
   };
 
@@ -23,8 +25,6 @@ in
           message = "Docker and Podman may not be used at the same time.";
         }
       ];
-
-      flake.containers.docker = lib.mkDefault true;
 
       environment.systemPackages = builtins.attrValues {
         inherit (pkgs)

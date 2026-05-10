@@ -12,7 +12,9 @@ in
   options.flake.git = {
     libsecret.enable = lib.mkEnableOption "Git via Libsecret";
     oauth.enable = lib.mkEnableOption "Git via Oauth";
-    ssh.enable = lib.mkEnableOption "Git via SSH";
+    ssh.enable = lib.mkEnableOption "Git via SSH" // {
+      default = true;
+    };
   };
 
   config = {
@@ -30,8 +32,6 @@ in
         message = "(Git) OAuth and SSH may not be used at the same time.";
       }
     ];
-
-    flake.git.ssh.enable = lib.mkDefault true;
 
     home-manager.users.${flk.user} = lib.mkMerge [
       {
@@ -51,7 +51,7 @@ in
       # Gnome relies upon 'gnome-keyring' and 'seahorse'
       # KDE relies upon 'kwallet', 'kwallet-pam', and 'kwalletmanager'
       (lib.mkIf (cfg.libsecret.enable) {
-        programs.git.extraConfig.credential.helper = lib.getExe' pkgs.git.override {
+        programs.git.settings.credential.helper = lib.getExe' pkgs.git.override {
           withLibsecret = true;
         } "git-credential-libsecret";
       })
@@ -62,17 +62,20 @@ in
 
       (lib.mkIf (cfg.ssh.enable) {
         programs = {
-          git.settings = {
-            commit.gpgsign = true;
-            gpg = {
-              format = "ssh";
-              ssh.program =
-                if (flk."1password".enable) then
-                  (lib.getExe' pkgs._1password-gui "op-ssh-sign")
-                else
-                  (lib.getExe' pkgs.openssh "ssh-keygen");
+          git = {
+            settings = {
+              commit.gpgsign = true;
+              gpg = {
+                format = "ssh";
+                ssh.program =
+                  if (flk."1password".enable) then
+                    (lib.getExe' pkgs._1password-gui "op-ssh-sign")
+                  else
+                    (lib.getExe' pkgs.openssh "ssh-keygen");
+              };
+              user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINdsPgO+W30YwojR6rmyFQ7JOoracCgncClxVUAkTNoJ";
             };
-            user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINdsPgO+W30YwojR6rmyFQ7JOoracCgncClxVUAkTNoJ";
+            signing.format = if (flk."1password".enable) then null else "ssh";
           };
 
           ssh =

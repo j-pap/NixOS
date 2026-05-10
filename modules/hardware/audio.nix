@@ -9,11 +9,8 @@ let
   cfg = config.flake.hw.audio;
 in
 {
-  options.flake.hw.audio.enable = lib.mkOption {
+  options.flake.hw.audio.enable = lib.mkEnableOption "audio (PipeWire)" // {
     default = true;
-    description = "Whether to enable audio (PipeWire)";
-    example = false;
-    type = lib.types.bool;
   };
 
   config = lib.mkIf (cfg.enable) {
