@@ -24,13 +24,6 @@ in
       settings = {
         devices."NAS".id = "FN25ISC-P52A3WA-GRV4SIR-YI4KBMM-2I5BECF-32SLV5B-5DADP5B-YSMVIQ4";
         folders = {
-          "music" = lib.mkIf (config.networking.hostName == "FW13") {
-            enable = true;
-            devices = [ "NAS" ];
-            label = "Music";
-            path = "/home/${flk.user}/Music";
-          };
-
           "obsidian" = {
             enable = true;
             devices = [ "NAS" ];
