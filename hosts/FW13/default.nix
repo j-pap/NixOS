@@ -89,6 +89,7 @@ in
         zenmonitor # CPU stats
 
         # Multimedia
+        finamp # JF music client
         flacon # CUE converter
         harmonoid # Music player
         jellyfin-desktop # JF client
