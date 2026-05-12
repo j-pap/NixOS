@@ -30,7 +30,8 @@ in
   config = {
     _module.args = {
       nixSecrets =
-        assert lib.assertMsg (useNixPlugins) "nixSecrets cannot be accessed because nix-plugins is not enabled.";
+        assert lib.assertMsg (useNixPlugins)
+          "nixSecrets cannot be accessed because nix-plugins is not enabled.";
         assert lib.assertMsg (builtins ? extraBuiltins.readSops)
           "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.plugin-files' & 'nix.settings.extra-builtins-file' are defined correctly.";
         builtins.extraBuiltins.readSops ../secrets/eval-secrets.nix;
@@ -38,7 +39,7 @@ in
 
     boot = {
       binfmt.emulatedSystems = [ "aarch64-linux" ];
-      consoleLogLevel = 3; # Errors only // sets 'loglevel=' kernelParam
+      consoleLogLevel = 3; # Errors only - sets 'loglevel=' kernelParam
       initrd.verbose = false;
       kernel.sysctl."vm.swappiness" = lib.mkDefault 0; # Prioritize swap for hibernation
       kernelParams = lib.mkBefore [
@@ -309,7 +310,13 @@ in
           "flakes"
           "nix-command"
         ];
-        extra-builtins-file = lib.mkIf (useNixPlugins) [ "${inputs.self}/libs/extra-builtins.nix" ];
+        extra-builtins-file = lib.mkIf (useNixPlugins) [
+          (pkgs.writeText "extra-builtins.nix" ''
+            { exec, ... }: {
+              readSops = name: exec [ "sops" "-d" name ];
+            }
+          '')
+        ];
         plugin-files = lib.mkIf (useNixPlugins) [ "${pkgs.nix-plugins}/lib/nix/plugins" ];
         substituters = [
           "https://nix-community.cachix.org"
