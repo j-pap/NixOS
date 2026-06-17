@@ -18,12 +18,11 @@ let
         forge
         fuzzy-app-search
         hibernate-status-button
-        #hot-edge
         just-perfection
         lock-keys
         night-theme-switcher
         notification-timeout
-        power-profile-switcher
+        #power-profile-switcher # Removed with 26.05 update
         search-light
         vitals
         weather-or-not
@@ -113,7 +112,9 @@ in
     "org/gnome/shell/extensions/dash-to-dock" = {
       apply-custom-theme = true;
       custom-theme-shrink = true;
+      dash-max-icon-size = 24;
       disable-overview-on-startup = true;
+      #dock-fixed = true; # Always show
       hot-keys = false;
       intellihide-mode = "ALL_WINDOWS";
       scroll-action = "switch-workspace";
@@ -180,12 +181,14 @@ in
       timeout = 5000;
     };
 
-    # Power Profile Switcher
-    "org/gnome/shell/extensions/power-profile-switcher" = lib.mkDefault {
-      # performance, balanced, power-saver
-      ac = "performance";
-      bat = "power-saver";
-    };
+    /*
+      # Power Profile Switcher
+      "org/gnome/shell/extensions/power-profile-switcher" = lib.mkDefault {
+        # performance, balanced, power-saver
+        ac = "performance";
+        bat = "power-saver";
+      };
+    */
 
     # Search Light
     "org/gnome/shell/extensions/search-light".shortcut-search = [ "<Super>space" ];

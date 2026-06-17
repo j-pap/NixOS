@@ -228,26 +228,26 @@ in
             enableBashIntegration = true;
             nix-direnv.enable = true;
             silent = false;
-            stdlib = /* ~/.config/direnv/direnvrc */ '''';
+            stdlib = /* ~/.config/direnv/direnvrc */ "";
           };
           ssh = {
             enableDefaultConfig = false;
-            matchBlocks."*" = {
-              addKeysToAgent = "no";
-              compression = false;
-              controlMaster = "no";
-              controlPath = "~/.ssh/master-%r@%n:%p";
-              controlPersist = "no";
-              forwardAgent = false;
-              hashKnownHosts = false;
-              identityAgent =
+            settings."*" = {
+              ForwardAgent = false;
+              ServerAliveInterval = 0;
+              ServerAliveCountMax = 3;
+              Compression = false;
+              AddKeysToAgent = false;
+              HashKnownHosts = false;
+              UserKnownHostsFile = "~/.ssh/known_hosts";
+              ControlMaster = false;
+              ControlPath = "~/.ssh/master-%r@%n:%p";
+              ControlPersist = false;
+              IdentityAgent =
                 if (flk."1password".enable) then
-                  "/home/${flk.user}/.1password/agent.sock"
+                  "~/.1password/agent.sock"
                 else
                   (lib.getExe' pkgs.openssh "ssh-agent");
-              serverAliveInterval = 0;
-              serverAliveCountMax = 3;
-              userKnownHostsFile = "~/.ssh/known_hosts";
             };
           };
         };

@@ -18,7 +18,7 @@ in
           amdgpu_top # GPU stats
 
           # Video acceleration libraries
-          libva1-minimal
+          libva-minimal
           libvdpau
           ;
       }

@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    stable.url = "github:nixos/nixpkgs/nixos-25.11";
+    stable.url = "github:nixos/nixpkgs/nixos-26.05";
     cosmic-manager = {
       url = "github:HeitorAugustoLN/cosmic-manager";
       inputs = {
@@ -31,7 +31,8 @@
     };
     hyprland.url = "github:hyprwm/Hyprland";
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.0.0";
+      #url = "github:nix-community/lanzaboote/v1.0.0";
+      url = "github:nix-community/lanzaboote/001e560fffc8f0235e9db20ebeb4ccde0ade1caf"; # https://github.com/nix-community/lanzaboote/pull/617
       inputs.nixpkgs.follows = "nixpkgs";
     };
     m4b-tool.url = "github:sandreas/m4b-tool";
@@ -96,7 +97,9 @@
           specialArgs = { inherit inputs; };
         in
         nixpkgs.lib.nixosSystem {
-          modules = hostModules ++ (if (hostIsBare) then ([ ]) else (stdModules hostName specialArgs));
+          modules = hostModules ++ (
+            if (hostIsBare) then ([ ]) else (stdModules hostName specialArgs)
+          );
           specialArgs = specialArgs;
         };
 

@@ -87,27 +87,24 @@ in
               ];
               identityAgent =
                 if (flk."1password".enable) then
-                  "/home/${flk.user}/.1password/agent.sock"
+                  "~/.1password/agent.sock"
                 else
                   (lib.getExe' pkgs.openssh "ssh-agent");
             in
             {
               enable = true;
-              matchBlocks =
+              settings =
                 builtins.listToAttrs (
                   builtins.map (host: {
-                    name = host;
+                    name = "Host ${host}";
                     value = {
-                      identityAgent = identityAgent;
-                      forwardAgent = true;
+                      ForwardAgent = true;
+                      IdentityAgent = identityAgent;
                     };
                   }) hosts
                 )
                 // {
-                  "github.com".match = ''
-                    host github.com exec "test -z $SSH_TTY"
-                      IdentityAgent ${identityAgent}
-                  '';
+                  "Match host github.com exec \"test -z $SSH_TTY\"".IdentityAgent = identityAgent;
                 };
             };
         };
