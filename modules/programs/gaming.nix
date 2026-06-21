@@ -202,10 +202,6 @@ in
                 ;
             };
         };
-        # Lutris workaround: https://github.com/NixOS/nixpkgs/issues/513245#issuecomment-4320293674
-        openldap = prev.openldap.overrideAttrs {
-          doCheck = !prev.stdenv.hostPlatform.isi686;
-        };
       })
     ];
 
