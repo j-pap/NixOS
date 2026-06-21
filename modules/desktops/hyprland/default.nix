@@ -198,12 +198,14 @@ in
           enable = true;
           package = null; # Use NixOS module package
           portalPackage = null; # Use NixOS module package
+          configType = "hyprlang"; # Explicitly set until lua conversion
+          xwayland.enable = true;
+
           systemd = {
             enable = true;
             enableXdgAutostart = false;
             variables = [ "--all" ];
           };
-          xwayland.enable = true;
 
           settings = {
             # https://wiki.hypr.land/Configuring/Keywords/#sourcing-multi-file
