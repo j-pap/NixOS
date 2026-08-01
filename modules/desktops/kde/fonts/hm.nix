@@ -24,7 +24,6 @@
           fonts = lib.mkForce {
             enable = true;
             priority = 10;
-            source = null;
             text = mkFontconfigConf ''
               <description>Add fonts in the Nix user profile</description>
 

@@ -11,7 +11,7 @@ let
 in
 {
   config = lib.mkIf (cfg.enable) {
-    programs.regreet = {
+    services.displayManager.regreet = {
       enable = false;
       font = {
         name = "Adwaita Sans Regular";
@@ -61,11 +61,11 @@ in
 
     services.greetd = {
       enable = true;
-      useTextGreeter = lib.mkIf (!config.programs.regreet.enable) true;
+      useTextGreeter = lib.mkIf (!config.services.displayManager.regreet.enable) true;
       settings = {
         default_session.command =
-          if (config.programs.regreet.enable) then
-            "${lib.getExe config.programs.regreet.package} --cmd Hyprland"
+          if (config.services.displayManager.regreet.enable) then
+            "${lib.getExe config.services.displayManager.regreet.package} --cmd Hyprland"
           else
             "${lib.getExe pkgs.tuigreet} --cmd Hyprland --time --remember --remember-user-session --asterisks --theme 'text=white;time=lightyellow;container=darkgray;border=lightmagenta;prompt=lightgreen;input=white;button=white;action=gray'";
         /*
