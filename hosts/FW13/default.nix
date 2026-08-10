@@ -40,6 +40,7 @@ in
     hw = {
       amdgpu.enable = true;
       bluetooth.enable = true;
+      scanner.enable = true;
     };
 
     host = {
