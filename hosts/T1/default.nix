@@ -86,20 +86,20 @@ in
         # Multimedia
         calibre # Book organization
         filebot # Media renamer
+        finamp # JF music client
         flacon # CUE converter
         harmonoid # Music player
         jellyfin-desktop # JF client
         mp4v2 # Audiobook chapters | `mp4chaps -l`
         picard # Music tagger
-        #pocket-casts # Podcast player
+        pocket-casts # Podcast player
         sone # Tidal client
         tauon # Music player
-        tidal-dl # Tidal downloader
-        tidal-hifi # Tidal client
+        tidal-dl # Tidal DL
 
         # Productivity
         gimp # Image editor
-        libreoffice-qt6-fresh # Office suite
+        libreoffice-qt # Office suite
         obsidian # Markdown notes
         ;
       inherit (pkgs.openraPackages_2019.engines)

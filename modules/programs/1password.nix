@@ -29,7 +29,7 @@ in
       (lib.mkIf (!flk.de.hyprland.enable) {
         xdg.configFile."autostart/1password.desktop" = {
           text = lib.replaceStrings [ "Exec=1password %U" ] [ "Exec=1password --silent %U" ] (
-            lib.fileContents "${config.programs._1password-gui.package}/share/applications/1password.desktop"
+            lib.fileContents "${config.programs._1password-gui.package}/share/applications/com.onepassword.OnePassword.desktop"
           );
         };
       })

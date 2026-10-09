@@ -95,14 +95,13 @@ in
         harmonoid # Music player
         jellyfin-desktop # JF client
         picard # Music tagger
-        #pocket-casts # Podcast player
+        pocket-casts # Podcast player
         sone # Tidal client
         tauon # Music player
-        tidal-dl # Tidal downloader
-        tidal-hifi # Tidal client
+        tidal-dl # Tidal DL
 
         # Productivity
-        libreoffice-fresh # Office suite
+        libreoffice # Office suite
         obsidian # Markdown notes
         ;
     }

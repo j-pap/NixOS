@@ -1,9 +1,10 @@
 final: prev: {
   bootdev-cli = prev.bootdev-cli.overrideAttrs (
     finalAttrs: oldAttrs: {
-      version = "1.29.3";
+      version = "1.32.5";
       src = oldAttrs.src.overrideAttrs {
-        hash = "sha256-6fdzSwCtJG8SFqInVsOc5EO4g9esMU/z9MYtou1ylFI=";
+        # hash = finalAttrs.lib.fakeHash;
+        hash = "sha256-TaZfb3ykSX7MqdTW+LuE8Ta/nwHQQW3jV3PIlv3UxrU=";
       };
     }
   );

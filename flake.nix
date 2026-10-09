@@ -31,8 +31,7 @@
     };
     hyprland.url = "github:hyprwm/Hyprland";
     lanzaboote = {
-      #url = "github:nix-community/lanzaboote/v1.0.0";
-      url = "github:nix-community/lanzaboote/001e560fffc8f0235e9db20ebeb4ccde0ade1caf"; # https://github.com/nix-community/lanzaboote/pull/617
+      url = "github:nix-community/lanzaboote/v1.2.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     m4b-tool.url = "github:sandreas/m4b-tool";
