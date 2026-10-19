@@ -6,7 +6,7 @@ let
   cpuMon = if (config.services.hardware.openrgb.enable) then "hwmon2" else "hwmon1";
   cpuName = "k10temp";
   cpuPath = "devices/pci0000:00/0000:00:18.3";
-  fanMon = "hwmon4";
+  fanMon = "hwmon3";
   fanName = "nct6686";
   fanPath = "devices/platform/nct6687.2592";
   # Fan speeds -- value = percent * 2.55
