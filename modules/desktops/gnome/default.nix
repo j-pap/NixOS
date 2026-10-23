@@ -89,14 +89,14 @@ in
     nixpkgs.overlays = [
       (final: prev: {
         # Display audio/video properties
-        nautilus = prev.nautilus.overrideAttrs (super: {
+        nautilus = prev.nautilus.overrideAttrs (oldAttrs: {
           buildInputs =
-            super.buildInputs
+            (oldAttrs.buildInputs or [ ])
             ++ builtins.attrValues {
               inherit (prev.gst_all_1)
                 gstreamer
                 gst-libav
-                #gst-plugins-base # Included w/ super.buildInputs
+                #gst-plugins-base # Included w/ oldAttrs.buildInputs
                 gst-plugins-good
                 #gst-plugins-bad
                 #gst-plugins-ugly
@@ -105,8 +105,8 @@ in
         });
 
         # GDM dconf database doesn't change the background, so overriding the package
-        gnome-shell = prev.gnome-shell.overrideAttrs (super: {
-          patches = (super.patches or [ ]) ++ [
+        gnome-shell = prev.gnome-shell.overrideAttrs (oldAttrs: {
+          patches = (oldAttrs.patches or [ ]) ++ [
             (pkgs.writeText "bg.patch" ''
               --- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
               +++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss

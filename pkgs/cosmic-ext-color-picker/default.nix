@@ -6,18 +6,16 @@
   just,
   libcosmicAppHook,
 }:
-let
+
+rustPlatform.buildRustPackage (finalAttrs: {
   pname = "cosmic-ext-color-picker";
   version = "1.1.0";
   src = fetchFromGitHub {
     owner = "PixelDoted";
-    repo = pname;
-    tag = version;
+    repo = finalAttrs.pname;
+    tag = finalAttrs.version;
     hash = "sha256-8joPqbnCPUwguRUXz8Dhzpv9j0mFCh004leQwMruQ60=";
   };
-in
-rustPlatform.buildRustPackage {
-  inherit pname version src;
 
   cargoHash = "sha256-XfAqBOgiZZCxWmU1Rj4sUr8M9WFDxbQc5PmdFHgOIB4=";
 
@@ -32,8 +30,8 @@ rustPlatform.buildRustPackage {
   ];
 
   postPatch = ''
-    mv res/app.desktop res/io.github.pixeldoted.${pname}.desktop
-    mv res/metainfo.xml res/io.github.pixeldoted.${pname}.metainfo.xml
+    mv res/app.desktop res/io.github.pixeldoted.${finalAttrs.pname}.desktop
+    mv res/metainfo.xml res/io.github.pixeldoted.${finalAttrs.pname}.metainfo.xml
   '';
 
   justFlags = [
@@ -42,7 +40,7 @@ rustPlatform.buildRustPackage {
     (placeholder "out")
     "--set"
     "bin-src"
-    "target/${stdenv.hostPlatform.rust.cargoShortTarget}/release/${pname}"
+    "target/${stdenv.hostPlatform.rust.cargoShortTarget}/release/${finalAttrs.pname}"
   ];
 
   dontUseJustBuild = true;
@@ -53,4 +51,4 @@ rustPlatform.buildRustPackage {
     homepage = "https://github.com/PixelDoted/cosmic-ext-color-picker";
     license = lib.licenses.gpl3;
   };
-}
+})

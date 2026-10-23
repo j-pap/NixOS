@@ -53,8 +53,8 @@ in
 
     nixpkgs.overlays = [
       (final: prev: {
-        gnome-keyring = prev.gnome-keyring.overrideAttrs (super: {
-          postInstall = (super.postInstall or "") + ''
+        gnome-keyring = prev.gnome-keyring.overrideAttrs (oldAttrs: {
+          postInstall = (oldAttrs.postInstall or "") + ''
             portal="$out/share/xdg-desktop-portal/portals/gnome-keyring.portal"
             substituteInPlace "$portal" \
               --replace "UseIn=gnome" "UseIn=COSMIC;gnome"

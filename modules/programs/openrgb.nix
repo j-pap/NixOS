@@ -21,7 +21,7 @@ in
     services.hardware.openrgb = {
       enable = true;
       package = pkgs.openrgb;
-      # package = pkgs.openrgb.overrideAttrs (super: {
+      # package = pkgs.openrgb.overrideAttrs (oldAttrs: {
       #   version = "1.0rc2-pipeline-2026-02-13";
       #   src = pkgs.fetchFromGitLab {
       #     owner = "CalcProgrammer1";
@@ -29,9 +29,9 @@ in
       #     rev = "880dc1450d0bcd27eec2bc9526590ffb40e87e78";
       #     sha256 = "sha256-TsMOujVI178r887IIh7fTPJRKxT3VIi965mipZcimzI=";
       #   };
-      #   patches = [ (builtins.elemAt super.patches 0) ]; # Source's fetchpatch is already merged w/ pipeline
+      #   patches = [ (builtins.elemAt oldAttrs.patches 0) ]; # src's fetchpatch already merged in pipeline
       # });
-      # server.port = 6742;
+      server.port = 6742;
       startupProfile = config.networking.hostName;
     };
 

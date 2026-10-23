@@ -7,18 +7,16 @@
   xcursorgen,
   variant ? "Bibata-Modern-Classic",
 }:
-let
+
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "bibata-hyprcursor";
   version = "1.0.0";
   src = fetchFromGitHub {
     owner = "rtgiskard";
     repo = "bibata_cursor";
-    tag = "v${version}";
+    tag = "v${finalAttrs.version}";
     hash = "sha256-p36pHyoVOcDPm/tbk8YKsL+ItTaVKrGTfQ8zp022mGA=";
   };
-in
-stdenvNoCC.mkDerivation {
-  inherit pname version src;
 
   postPatch = "patchShebangs ./src/cursor_utils.py";
 
@@ -53,4 +51,4 @@ stdenvNoCC.mkDerivation {
     license = lib.licenses.gpl3;
     platforms = lib.platforms.linux;
   };
-}
+})

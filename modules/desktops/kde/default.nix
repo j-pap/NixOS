@@ -69,18 +69,18 @@ in
       (final: prev: {
         # Add pipewire path for kdePackages using qtmultimedia
         kdePackages = prev.kdePackages.overrideScope (
-          kfinal: kprev: {
+          kdeFinal: kdePrev: {
             kdeconnect-kde = (
-              kprev.kdeconnect-kde.overrideAttrs (super: {
-                qtWrapperArgs = (super.qtWrapperArgs or [ ]) ++ [
+              kdePrev.kdeconnect-kde.overrideAttrs (oldAttrs: {
+                qtWrapperArgs = (oldAttrs.qtWrapperArgs or [ ]) ++ [
                   "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ final.pipewire ]}"
                 ];
               })
             );
 
             sddm = (
-              kprev.sddm.overrideAttrs (super: {
-                qtWrapperArgs = (super.qtWrapperArgs or [ ]) ++ [
+              kdePrev.sddm.overrideAttrs (oldAttrs: {
+                qtWrapperArgs = (oldAttrs.qtWrapperArgs or [ ]) ++ [
                   "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ final.pipewire ]}"
                 ];
               })

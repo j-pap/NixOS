@@ -3,26 +3,29 @@
   fetchurl,
   zstd,
 }:
-let
+
+stdenv.mkDerivation (finalAttrs: {
   pname = "iosvmata";
   version = "1.2.0";
   src = fetchurl {
-    url = "https://github.com/N-R-K/Iosvmata/releases/download/v${version}/Iosvmata-v${version}.tar.zst";
+    url = "https://github.com/N-R-K/Iosvmata/releases/download/v${finalAttrs.version}/Iosvmata-v${finalAttrs.version}.tar.zst";
     hash = "sha256-Cq/bx+nc5sTHxb4GerpEHDmW7st835bQ6ihTOp20Ei4=";
   };
-in
-stdenv.mkDerivation {
-  inherit pname version src;
+
   dontUnpack = true;
   nativeBuildInputs = [ zstd ];
   installPhase = ''
-    tar xvf ${src}
+    runHook preInstall
+
+    tar xvf ${finalAttrs.src}
     mkdir -p $out/share/fonts/truetype
-    install --mode=644 ./Iosvmata-v${version}/Normal/*.ttf $out/share/fonts/truetype
+    install --mode=644 ./Iosvmata-v${finalAttrs.version}/Normal/*.ttf $out/share/fonts/truetype
+
+    runHook postInstall
   '';
 
   meta = {
     description = "Custom Iosevka build somewhat mimicking PragmataPro";
     homepage = "https://github.com/N-R-K/Iosvmata";
   };
-}
+})
