@@ -79,7 +79,21 @@
           ];
         };
 
-        T1.modules = [ ];
+        T1.modules = [
+          {
+            nix.settings = {
+              substituters = [
+                "https://cache.lantian.pub/lantian"
+              ];
+              trusted-public-keys = [
+                "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
+              ];
+            };
+            nixpkgs.overlays = [
+              inputs.nix-cachyos-kernel.overlays.pinned
+            ];
+          }
+        ];
 
         T450s.modules = [
           inputs.hardware.nixosModules.lenovo-thinkpad-t450s
@@ -121,12 +135,10 @@
               substituters = [
                 "https://nix-community.cachix.org"
                 "https://hyprland.cachix.org"
-                # "https://attic.xuyh0120.win/lantian" # https://github.com/xddxdd/nix-cachyos-kernel/issues/110
               ];
               trusted-public-keys = [
                 "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
                 "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-                # "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
               ];
             };
             nixpkgs = {
@@ -141,7 +153,6 @@
                 };
               };
               overlays = (map import (import ./overlays)) ++ [
-                inputs.nix-cachyos-kernel.overlays.pinned
                 inputs.nur.overlays.default
               ];
             };
