@@ -28,11 +28,7 @@ in
 
       environment.systemPackages = builtins.attrValues {
         inherit (pkgs)
-          # Docker
           compose2nix
-          # Kubernetes Tools
-          #kind
-          #kubectl
           ;
       };
 
