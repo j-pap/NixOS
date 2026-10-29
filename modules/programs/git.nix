@@ -95,13 +95,13 @@ in
               enable = true;
               settings =
                 builtins.listToAttrs (
-                  builtins.map (host: {
-                    name = "Host ${host}";
-                    value = {
+                  builtins.map (
+                    host:
+                    lib.nameValuePair "Host ${host}" {
                       ForwardAgent = true;
                       IdentityAgent = identityAgent;
-                    };
-                  }) hosts
+                    }
+                  ) hosts
                 )
                 // {
                   "Match host github.com exec \"test -z $SSH_TTY\"".IdentityAgent = identityAgent;

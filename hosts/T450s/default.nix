@@ -69,20 +69,20 @@
     (lib.mkIf (flk.de.hyprland.enable) {
       programs.waybar.settings.mainBar =
         let
-          batteryCount = 2;
+          batCount = 2;
         in
         {
           "temperature#cpu".hwmon-path = "/sys/class/hwmon/hwmon6/temp1_input";
           "temperature#gpu".hwmon-path = "/sys/class/hwmon/hwmon5/temp1_input";
 
           modules-right = lib.mkAfter (
-            builtins.concatLists (builtins.genList (i: [ "battery\#bat${toString i}" ]) batteryCount)
+            builtins.concatLists (builtins.genList (i: [ "battery\#bat${toString i}" ]) batCount)
           );
         }
         // builtins.listToAttrs (
-          builtins.genList (i: {
-            name = "battery#bat${toString i}";
-            value = {
+          builtins.genList (
+            i:
+            lib.nameValuePair "battery#bat${toString i}" {
               bat = "BAT${toString i}";
               adapter = "AC";
               interval = 5;
@@ -103,8 +103,8 @@
               format-plugged = " {capacity}%";
               tooltip = true;
               tooltip-format = "{time}";
-            };
-          }) batteryCount
+            }
+          ) batCount
         );
 
       wayland.windowManager.hyprland.settings.bindd = [
