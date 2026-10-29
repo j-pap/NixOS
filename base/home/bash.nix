@@ -29,7 +29,9 @@
       # Nix
       nix-diff = "nix store diff-closures /run/current-system \"$@\"";
       nix-eval = "cd /etc/nix/nixpkgs && nix repl .";
+      nix-hash = "nix-prefetch-url --unpack \"$1\" | xargs nix hash convert --hash-algo sha256";
       nix-host = "nixos-rebuild build --build-host \"$@\"";
+      nix-repair = "nix-store --check-contents --repair --verify";
 
       # Pictures
       exifinfo = "exiftool -a -g -s \"$@\"";
