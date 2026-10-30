@@ -171,8 +171,6 @@ in
   # Boot
   ##########################################################
   boot = {
-    initrd.systemd.enable = true;
-
     blacklistedKernelModules = [
       "amdgpu" # iGPU
       "mt7921e" # Wifi

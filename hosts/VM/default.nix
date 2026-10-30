@@ -74,8 +74,6 @@
   # Boot
   ##########################################################
   boot = {
-    initrd.systemd.enable = true;
-
     kernelPackages = pkgs.linuxPackages;
     kernelParams = [ ];
 

@@ -144,8 +144,6 @@
   # Boot
   ##########################################################
   boot = {
-    initrd.systemd.enable = true;
-
     kernelModules = [ "nfs" ];
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ ];

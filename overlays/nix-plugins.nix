@@ -10,80 +10,20 @@ in
 {
   nix-plugins =
     (prev.nix-plugins.overrideAttrs (oldAttrs: {
-      patches = (oldAttrs.patches or [ ]) ++ [
-        (final.writeText "nix-plugins-nix-2.34.patch" ''
-          --- a/extra-builtins.cc
-          +++ b/extra-builtins.cc
-          @@ -2,6 +2,7 @@
-           #include <nix/expr/eval-settings.hh>
-           #include <nix/expr/primops.hh>
-           #include <nix/fetchers/filtering-source-accessor.hh>
-          +#include <nix/store/global-paths.hh>
-           #include <nix/store/globals.hh>
-           #include <nix/util/configuration.hh>
-           #include <nix/util/config-global.hh>
-          @@ -12,8 +13,8 @@
-           using namespace nix;
-
-           struct ExtraBuiltinsSettings : Config {
-          -    Setting<Path> extraBuiltinsFile{this,
-          -        settings.nixConfDir + "/extra-builtins.nix",
-          +    Setting<AbsolutePath> extraBuiltinsFile{this,
-          +        AbsolutePath(nixConfDir() / "extra-builtins.nix"),
-                       "extra-builtins-file",
-                       "The path to a nix expression defining extra expression-language level builtins."};
-           };
-          @@ -42,14 +43,14 @@
-                       attrs.alloc(sExec).mkPrimOp(new PrimOp {
-                           .name = "exec",
-                           .arity = 1,
-          -                .fun = prim_exec,
-          +                .impl = prim_exec,
-                       });
-
-                       auto sImportNative = state.symbols.create("importNative");
-                       attrs.alloc(sImportNative).mkPrimOp(new PrimOp {
-                           .name = "importNative",
-                           .arity = 2,
-          -                .fun = prim_importNative,
-          +                .impl = prim_importNative,
-                       });
-
-                       arg = state.allocValue();
-          @@ -62,24 +63,24 @@
-               }
-           }
-
-          -static RegisterPrimOp rp1({
-          +static RegisterPrimOp rp1(PrimOp{
-               .name = "__extraBuiltins",
-               .arity = 0,
-          -    .fun = extraBuiltins,
-          +    .impl = extraBuiltins,
-           });
-
-           static void cflags(EvalState & state, const PosIdx _pos,
-               Value ** _args, Value & v)
-           {
-               auto attrs = state.buildBindings(3);
-          -    attrs.alloc("NIX_INCLUDE_DIRS").mkString(NIX_INCLUDE_DIRS);
-          -    attrs.alloc("NIX_CFLAGS_OTHER").mkString(NIX_CFLAGS_OTHER);
-          -    attrs.alloc("BOOST_INCLUDE_DIR").mkString(BOOST_INCLUDE_DIR);
-          +    attrs.alloc("NIX_INCLUDE_DIRS").mkString(NIX_INCLUDE_DIRS, state.mem);
-          +    attrs.alloc("NIX_CFLAGS_OTHER").mkString(NIX_CFLAGS_OTHER, state.mem);
-          +    attrs.alloc("BOOST_INCLUDE_DIR").mkString(BOOST_INCLUDE_DIR, state.mem);
-               v.mkAttrs(attrs);
-           }
-
-          -static RegisterPrimOp rp2({
-          +static RegisterPrimOp rp2(PrimOp{
-               .name = "__nix-cflags",
-               .arity = 0,
-          -    .fun = cflags,
-          +    .impl = cflags,
-           });
-        '')
-      ];
+      # patches = (oldAttrs.patches or [ ]) ++ [
+      #   # https://github.com/shlevy/nix-plugins/pull/25
+      #   (final.fetchpatch {
+      #     name = "nix-plugins-nix-2.33.patch";
+      #     url = "https://github.com/shlevy/nix-plugins/commit/75b5f1d79923243759ddb8261df7d24df8ad2d5b.patch";
+      #     hash = "sha256-q3f3CQhJDBU8MsSaPDWZv5V1bUxL9spq/aUaOvz0bns=";
+      #   })
+      #   # https://github.com/shlevy/nix-plugins/pull/26
+      #   (final.fetchpatch {
+      #     name = "nix-plugins-nix-2.34.patch";
+      #     url = "https://github.com/shlevy/nix-plugins/commit/51ab78357ab6eb1f382c3f64bdb8fbaf742d8dec.patch";
+      #     hash = "sha256-7jE8MoZJiTXx0O3SGqXQ7PhwqK7txEoESWXWmMq9Dts=";
+      #   })
+      # ];
     })).override
       {
         nixComponents = final.nixVersions."nixComponents_${getNixVer final.nix.version}";

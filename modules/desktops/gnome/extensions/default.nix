@@ -10,6 +10,7 @@ let
       inherit (pkgs.gnomeExtensions)
         alphabetical-app-grid
         appindicator
+        auto-power-profile
         bluetooth-quick-connect
         blur-my-shell
         caffeine
@@ -17,12 +18,11 @@ let
         dash-to-dock
         forge
         fuzzy-app-search
-        hibernate-status-button
+        hibernate-power-menu
         just-perfection
-        lock-keys
+        lock-keys-2
         night-theme-switcher
         notification-timeout
-        #power-profile-switcher # Removed with 26.05 update
         search-light
         vitals
         weather-or-not
@@ -50,6 +50,13 @@ in
 
     # AppIndicator
     "org/gnome/shell/extensions/appindicator".icon-size = 16;
+
+    # # Auto Power Profile
+    # "org/gnome/shell/extensions/auto-power-profile" = lib.mkDefault {
+    #   # performance, balanced, power-saver
+    #   ac = "performance";
+    #   bat = "power-saver";
+    # };
 
     # Battery Health Charging
     "org/gnome/shell/extensions/Battery-Health-Charging" =
@@ -121,11 +128,11 @@ in
       show-trash = false;
     };
 
-    # Hibernate Status Button
-    "org/gnome/shell/extensions/hibernate-status-button" = {
-      show-hybrid-sleep = false;
-      show-suspend-then-hibernate = false;
-    };
+    # Hibernate Power Menu
+    # "org/gnome/shell/extensions/hibernate-power-menu" = {
+    #   show-hybrid-sleep = false;
+    #   show-suspend-then-hibernate = false;
+    # };
 
     # Just Perfection
     "org/gnome/shell/extensions/just-perfection" = {
@@ -136,7 +143,7 @@ in
     };
 
     # Lock Keys
-    "org/gnome/shell/extensions/lockkeys".style = "show-hide-capslock";
+    # "org/gnome/shell/extensions/lockkeys".style = "show-hide-capslock";
 
     # Night Theme Switcher
     "org/gnome/shell/extensions/nightthemeswitcher/commands" =
@@ -180,15 +187,6 @@ in
       ignore-idle = true;
       timeout = 5000;
     };
-
-    /*
-      # Power Profile Switcher
-      "org/gnome/shell/extensions/power-profile-switcher" = lib.mkDefault {
-        # performance, balanced, power-saver
-        ac = "performance";
-        bat = "power-saver";
-      };
-    */
 
     # Search Light
     "org/gnome/shell/extensions/search-light".shortcut-search = [ "<Super>space" ];

@@ -40,7 +40,7 @@ in
     boot = {
       binfmt.emulatedSystems = [ "aarch64-linux" ];
       consoleLogLevel = 3; # Errors only - sets 'loglevel=' kernelParam
-      initrd.verbose = false;
+      # initrd.verbose = false;
       kernel.sysctl."vm.swappiness" = lib.mkDefault 0; # Prioritize swap for hibernation
       kernelParams = lib.mkBefore [
         "quiet"

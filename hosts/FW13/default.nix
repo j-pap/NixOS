@@ -229,10 +229,7 @@ in
   # Boot
   ##########################################################
   boot = {
-    initrd = {
-      availableKernelModules = [ "cryptd" ];
-      systemd.enable = true;
-    };
+    initrd.availableKernelModules = [ "cryptd" ];
 
     blacklistedKernelModules = lib.optionals (debug) [
       "framework_laptop"

@@ -16,11 +16,6 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf (cfg.enable) {
-      boot.kernelParams = [
-        "nvidia.NVreg_EnableResizableBar=1"
-        "nvidia.NVreg_TemporaryFilePath=/var/tmp"
-      ];
-
       environment = {
         etc."libva.conf".text = "LIBVA_MESSAGING_LEVEL=1"; # Suppress Firefox's libva logging
         systemPackages = [
@@ -44,6 +39,10 @@ in
         graphics.enable = true;
         nvidia = {
           modesetting.enable = true; # "nvidia-drm.modeset=1"/"nvidia-drm.fbdev=1" - enables dedicated framebuffer
+          moduleParams.nvidia = {
+            NVreg_EnableResizableBar = 1;
+            NVreg_TemporaryFilePath = "/var/tmp";
+          };
           nvidiaSettings = true;
           open = true; # Required for 50XX+; Recommended for 16XX+ - v560+ defaults to true
           package = nvPkg // {
@@ -71,8 +70,12 @@ in
     (lib.mkIf (cfg.enable && flk.de.kde.enable && !config.hardware.nvidia.open) {
       # Disable GSP - Smoother Wayland experience
       # Unsure if this is still necessary with newer versions of Plasma 6
-      boot.kernelParams = [ "nvidia.NVreg_EnableGpuFirmware=0" ];
-      hardware.nvidia.gsp.enable = false;
+      hardware.nvidia = {
+        gsp.enable = false;
+        moduleParams.nvidia = {
+          NVreg_EnableGpuFirmware = 0;
+        };
+      };
     })
   ];
 }
