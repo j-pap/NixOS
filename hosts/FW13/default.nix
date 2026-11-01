@@ -78,8 +78,8 @@ in
         thunderbird-latest # Email client
 
         # Framework Hardware
-        amd-debug-tools # s2idle | `amd-`
-        framework-tool # Swiss army knife for FWs
+        # amd-debug-tools # s2idle | `amd-`
+        fw-ectool # Embedded controller
         sbctl # Secure boot key manager
 
         # Misc
@@ -105,6 +105,7 @@ in
         obsidian # Markdown notes
         ;
     }
+    ++ [ pkgs.stable.amd-debug-tools ]
     ++ lib.optionals (config.services.fprintd.enable) [
       (pkgs.callPackage ./fprint-clear-storage.nix { }) # Clear fingerprint sensor history
     ];
@@ -130,7 +131,7 @@ in
       programs.mangohud.settings.pci_dev = "0:c1:00.0"; # `lspci -D | grep -i vga`
 
       services.easyeffects = {
-        enable = true;
+        enable = false;
         preset = easyPreset;
       };
 
@@ -154,6 +155,14 @@ in
     firmware = [ pkgs.linux-firmware ];
     sensor.iio.enable = true; # Ambient light sensor | `monitor-sensor`
     wirelessRegulatoryDatabase = true; # Allow 5GHz wifi
+    framework = {
+      enableKmod = true; # extraModulePackage / cros_ec kernelModules
+      laptop13.audioEnhancement = {
+        enable = true; # Set speakers to 100% before enabling
+        hideRawDevice = true;
+        rawDeviceName = "alsa_output.pci-0000_c1_00.6.analog-stereo"; # `pw-dump | grep -C 20 pci-0000 | grep stereo`
+      };
+    };
   };
 
   powerManagement = {
@@ -164,7 +173,6 @@ in
 
   services = {
     fprintd.enable = lib.mkForce useFP; # `fprintd-enroll`
-
     #fwupd.extraRemotes = [ "lvfs-testing" ];
 
     logind.settings.Login = {
@@ -231,7 +239,10 @@ in
   boot = {
     initrd.availableKernelModules = [ "cryptd" ];
 
-    blacklistedKernelModules = lib.optionals (debug) [
+    blacklistedKernelModules = [
+      "cros-usbpd-charger" # Unused / suppresses errors
+    ]
+    ++ lib.optionals (debug) [
       "framework_laptop"
     ];
     extraModprobeConfig = ''
@@ -240,11 +251,11 @@ in
       # Fix wifi high latency
       options mt7921e disable_aspm=1
     '';
-    extraModulePackages = lib.optionals (!debug) [
-      (pkgs.callPackage ./usbpd {
-        kernel = config.boot.kernelPackages.kernel; # Patch kernel to log usbpd instead of warn
-      })
-    ];
+    # extraModulePackages = lib.optionals (!debug) [
+    #   (pkgs.callPackage ./usbpd {
+    #     kernel = config.boot.kernelPackages.kernel; # Patch to log usbpd instead of warn
+    #   })
+    # ];
     kernelModules = [
       "nfs"
     ];

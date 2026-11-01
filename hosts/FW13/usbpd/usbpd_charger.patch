@@ -2,10 +2,10 @@ Link: https://patchwork.kernel.org/project/chrome-platform/patch/20240406191734.
 ---
 
 diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
-index b6c96376776a..4e69da2cce7b 100644
+index 69d227ceb5c9..cd0f22f5d4dd 100644
 --- a/drivers/power/supply/cros_usbpd-charger.c
 +++ b/drivers/power/supply/cros_usbpd-charger.c
-@@ -570,7 +570,8 @@ static int cros_usbpd_charger_probe(struct platform_device *pd)
+@@ -569,7 +569,8 @@ static int cros_usbpd_charger_probe(struct platform_device *pd)
  		 * This can happen on a system that doesn't support USB PD.
  		 * Log a message, but no need to warn.
  		 */

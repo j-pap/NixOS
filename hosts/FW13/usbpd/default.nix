@@ -1,15 +1,16 @@
 {
   lib,
-  pkgs,
-  kernel ? pkgs.linuxPackages_latest.kernel,
+  stdenv,
+  linuxPackages_latest,
+  kernel ? linuxPackages_latest.kernel,
 }:
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "fw-usbpd-charger";
   inherit (kernel)
-    src
     version
-    postPatch
+    src
     nativeBuildInputs
+    postPatch
     ;
 
   kernel_dev = kernel.dev;
@@ -20,6 +21,8 @@ pkgs.stdenv.mkDerivation {
   patches = [ ./usbpd_charger.patch ];
 
   buildPhase = ''
+    runHook preBuild
+
     BUILT_KERNEL=$kernel_dev/lib/modules/$kernelVersion/build
 
     cp $BUILT_KERNEL/Module.symvers .
@@ -28,14 +31,20 @@ pkgs.stdenv.mkDerivation {
 
     make "-j$NIX_BUILD_CORES" modules_prepare
     make "-j$NIX_BUILD_CORES" M=$modulePath modules
+
+    runHook postBuild
   '';
 
   installPhase = ''
+    runHook preInstall
+
     make \
       INSTALL_MOD_PATH="$out" \
       XZ="xz -T$NIX_BUILD_CORES" \
       M="$modulePath" \
       modules_install
+
+    runHook postInstall
   '';
 
   meta = {
