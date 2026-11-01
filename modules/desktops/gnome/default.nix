@@ -77,13 +77,16 @@ in
           gnome-tweaks            # Tweaks
 
           # GNOME Circle
-          amberol     # Music player
+          # amberol     # Music player
           eyedropper  # Color picker
 
           # Multimedia
           celluloid # GTK MPV frontend w/ Wayland
           ;
-      };
+      }
+      ++ [
+        pkgs.stable.amberol
+      ];
     };
 
     nixpkgs.overlays = [

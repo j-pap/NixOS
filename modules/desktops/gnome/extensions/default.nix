@@ -51,12 +51,12 @@ in
     # AppIndicator
     "org/gnome/shell/extensions/appindicator".icon-size = 16;
 
-    # # Auto Power Profile
-    # "org/gnome/shell/extensions/auto-power-profile" = lib.mkDefault {
-    #   # performance, balanced, power-saver
-    #   ac = "performance";
-    #   bat = "power-saver";
-    # };
+    # Auto Power Profile
+    "org/gnome/shell/extensions/auto-power-profile" = lib.mkDefault {
+      # performance, balanced, power-saver
+      ac = "performance";
+      bat = "power-saver";
+    };
 
     # Battery Health Charging
     "org/gnome/shell/extensions/Battery-Health-Charging" =
@@ -129,10 +129,7 @@ in
     };
 
     # Hibernate Power Menu
-    # "org/gnome/shell/extensions/hibernate-power-menu" = {
-    #   show-hybrid-sleep = false;
-    #   show-suspend-then-hibernate = false;
-    # };
+    "org/gnome/shell/extensions/hibernate-power-menu".show-hybrid-sleep = false;
 
     # Just Perfection
     "org/gnome/shell/extensions/just-perfection" = {
@@ -143,7 +140,12 @@ in
     };
 
     # Lock Keys
-    # "org/gnome/shell/extensions/lockkeys".style = "show-hide-capslock";
+    "org/gnome/shell/extensions/lockkeys" = {
+      capslock-indicator = "when-active";
+      capslock-notification = "osd";
+      numlock-indicator = "when-active";
+      numlock-notification = "osd";
+    };
 
     # Night Theme Switcher
     "org/gnome/shell/extensions/nightthemeswitcher/commands" =
