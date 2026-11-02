@@ -103,7 +103,8 @@ in
             #"class<app>" # Match class
             #"title<name>" # Match title
             #"<app/name>" # Match any
-            "class<(kitty|com.mitchellh.ghostty|com.system76.CosmicTerm|org.gnome.Console|org.kde.konsole|org.wezfurlong.wezterm)>" = "";
+            "class<(kitty|com.mitchellh.ghostty|com.system76.CosmicTerm|org.gnome.Console|org.kde.konsole|org.wezfurlong.wezterm)>" =
+              "";
             "class<firefox>" = "󰈹";
           };
           window-rewrite-default = "";

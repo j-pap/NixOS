@@ -36,7 +36,7 @@ in
           #snapshot             # Camera
           #gnome-characters     # Character map
           #gnome-clocks         # Clock
-          gnome-connections     # Connections (RDP/VNC)
+          gnome-connections # Connections (RDP/VNC)
           #gnome-console        # Console
           #gnome-contacts       # Contacts
           #baobab               # Disk usage
@@ -45,7 +45,7 @@ in
           #papers               # Document viewer
           #nautilus             # Files
           #gnome-font-viewer    # Font viewer
-          yelp                  # Help
+          yelp # Help
           #loupe                # Image viewer
           #gnome-logs           # Log viewer
           #gnome-maps           # Maps
@@ -53,10 +53,10 @@ in
           #gnome-software       # Software (Flatpak)
           #gnome-system-monitor # System monitor
           #gnome-text-editor    # Text editor
-          gnome-tour            # Tour
+          gnome-tour # Tour
           #showtime             # Video player
           #gnome-weather        # Weather
-          epiphany              # Web browser
+          epiphany # Web browser
           ;
       };
 
@@ -64,21 +64,21 @@ in
         stylix.cursor.package # GDM
       ]
       ++ lib.optionals (flk.terminal != "kgx") [
-        pkgs.nautilus-python            # Allow nautilus scripts
+        pkgs.nautilus-python # Allow nautilus scripts
         pkgs.nautilus-open-any-terminal # Custom terminals in nautilus
       ]
       ++ builtins.attrValues {
         inherit (pkgs)
           # GNOME
-          dconf-editor            # GUI dconf editor
-          file-roller             # Archive manager
+          dconf-editor # GUI dconf editor
+          file-roller # Archive manager
           gnome-extension-manager # Extensions
-          gnome-themes-extra      # Adwaita-dark
-          gnome-tweaks            # Tweaks
+          gnome-themes-extra # Adwaita-dark
+          gnome-tweaks # Tweaks
 
           # GNOME Circle
           # amberol     # Music player
-          eyedropper  # Color picker
+          eyedropper # Color picker
 
           # Multimedia
           celluloid # GTK MPV frontend w/ Wayland

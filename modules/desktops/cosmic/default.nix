@@ -108,7 +108,14 @@ in
         imports = [
           ./appearance
           (import ./panels { inherit cosmicLib favApps; })
-          (import ./inputs { inherit lib pkgs cosmicLib flk; })
+          (import ./inputs {
+            inherit
+              lib
+              pkgs
+              cosmicLib
+              flk
+              ;
+          })
         ];
 
         programs.cosmic-applibrary = {

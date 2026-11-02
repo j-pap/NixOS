@@ -13,8 +13,8 @@ in
   config = lib.mkIf (cfg.enable) {
     environment.systemPackages = builtins.attrValues {
       inherit (pkgs)
-        yubioath-flutter        # Yubico Authenticator
-        yubikey-manager         # CLI config tool | 'ykman'
+        yubioath-flutter # Yubico Authenticator
+        yubikey-manager # CLI config tool | 'ykman'
         yubikey-personalization # CLI personalize | 'ykpersonalize'
         ;
     };

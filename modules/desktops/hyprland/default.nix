@@ -37,27 +37,27 @@ in
             #wofi                # Launcher
 
             # Audio
-            hyprpwcenter         # Pipewire display
+            hyprpwcenter # Pipewire display
 
             # Authorization Agent
             #hyprpolkitagent     # Hypr's polkit agent (via HM)
             #polkit_gnome        # Gnome's polkit agent (via HM)
 
             # Clipboard
-            cliphist             # Save clipboard history after closing apps
+            cliphist # Save clipboard history after closing apps
 
             # File Manager
-            file-roller          # Gnome's GUI archive manager
-            pcmanfm              # Independent file manager
+            file-roller # Gnome's GUI archive manager
+            pcmanfm # Independent file manager
 
             # Hardware
-            brightnessctl        # Monitor brightness control
+            brightnessctl # Monitor brightness control
 
             # Hypr Ecosystem
-            hyprcursor           # Cursor format/library/utilities
-            hyprpicker           # Utility for picking a color from your screen
-            hyprshutdown         # GUI session manager
-            hyprsysteminfo       # Display system information
+            hyprcursor # Cursor format/library/utilities
+            hyprpicker # Utility for picking a color from your screen
+            hyprshutdown # GUI session manager
+            hyprsysteminfo # Display system information
 
             # Status bar
             networkmanagerapplet # Show network tray icon (nm-applet --indicator)
@@ -72,14 +72,14 @@ in
             #awww                # Wallpaper manager capable of GIFs (via HM)
 
             # Wayland
-            wayland-utils        # Wayland utilities | 'wayland-info'
-            wev                  # Keymapper
+            wayland-utils # Wayland utilities | 'wayland-info'
+            wev # Keymapper
             ;
         }
         ++ [
           # QT Wayland
           pkgs.libsForQt5.qt5.qtwayland # QT5 Wayland
-          pkgs.kdePackages.qtwayland    # QT6 Wayland
+          pkgs.kdePackages.qtwayland # QT6 Wayland
         ]
         ++ lib.optional (config.services.flatpak.enable) [
           pkgs.gnome-software # Flatpak store

@@ -57,14 +57,13 @@ in
     }
 
     (lib.mkIf (cfg.enable) {
-      environment.systemPackages =
-        builtins.attrValues {
-          inherit (pkgs)
-            base16-schemes # Theme presets
-            home-manager   # Required for stylix-switch | 'programs.home-manager.enable' doesn't install
-            stylix-switch  # HM theme switching script
-            ;
-        };
+      environment.systemPackages = builtins.attrValues {
+        inherit (pkgs)
+          base16-schemes # Theme presets
+          home-manager # Required for stylix-switch | 'programs.home-manager.enable' doesn't install
+          stylix-switch # HM theme switching script
+          ;
+      };
 
       nixpkgs.overlays = [
         (final: prev: {

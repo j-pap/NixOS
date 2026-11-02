@@ -30,7 +30,7 @@ in
   config = {
     _module.args = {
       nixSecrets =
-        assert lib.assertMsg (useNixPlugins)
+        assert lib.assertMsg useNixPlugins
           "nixSecrets cannot be accessed because nix-plugins is not enabled.";
         assert lib.assertMsg (builtins ? extraBuiltins.readSops)
           "The extraBuiltin 'readSops' could not be read. Verify that 'nix.settings.plugin-files' & 'nix.settings.extra-builtins-file' are defined correctly.";
@@ -40,7 +40,6 @@ in
     boot = {
       binfmt.emulatedSystems = [ "aarch64-linux" ];
       consoleLogLevel = 3; # Errors only - sets 'loglevel=' kernelParam
-      # initrd.verbose = false;
       kernel.sysctl."vm.swappiness" = lib.mkDefault 0; # Prioritize swap for hibernation
       kernelParams = lib.mkBefore [
         "quiet"
@@ -85,103 +84,104 @@ in
       systemPackages = builtins.attrValues {
         inherit (pkgs)
           # ASCII Art
-          asciiquarium      # Fishies swimming
-          cbonsai           # Bonsai growing
+          asciiquarium # Fishies
+          cbonsai # Bonsai growing
 
           # Disks
-          caligula          # Imaging
-          cryptsetup        # Encryption
-          tparted           # TUI parted
+          caligula # Imaging
+          cryptsetup # Encryption
+          tparted # TUI parted
 
           # Files
-          cryptomator       # Encrypt cloud files
-          exiftool          # Metadata remover
-          file              # Information
-          libarchive        # ISO extraction | `bsdtar -xf IsoFile.iso OutputFile`
-          pandoc            # Document converter | `pandoc input -o output`
-          p7zip             # Encryption
-          unrar             # Rar
-          unzip             # Zip
-          zip               # Zip
+          cryptomator # Encrypt cloud files
+          exiftool # Metadata remover
+          file # Information
+          libarchive # ISO extraction | `bsdtar -xf IsoFile.iso OutputFile`
+          pandoc # Document converter | `pandoc input -o output`
+          p7zip # Encryption
+          unrar # Rar
+          unzip # Zip
+          zip # Zip
 
           # Hardware
-          dmidecode         # Firmware | `dmidecode -s bios-version`
-          ffmpeg-full       # Video acceleration
-          mesa-demos        # OpenGL info
-          libva-utils       # VAAPI | `vainfo`
-          lm_sensors        # Sensors | `sensors-detect`
-          lshw              # Summary
-          nvme-cli          # Manage NVMe
-          pciutils          # Manage PCI | `lspci`
-          usbutils          # Manage USB | `lsusb`
-          vdpauinfo         # VDPAU
-          vulkan-tools      # Vulkan utilities | `vulkaninfo`
+          dmidecode # Firmware | `dmidecode -s bios-version`
+          ffmpeg-full # Video acceleration
+          mesa-demos # OpenGL info
+          libva-utils # VAAPI | `vainfo`
+          lm_sensors # Sensors | `sensors-detect`
+          lshw # Summary
+          nvme-cli # Manage NVMe
+          pciutils # Manage PCI | `lspci`
+          usbutils # Manage USB | `lsusb`
+          vdpauinfo # VDPAU
+          vulkan-tools # Vulkan utilities | `vulkaninfo`
 
           # Images
-          chafa             # Terminal viewer
-          feh               # Viewer
-          imagemagick       # Tools
+          chafa # Terminal viewer
+          feh # Viewer
+          imagemagick # Tools
 
           # Network
-          dig               # DNS tools
-          ethtool           # Diagnostic / control
-          ipcalc            # Network calculator
-          iptraf-ng         # Traffic monitor
-          mtr               # ping/traceroute
-          nfs-utils         # NFS support
-          nmap              # Discovery
-          sipcalc           # Advanced network calculator
-          speedtest-cli     # Bandwidth testing
-          tcpdump           # Sniffer
-          traceroute        # Route tracing
-          whois             # Domain lookup
+          dig # DNS tools
+          ethtool # Diagnostic / control
+          ipcalc # Network calculator
+          iptraf-ng # Traffic monitor
+          mtr # ping/traceroute
+          nfs-utils # NFS support
+          nmap # Discovery
+          sipcalc # Advanced network calculator
+          speedtest-cli # Bandwidth testing
+          tcpdump # Sniffer
+          traceroute # Route tracing
+          whois # Domain lookup
 
           # Nix
-          nixfmt            # Officlal Nix formatter
-          nix-tree          # Browse nix store
-          nvd               # Package version diff tool
+          nixfmt # Officlal Nix formatter
+          nixfmt-tree # Nix project formatter | `treefmt`
+          nix-tree # Browse nix store
+          nvd # Package version diff tool
 
           # Notifications
-          libnotify         # Notification engine
+          libnotify # Notification engine
 
           # Productivity
-          hunspell          # Spellcheck
+          hunspell # Spellcheck
 
           # Secrets
-          sops              # Secret management
-          ssh-to-age        # Convert SSH keys to Age
+          sops # Secret management
+          ssh-to-age # Convert SSH keys to Age
 
           # Terminal
-          awscli2           # AWS CLI v2
-          bootdev-cli       # CLI tool
-          cht-sh            # Cheat sheet
-          coreutils         # GNU utilities
+          awscli2 # AWS CLI v2
+          bootdev-cli # CLI tool
+          cht-sh # Cheat sheet
+          coreutils # GNU utilities
           #devenv           # Declarative development environments
-          dust              # Disk usage
-          eza               # ls/tree replacement | `eza` or `exa`
-          fastfetch         # Faster system info
-          fd                # Find alternative | `fd`
-          findutils         # Find utilities
-          glow              # Markdown reader
-          htop              # Process viewer
-          killall           # Process killer
-          lazyjournal       # Log viewer
-          openssl           # SSL toolkit
-          procs             # Modern ps
-          progress          # Monitor progress | `cmd & progress -mp $!`
-          ps                # Processes
-          pstree            # Process tree
-          ripgrep           # Search file contents | `rg`
-          shellcheck        # Script formating checker
-          sqlite            # SQLite
-          sysstat           # 'iostat' & various tools
-          tldr              # Abbreviated manual
-          tmux              # Multiplexor
-          toybox            # Various commands
-          wget              # Retriever
-          wl-clipboard      # Enable wl-copy/wl-paste
-          xdg-utils         # Environment integration
-          zellij            # Tmux alternative
+          dust # Disk usage
+          eza # ls/tree replacement | `eza` or `exa`
+          fastfetch # Faster system info
+          fd # Find alternative | `fd`
+          findutils # Find utilities
+          glow # Markdown reader
+          htop # Process viewer
+          killall # Process killer
+          lazyjournal # Log viewer
+          openssl # SSL toolkit
+          procs # Modern ps
+          progress # Monitor progress | `cmd & progress -mp $!`
+          ps # Processes
+          pstree # Process tree
+          ripgrep # Search file contents | `rg`
+          shellcheck # Script formating checker
+          sqlite # SQLite
+          sysstat # 'iostat' & various tools
+          tldr # Abbreviated manual
+          tmux # Multiplexor
+          toybox # Various commands
+          wget # Retriever
+          wl-clipboard # Enable wl-copy/wl-paste
+          xdg-utils # Environment integration
+          zellij # Tmux alternative
 
           # Theming
           #variety          # Wallpapers
@@ -222,13 +222,15 @@ in
         programs = {
           direnv = {
             enable = true; # `echo "use nix" >> .envrc && direnv allow`
-            config = /* ~/.config/direnv/direnv.toml */ {
-              global.hide_env_diff = true;
-            };
+            config = # ~/.config/direnv/direnv.toml
+              {
+                global.hide_env_diff = true;
+              };
             enableBashIntegration = true;
             nix-direnv.enable = true;
             silent = false;
-            stdlib = /* ~/.config/direnv/direnvrc */ "";
+            stdlib = # ~/.config/direnv/direnvrc
+              "";
           };
           ssh = {
             enableDefaultConfig = false;
@@ -325,7 +327,9 @@ in
     programs = {
       command-not-found = {
         enable = true;
-        dbPath = lib.mkForce inputs.flake-programs-sqlite.packages.${pkgs.stdenv.hostPlatform.system}.programs-sqlite;
+        dbPath =
+          lib.mkForce
+            inputs.flake-programs-sqlite.packages.${pkgs.stdenv.hostPlatform.system}.programs-sqlite;
       };
     };
 
@@ -333,7 +337,7 @@ in
       pam.services.login.fprintAuth = false; # Disabled since fingerprints can't be used for login
       polkit.enable = true;
       sudo = {
-        extraConfig = ''Defaults lecture = never'';
+        extraConfig = "Defaults lecture = never";
         wheelNeedsPassword = true;
       };
       wrappers.btop = {

@@ -148,7 +148,7 @@ in
                 ""
               else if (flk.de.gnome.enable) then
                 "gsettings set org.gnome.desktop.background picture-uri %s1"
-                #"gsettings set org.gnome.desktop.background picture-uri-dark %s1"
+              # "gsettings set org.gnome.desktop.background picture-uri-dark %s1"
               else if (flk.de.kde.enable) then
                 "plasma-apply-wallpaperimage %s1"
               else if (flk.de.hyprland.enable) then

@@ -26,7 +26,6 @@ in
           # Wayland
           GBM_BACKEND = "nvidia-drm";
           __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-
           # Hardware Acceleration
           NVD_BACKEND = "direct"; # Library backend - 'direct' or 'egl'
           MOZ_DISABLE_RDD_SANDBOX = 1; # Disables Firefox's sandbox for the RDD process that the decoder runs in
@@ -72,9 +71,7 @@ in
       # Unsure if this is still necessary with newer versions of Plasma 6
       hardware.nvidia = {
         gsp.enable = false;
-        moduleParams.nvidia = {
-          NVreg_EnableGpuFirmware = 0;
-        };
+        moduleParams.nvidia.NVreg_EnableGpuFirmware = 0;
       };
     })
   ];

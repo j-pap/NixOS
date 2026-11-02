@@ -68,47 +68,48 @@ in
   # System Packages / Variables
   ##########################################################
   environment = {
-    systemPackages = builtins.attrValues {
-      inherit (pkgs)
-        # Browser
-        brave # Alt
+    systemPackages =
+      builtins.attrValues {
+        inherit (pkgs)
+          # Browser
+          brave # Alt
 
-        # Communication
-        signal-desktop # Signal
-        thunderbird-latest # Email client
+          # Communication
+          signal-desktop # Signal
+          thunderbird-latest # Email client
 
-        # Framework Hardware
-        # amd-debug-tools # s2idle | `amd-`
-        fw-ectool # Embedded controller
-        sbctl # Secure boot key manager
+          # Framework Hardware
+          # amd-debug-tools # s2idle | `amd-`
+          fw-ectool # Embedded controller
+          sbctl # Secure boot key manager
 
-        # Misc
-        android-tools # Android flashing
+          # Misc
+          android-tools # Android flashing
 
-        # Monitoring
-        powertop # Power stats
-        zenmonitor # CPU stats
+          # Monitoring
+          powertop # Power stats
+          zenmonitor # CPU stats
 
-        # Multimedia
-        finamp # JF music client
-        flacon # CUE converter
-        harmonoid # Music player
-        jellyfin-desktop # JF client
-        picard # Music tagger
-        pocket-casts # Podcast player
-        sone # Tidal client
-        tauon # Music player
-        tidal-dl # Tidal DL
+          # Multimedia
+          finamp # JF music client
+          flacon # CUE converter
+          harmonoid # Music player
+          jellyfin-desktop # JF client
+          picard # Music tagger
+          pocket-casts # Podcast player
+          sone # Tidal client
+          tauon # Music player
+          tidal-dl # Tidal DL
 
-        # Productivity
-        libreoffice # Office suite
-        obsidian # Markdown notes
-        ;
-    }
-    ++ [ pkgs.stable.amd-debug-tools ]
-    ++ lib.optionals (config.services.fprintd.enable) [
-      (pkgs.callPackage ./fprint-clear-storage.nix { }) # Clear fingerprint sensor history
-    ];
+          # Productivity
+          libreoffice # Office suite
+          obsidian # Markdown notes
+          ;
+      }
+      ++ [ pkgs.stable.amd-debug-tools ]
+      ++ lib.optionals (config.services.fprintd.enable) [
+        (pkgs.callPackage ./fprint-clear-storage.nix { }) # Clear fingerprint history
+      ];
     variables.MOZ_DRM_DEVICE = "/dev/dri/by-path/pci-0000:c1:00.0-render"; # GPU for Firefox
   };
 

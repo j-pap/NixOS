@@ -110,9 +110,7 @@
           specialArgs = { inherit inputs; };
         in
         nixpkgs.lib.nixosSystem {
-          modules = hostModules ++ (
-            if (hostIsBare) then ([ ]) else (stdModules hostName specialArgs)
-          );
+          modules = (if (hostIsBare) then ([ ]) else (stdModules hostName specialArgs)) ++ hostModules;
           specialArgs = specialArgs;
         };
 

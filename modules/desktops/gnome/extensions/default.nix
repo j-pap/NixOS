@@ -173,8 +173,10 @@ in
       in
       {
         enabled = true;
-        sunrise = if (stylix.enable) then "${lib.getExe pkgs.stylix-switch} light" else "${lib.getExe themeSwitch}";
-        sunset = if (stylix.enable) then "${lib.getExe pkgs.stylix-switch} dark" else "${lib.getExe themeSwitch}";
+        sunrise =
+          if (stylix.enable) then "${lib.getExe pkgs.stylix-switch} light" else "${lib.getExe themeSwitch}";
+        sunset =
+          if (stylix.enable) then "${lib.getExe pkgs.stylix-switch} dark" else "${lib.getExe themeSwitch}";
       };
     "org/gnome/shell/extensions/nightthemeswitcher/time" = {
       manual-schedule = false;
