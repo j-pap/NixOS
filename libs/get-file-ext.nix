@@ -1,10 +1,10 @@
 #######################################
-# Obtain a filename's extension
+# Retrieve a filename's extension
 # Globals:
 #   names: filename split by ".", a list of strings
-#   length: length of names list minus one, an integer
+#   ext: count of names list, minus one, an integer
 # Arguments:
-#   file: filename string to get extension of
+#   file: filename to get extension from, a string
 # Returns:
 #   "file.ext" -> "ext"
 #######################################
@@ -14,6 +14,8 @@
 file:
 let
   names = lib.splitString "." (builtins.baseNameOf file);
-  length = (lib.length names) - 1;
+  ext = (lib.length names) - 1;
 in
-builtins.elemAt names length
+assert lib.assertMsg (builtins.isString file) "A string is required to use this function.";
+assert lib.assertMsg ((lib.length names) >= 2) "This function requires a period in the filename.";
+builtins.elemAt names ext

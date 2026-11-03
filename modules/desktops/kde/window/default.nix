@@ -39,7 +39,7 @@
     # Window Rules
     window-rules =
       let
-        resize = s: f: toString (extraLibs.truncateFloat ((lib.toInt s) * f) 0);
+        resize = s: f: toString (extraLibs.trimFloat ((lib.toInt s) * f) 0);
       in
       import ./window-rules.nix { inherit flk resize; };
 
