@@ -19,16 +19,16 @@ let
   numPart = n: builtins.elemAt (lib.splitString "." dec) n;
   int = numPart 0;
   frac = numPart 1;
-  integral = lib.toIntBase10 (if (int == "") then "0" else int);
+  integral = lib.toIntBase10 (if (int == "") then "0" else int); # .25 -> 0.25
   fractional =
     lib.toIntBase10 (
       builtins.substring 0 2 (
         if (int == "") then
-          if (lib.stringLength frac == 1) then (frac + "0") else frac
+          if (lib.stringLength frac == 1) then (frac + "0") else frac # .2 -> .20
         else if ((lib.length (builtins.splitVersion dec)) < 2) then
-          "00"
+          "00" # 1. or 1 -> 1.00
         else if (lib.stringLength frac == 1) then
-          (frac + "0")
+          (frac + "0") # 1.2 -> 1.20
         else
           frac
       )

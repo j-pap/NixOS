@@ -13,9 +13,9 @@
 }:
 file:
 let
-  names = lib.splitString "." (builtins.baseNameOf file);
+  names = lib.splitString "." (builtins.baseNameOf file); # "path/to/file.ext" -> [ "file" "ext" ]
   ext = (lib.length names) - 1;
 in
 assert lib.assertMsg (builtins.isString file) "A string is required to use this function.";
 assert lib.assertMsg ((lib.length names) >= 2) "This function requires a period in the filename.";
-builtins.elemAt names ext
+builtins.elemAt names ext # [ "file" "ext" ] -> "ext"

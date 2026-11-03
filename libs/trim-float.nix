@@ -18,7 +18,7 @@ let
   power = n: e: builtins.foldl' builtins.mul 1 (builtins.genList (_: n) e);
 in
 assert lib.assertMsg (builtins.isFloat float)
-  "A float is required for the first argument of this function.";
+  "A float is required as the first argument of this function.";
 assert lib.assertMsg (builtins.isInt place)
-  "An integer is required for the second argument of this function.";
+  "An integer is required as the second argument of this function.";
 trunc (float * (power 10 place)) / (power 10.0 place)
