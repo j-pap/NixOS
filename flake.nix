@@ -80,19 +80,7 @@
         };
 
         T1.modules = [
-          {
-            nix.settings = {
-              substituters = [
-                "https://cache.lantian.pub/lantian"
-              ];
-              trusted-public-keys = [
-                "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
-              ];
-            };
-            nixpkgs.overlays = [
-              inputs.nix-cachyos-kernel.overlays.pinned
-            ];
-          }
+          useCachyKernel
         ];
 
         T450s.modules = [
@@ -149,6 +137,7 @@
                     config.allowUnfree = true;
                   };
                 };
+                problems.handlers."gtk+".broken = "warn"; # or "ignore"
               };
               overlays = (map import (import ./overlays)) ++ [
                 inputs.nur.overlays.default
@@ -165,6 +154,20 @@
         inputs.sops-nix.nixosModules.sops
         inputs.stylix.nixosModules.stylix
       ];
+
+      useCachyKernel = {
+        nix.settings = {
+          substituters = [
+            "https://cache.lantian.pub/lantian"
+          ];
+          trusted-public-keys = [
+            "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
+          ];
+        };
+        nixpkgs.overlays = [
+          inputs.nix-cachyos-kernel.overlays.pinned
+        ];
+      };
     in
     {
       # 'nixos-rebuild switch --flake .#hostname'
