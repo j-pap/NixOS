@@ -180,7 +180,7 @@ in
       "nct6687"
       "nfs"
     ];
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-zen4;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-zen4;
     kernelParams = [
       "amd_pstate=active"
       "module_blacklist=amdgpu"
