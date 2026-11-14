@@ -260,10 +260,12 @@ in
           enable = true;
           darkModeScripts = {
             kitty = ''
+              export QT_QPA_PLATFORM=offscreen
               ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.dark}.conf /home/${flk.user}/.config/kitty/current-theme.conf
               kill -SIGUSR1 $(pidof kitty) 2>/dev/null
             '';
             plasma_theme = ''
+              export QT_QPA_PLATFORM=offscreen
               ${plasma.lookandfeel} --keep-auto --apply ${theme.dark} && \
                 ${plasma.cursor} ${stylix.cursor.name}
               #${plasma.wallpaper} ${flk.host.wallpaper.dark}
@@ -273,10 +275,12 @@ in
 
           lightModeScripts = {
             kitty = ''
+              export QT_QPA_PLATFORM=offscreen
               ln -fs ${pkgs.kitty-themes}/share/kitty-themes/themes/${flk.host.theme.light}.conf /home/${flk.user}/.config/kitty/current-theme.conf
               kill -SIGUSR1 $(pidof kitty) 2>/dev/null
             '';
             plasma_theme = ''
+              export QT_QPA_PLATFORM=offscreen
               ${plasma.lookandfeel} --keep-auto --apply ${theme.light} && \
                 ${plasma.cursor} ${stylix.cursor.name}
               #${plasma.wallpaper} ${flk.host.wallpaper.light}
