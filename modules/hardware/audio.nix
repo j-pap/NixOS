@@ -23,7 +23,7 @@ in
     services = {
       pipewire = {
         enable = true;
-        jack.enable = true;
+        # jack.enable removed in favor of using `lib.getExe' pkgs.pipewire.jack "pw-jack"`
         pulse.enable = true;
         wireplumber.enable = true;
         alsa = {

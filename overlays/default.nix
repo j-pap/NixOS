@@ -3,7 +3,6 @@
   ./bootdev.nix
   ./cosmic-ext-color-picker.nix
   ./fonts.nix
-  ./kdeplasma-addons.nix
   ./nix-plugins.nix
   ./yaziFlavors.nix
 ]

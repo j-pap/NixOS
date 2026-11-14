@@ -137,7 +137,6 @@
                     config.allowUnfree = true;
                   };
                 };
-                problems.handlers."gtk+".broken = "warn"; # or "ignore"
               };
               overlays = (map import (import ./overlays)) ++ [
                 inputs.nur.overlays.default
